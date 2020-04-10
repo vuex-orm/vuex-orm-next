@@ -8,10 +8,10 @@
   <a href="https://www.npmjs.com/package/@vuex-orm/core">
     <img alt="npm" src="https://img.shields.io/npm/v/@vuex-orm/core?color=blue" alt="NPM">
   </a>
-  <a href="https://travis-ci.org/vuex-orm/vuex-orm">
+  <a href="https://travis-ci.org/vuex-orm/vuex-orm-next">
     <img src="https://travis-ci.org/vuex-orm/vuex-orm-next.svg?branch=master" alt="Travis CI">
   </a>
-  <a href="https://codecov.io/gh/vuex-orm/vuex-orm">
+  <a href="https://codecov.io/gh/vuex-orm/vuex-orm-next">
     <img src="https://codecov.io/gh/vuex-orm/vuex-orm-next/branch/master/graph/badge.svg" alt="codecov">
   </a>
   <a href="https://github.com/vuex-orm/vuex-orm-next/blob/master/LICENSE">
