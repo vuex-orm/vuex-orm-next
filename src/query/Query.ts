@@ -1,11 +1,18 @@
 import { Store } from 'vuex'
-import { isArray, isEmpty, orderBy, groupBy } from '../support/Utils'
+import {
+  isArray,
+  isFunction,
+  isEmpty,
+  orderBy,
+  groupBy
+} from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 import { Connection } from '../connection/Connection'
 import {
   Where,
+  WhereSecondaryClosure,
   Order,
   OrderDirection,
   EagerLoad,
@@ -26,7 +33,7 @@ export class Query<M extends Model = Model> {
   /**
    * The where constraints for the query.
    */
-  protected wheres: Where[] = []
+  protected wheres: Where<M, any>[] = []
 
   /**
    * The orderings for the query.
@@ -73,7 +80,9 @@ export class Query<M extends Model = Model> {
   /**
    * Add a basic where clause to the query.
    */
-  where(field: string, value: any): this {
+  where<T extends keyof M>(field: T, value: WhereSecondaryClosure<M, T>): this
+  where<T extends keyof M>(field: T, value: M[T] | M[T][]): this
+  where(field: any, value: any): any {
     this.wheres.push({ field, value, boolean: 'and' })
 
     return this
@@ -82,7 +91,7 @@ export class Query<M extends Model = Model> {
   /**
    * Add a "where in" clause to the query.
    */
-  whereIn(field: string, values: any[]): this {
+  whereIn<T extends keyof M>(field: T, values: M[T][]): this {
     this.wheres.push({ field, value: values, boolean: 'and' })
 
     return this
@@ -91,14 +100,16 @@ export class Query<M extends Model = Model> {
   /**
    * Add a where clause on the primary key to the query.
    */
-  whereId(ids: string | number | (string | number)[]): this {
-    return this.where(this.model.$getPrimaryKey(), ids)
+  whereId<T extends keyof M>(ids: M[T] | M[T][]): this {
+    return this.where(this.model.$getPrimaryKey() as T, ids)
   }
 
   /**
    * Add an "or where" clause to the query.
    */
-  orWhere(field: string, value: any): Query<M> {
+  orWhere<T extends keyof M>(field: T, value: WhereSecondaryClosure<M, T>): this
+  orWhere<T extends keyof M>(field: T, value: M[T] | M[T][]): this
+  orWhere(field: any, value: any): any {
     this.wheres.push({ field, value, boolean: 'or' })
 
     return this
@@ -261,9 +272,13 @@ export class Query<M extends Model = Model> {
   /**
    * The function to compare where clause to the given model.
    */
-  protected whereComparator(model: M, where: Where): boolean {
+  protected whereComparator(model: M, where: Where<M, any>): boolean {
     if (isArray(where.value)) {
       return where.value.includes(model[where.field])
+    }
+
+    if (isFunction(where.value)) {
+      return where.value(model[where.field])
     }
 
     return model[where.field] === where.value
@@ -396,7 +411,7 @@ export class Query<M extends Model = Model> {
   /**
    * Destroy the models for the given id.
    */
-  async destroyMany(ids: (string | number)[]): Promise<Collection<M>> {
+  async destroyMany<T extends keyof M>(ids: M[T][]): Promise<Collection<M>> {
     return this.whereId(ids).delete()
   }
 
