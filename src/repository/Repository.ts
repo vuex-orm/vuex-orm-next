@@ -9,7 +9,7 @@ import {
   Collections
 } from '../data/Data'
 import { Model } from '../model/Model'
-import { Interpretation } from '../interpretation/Interpretation'
+import { Interpreter } from '../interpreter/Interpreter'
 import { Query } from '../query/Query'
 import { WhereSecondaryClosure, OrderDirection } from '../query/Options'
 
@@ -41,7 +41,7 @@ export class Repository<M extends Model> {
   }
 
   /**
-   * Create a new repository instance for the given entity.
+   * Create a new Repository instance for the given entity.
    */
   newRepository<T extends Model>(entity: string): Repository<T> {
     const model = this.store.$database.getModel(entity)
@@ -50,14 +50,14 @@ export class Repository<M extends Model> {
   }
 
   /**
-   * Create a new interpretation instance.
+   * Create a new Interpreter instance.
    */
-  interpretation(): Interpretation<M> {
-    return new Interpretation(this.store, this.model)
+  interpreter(): Interpreter<M> {
+    return new Interpreter(this.store, this.model)
   }
 
   /**
-   * Create a new query instance.
+   * Create a new Query instance.
    */
   query(): Query<M> {
     return new Query(this.store, this.model)
@@ -212,7 +212,7 @@ export class Repository<M extends Model> {
    * Normalize the given record.
    */
   protected interpret(records: Element | Element[]): NormalizedData {
-    return this.interpretation().process(records)
+    return this.interpreter().process(records)
   }
 
   /**

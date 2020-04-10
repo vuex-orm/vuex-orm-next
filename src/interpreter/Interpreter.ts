@@ -5,7 +5,7 @@ import { Element, Elements, NormalizedData } from '../data/Data'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 
-export class Interpretation<M extends Model> {
+export class Interpreter<M extends Model> {
   /**
    * The store instance.
    */
@@ -17,7 +17,7 @@ export class Interpretation<M extends Model> {
   model: M
 
   /**
-   * Create a new interpreter instance.
+   * Create a new Interpreter instance.
    */
   constructor(store: Store<any>, model: M) {
     this.store = store

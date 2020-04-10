@@ -101,8 +101,8 @@ export class Database {
 
   /**
    * Create the schema definition from registered models and set it to the
-   * `schema` property. This schema will be used by the interpretation
-   * to interpret data before persisting them to the store.
+   * `schema` property. This schema will be used by the Interpreter to interpret
+   * the data before persisting them to the store.
    */
   private createSchemas(): void {
     for (const name in this.models) {

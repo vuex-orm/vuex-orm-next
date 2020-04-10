@@ -30,7 +30,7 @@ export * from './modules/Module'
 export * from './modules/State'
 export * from './modules/Mutations'
 export * from './repository/Repository'
-export * from './interpretation/Interpretation'
+export * from './interpreter/Interpreter'
 export * from './query/Query'
 export * from './query/Options'
 export * from './connection/Connection'
@@ -49,7 +49,7 @@ import { Relation } from './model/attributes/relations/Relation'
 import { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
 import { Repository } from './repository/Repository'
-import { Interpretation } from './interpretation/Interpretation'
+import { Interpreter } from './interpreter/Interpreter'
 import { Query } from './query/Query'
 import { Connection } from './connection/Connection'
 
@@ -68,7 +68,7 @@ export default {
   HasOneAttr,
   HasManyAttr,
   Repository,
-  Interpretation,
+  Interpreter,
   Query,
   Connection
 }
