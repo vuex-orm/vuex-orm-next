@@ -62,7 +62,7 @@ export class BelongsTo extends Relation {
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.whereIn(this.ownerKey, this.getEagerModelKeys(models))
+    query.whereIn(this.ownerKey as any, this.getEagerModelKeys(models))
   }
 
   /**

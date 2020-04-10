@@ -12,6 +12,7 @@ import { Model } from '../model/Model'
 import { Connection } from '../connection/Connection'
 import {
   Where,
+  WherePrimaryClosure,
   WhereSecondaryClosure,
   Order,
   OrderDirection,
@@ -80,9 +81,10 @@ export class Query<M extends Model = Model> {
   /**
    * Add a basic where clause to the query.
    */
-  where<T extends keyof M>(field: T, value: WhereSecondaryClosure<M, T>): this
-  where<T extends keyof M>(field: T, value: M[T] | M[T][]): this
-  where(field: any, value: any): any {
+  where<T extends keyof M>(
+    field: WherePrimaryClosure<M> | T,
+    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  ): this {
     this.wheres.push({ field, value, boolean: 'and' })
 
     return this
@@ -107,9 +109,10 @@ export class Query<M extends Model = Model> {
   /**
    * Add an "or where" clause to the query.
    */
-  orWhere<T extends keyof M>(field: T, value: WhereSecondaryClosure<M, T>): this
-  orWhere<T extends keyof M>(field: T, value: M[T] | M[T][]): this
-  orWhere(field: any, value: any): any {
+  orWhere<T extends keyof M>(
+    field: WherePrimaryClosure<M> | T,
+    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  ): this {
     this.wheres.push({ field, value, boolean: 'or' })
 
     return this
@@ -273,6 +276,10 @@ export class Query<M extends Model = Model> {
    * The function to compare where clause to the given model.
    */
   protected whereComparator(model: M, where: Where<M, any>): boolean {
+    if (isFunction(where.field)) {
+      return where.field(model)
+    }
+
     if (isArray(where.value)) {
       return where.value.includes(model[where.field])
     }
