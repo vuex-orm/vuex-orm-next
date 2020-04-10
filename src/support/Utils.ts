@@ -26,6 +26,13 @@ export function isArray(value: any): value is any[] {
 }
 
 /**
+ * Check if the given value is the type of array.
+ */
+export function isFunction(value: any): value is Function {
+  return typeof value === 'function'
+}
+
+/**
  * Check if the given array or object is empty.
  */
 export function isEmpty(collection: any[] | object): boolean {

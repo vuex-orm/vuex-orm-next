@@ -11,7 +11,7 @@ import {
 import { Model } from '../model/Model'
 import { Interpretation } from '../interpretation/Interpretation'
 import { Query } from '../query/Query'
-import { OrderDirection } from '../query/Options'
+import { WhereSecondaryClosure, OrderDirection } from '../query/Options'
 
 export type PersistMethod = 'insert' | 'merge'
 
@@ -66,14 +66,24 @@ export class Repository<M extends Model> {
   /**
    * Add a basic where clause to the query.
    */
-  where(field: string, value: any): Query<M> {
+  where<T extends keyof M>(
+    field: T,
+    value: WhereSecondaryClosure<M, T>
+  ): Query<M>
+  where<T extends keyof M>(field: T, value: M[T] | M[T][]): Query<M>
+  where(field: any, value: any): any {
     return this.query().where(field, value)
   }
 
   /**
    * Add an "or where" clause to the query.
    */
-  orWhere(field: string, value: any): Query<M> {
+  orWhere<T extends keyof M>(
+    field: T,
+    value: WhereSecondaryClosure<M, T>
+  ): Query<M>
+  orWhere<T extends keyof M>(field: T, value: M[T] | M[T][]): Query<M>
+  orWhere(field: any, value: any): any {
     return this.query().orWhere(field, value)
   }
 
