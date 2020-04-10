@@ -2,7 +2,7 @@ import { Model } from '../../../Model'
 import { PropertyDecorator } from '../../Contracts'
 
 /**
- * Create a has one decorator.
+ * Create a has-one attribute property decorator.
  */
 export function HasOne(
   related: () => typeof Model,

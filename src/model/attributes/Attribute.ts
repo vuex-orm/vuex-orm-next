@@ -7,7 +7,7 @@ export abstract class Attribute {
   protected model: Model
 
   /**
-   * Create a new attribute instance.
+   * Create a new Attribute instance.
    */
   constructor(model: Model) {
     this.model = model

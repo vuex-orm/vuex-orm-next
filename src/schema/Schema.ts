@@ -4,7 +4,7 @@ import { Model } from '../model/Model'
 
 export class Schema {
   /**
-   * List of generated schemas.
+   * The list of generated schemas.
    */
   private schemas: Record<string, Normalizr.Entity> = {}
 
@@ -14,7 +14,7 @@ export class Schema {
   private model: Model
 
   /**
-   * Create a new schema instance.
+   * Create a new Schema instance.
    */
   constructor(model: Model) {
     this.model = model
@@ -66,7 +66,7 @@ export class Schema {
   }
 
   /**
-   * Create a dfinition for the given model.
+   * Create a definition for the given model.
    */
   private definition(model: Model): NormalizrSchema {
     const definition: NormalizrSchema = {}

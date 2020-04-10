@@ -1,7 +1,7 @@
 import { PropertyDecorator } from '../../Contracts'
 
 /**
- * Create an attr decorator.
+ * Create an Attr attribute property decorator.
  */
 export function Attr(value?: any): PropertyDecorator {
   return (target, propertyKey) => {

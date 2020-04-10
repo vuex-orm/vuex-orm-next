@@ -3,7 +3,7 @@ import { Type } from './Type'
 
 export class Boolean extends Type {
   /**
-   * Create a new boolean attribute instance.
+   * Create a new Boolean attribute instance.
    */
   constructor(model: Model, value: boolean | null) {
     super(model, value)

@@ -11,7 +11,7 @@ export interface Mutations<S extends State> extends MutationTree<S> {
 }
 
 /**
- * Generic mutation.
+ * Execute a generic mutation.
  */
 function mutate(state: State, callback: (state: State) => void): void {
   callback(state)

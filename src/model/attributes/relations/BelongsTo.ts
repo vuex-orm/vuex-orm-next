@@ -22,7 +22,7 @@ export class BelongsTo extends Relation {
   protected ownerKey: string
 
   /**
-   * Create a new belongs to relation instance.
+   * Create a new belongs-to relation instance.
    */
   constructor(
     parent: Model,
@@ -34,21 +34,21 @@ export class BelongsTo extends Relation {
     this.foreignKey = foreignKey
     this.ownerKey = ownerKey
 
-    // In the underlying base relationship class, this variable is referred to as
-    // the "parent" since most relationships are not inversed. But, since this
-    // one is we will create a "child" variable for much better readability.
+    // In the underlying base relation class, this property is referred to as
+    // the "parent" as most relations are not inversed. But, since this
+    // one is, we will create a "child" property for improved readability.
     this.child = child
   }
 
   /**
-   * Define the normalizr schema for the relationship.
+   * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
     return schema.one(this.child)
   }
 
   /**
-   * Attach the relational key to the given data.
+   * Attach the relational key to the given data object.
    */
   attach(id: string | number, record: Element, data: NormalizedData): void {
     const childRecord = data[this.child.$entity]?.[id]
@@ -66,7 +66,7 @@ export class BelongsTo extends Relation {
   }
 
   /**
-   * Gather the keys from an array of related models.
+   * Gather the keys from a collection of related models.
    */
   protected getEagerModelKeys(models: Collection): (string | number)[] {
     return models.reduce<(string | number)[]>((keys, model) => {
@@ -79,7 +79,7 @@ export class BelongsTo extends Relation {
   }
 
   /**
-   * Match the eagerly loaded results to their parents.
+   * Match the eagerly loaded results to their respective parents.
    */
   match(relation: string, models: Collection, results: Collection): void {
     const dictionary = results.reduce<Record<string, Model>>((dic, result) => {

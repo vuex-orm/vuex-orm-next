@@ -37,7 +37,7 @@ export abstract class Relation extends Attribute {
   }
 
   /**
-   * Define the normalizr schema for the relationship.
+   * Define the normalizr schema for the relation.
    */
   abstract define(schema: Schema): NormalizrSchema
 

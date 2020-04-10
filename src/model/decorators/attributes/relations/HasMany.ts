@@ -2,7 +2,7 @@ import { Model } from '../../../Model'
 import { PropertyDecorator } from '../../Contracts'
 
 /**
- * Create a has many decorator.
+ * Create a has-many attribute property decorator.
  */
 export function HasMany(
   related: () => typeof Model,

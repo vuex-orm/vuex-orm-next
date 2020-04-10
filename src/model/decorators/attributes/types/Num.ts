@@ -1,7 +1,7 @@
 import { PropertyDecorator, TypeOptions } from '../../Contracts'
 
 /**
- * Create a str decorator.
+ * Create a Number attribute property decorator.
  */
 export function Num(
   value: number | null,

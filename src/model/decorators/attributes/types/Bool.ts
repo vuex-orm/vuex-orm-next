@@ -1,7 +1,7 @@
 import { PropertyDecorator, TypeOptions } from '../../Contracts'
 
 /**
- * Create a str decorator.
+ * Create a Boolean attribute property decorator.
  */
 export function Bool(
   value: boolean | null,

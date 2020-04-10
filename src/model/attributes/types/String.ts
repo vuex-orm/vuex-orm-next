@@ -3,7 +3,7 @@ import { Type } from './Type'
 
 export class String extends Type {
   /**
-   * Create a new string attribute instance.
+   * Create a new String attribute instance.
    */
   constructor(model: Model, value: string | null) {
     super(model, value)

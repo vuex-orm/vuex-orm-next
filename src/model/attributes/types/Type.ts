@@ -8,12 +8,12 @@ export abstract class Type extends Attribute {
   protected value: any
 
   /**
-   * Whether if the attribute accepts `null` value or not.
+   * Whether the attribute accepts `null` value or not.
    */
   protected isNullable: boolean = false
 
   /**
-   * Create a new type attribute instance.
+   * Create a new Type attribute instance.
    */
   constructor(model: Model, value: any = null) {
     super(model)

@@ -22,7 +22,7 @@ export class Connection<M extends Model> {
   }
 
   /**
-   * Get namespace for the modul
+   * Get namespace for the module.
    */
   private getNamespace(): { connection: string; entity: string } {
     const connection = this.store.$database.connection
@@ -41,7 +41,7 @@ export class Connection<M extends Model> {
   }
 
   /**
-   * Commit the store mutation.
+   * Commit a namespaced store mutation.
    */
   private commit(name: string, payload?: any): void {
     const { connection, entity } = this.getNamespace()
@@ -73,21 +73,22 @@ export class Connection<M extends Model> {
   }
 
   /**
-   * Commit `insert` change to the store.
+   * Commit `insert` mutation to the store.
    */
   insert(records: Element[]): void {
     this.commit('insert', this.mapElements(records))
   }
 
   /**
-   * Commit `update` change to the store.
+   * Commit `update` mutation to the store.
    */
   update(records: Element[]): void {
     this.commit('update', this.mapElements(records))
   }
 
   /**
-   * Convert the given array of records into records.
+   * Convert the given array of records into a dictionary of records keyed by
+   * it's primary key.
    */
   private mapElements(records: Element[]): Elements {
     return records.reduce<Elements>((carry, record) => {
@@ -97,14 +98,14 @@ export class Connection<M extends Model> {
   }
 
   /**
-   * Commit `delete` change to the store.
+   * Commit `delete` mutation to the store.
    */
   delete(ids: string[]): void {
     this.commit('delete', ids)
   }
 
   /**
-   * Commit `deleteAll` change to the store.
+   * Commit `deleteAll` mutation to the store.
    */
   deleteAll(): void {
     this.commit('deleteAll')

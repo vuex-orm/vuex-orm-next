@@ -16,7 +16,7 @@ export class Database {
 
   /**
    * The name of Vuex Module namespace. Vuex ORM will create Vuex Modules from
-   * the registered models and modules and define them under this namespace.
+   * the registered models, and modules, and define them under this namespace.
    */
   connection!: string
 
@@ -32,7 +32,7 @@ export class Database {
 
   /**
    * Whether the database has already been installed to Vuex or not.
-   * The model registration steps depend on its value.
+   * The model registration procedure depends on this flag.
    */
   started: boolean = false
 
@@ -77,14 +77,14 @@ export class Database {
   }
 
   /**
-   * Get the model.
+   * Get a model by the specified entity name.
    */
   getModel<M extends Model>(name: string): M {
     return this.models[name] as any
   }
 
   /**
-   * Get the schema.
+   * Get schema by the specified entity name.
    */
   getSchema(name: string): Normalizr.Entity {
     return this.schemas[name]

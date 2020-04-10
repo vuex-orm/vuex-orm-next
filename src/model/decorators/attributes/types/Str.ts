@@ -1,7 +1,7 @@
 import { PropertyDecorator, TypeOptions } from '../../Contracts'
 
 /**
- * Create a str decorator.
+ * Create a String attribute property decorator.
  */
 export function Str(
   value: string | null,

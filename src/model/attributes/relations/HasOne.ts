@@ -17,7 +17,7 @@ export class HasOne extends Relation {
   protected localKey: string
 
   /**
-   * Create a new has one relation instance.
+   * Create a new has-one relation instance.
    */
   constructor(
     parent: Model,
@@ -31,14 +31,14 @@ export class HasOne extends Relation {
   }
 
   /**
-   * Define the normalizr schema for the relationship.
+   * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
     return schema.one(this.related)
   }
 
   /**
-   * Attach the relational key to the given data.
+   * Attach the relational key to the given data object.
    */
   attach(id: string | number, record: Element, data: NormalizedData): void {
     const relatedElement = data[this.related.$entity]?.[id]

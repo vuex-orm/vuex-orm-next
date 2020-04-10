@@ -17,7 +17,7 @@ export class HasMany extends Relation {
   protected localKey: string
 
   /**
-   * Create a new has many relation instance.
+   * Create a new has-many relation instance.
    */
   constructor(
     parent: Model,
@@ -31,14 +31,14 @@ export class HasMany extends Relation {
   }
 
   /**
-   * Define the normalizr schema for the relationship.
+   * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
     return schema.many(this.related)
   }
 
   /**
-   * Attach the relational key to the given data.
+   * Attach the relational key to the given data object.
    */
   attach(
     ids: (string | number)[],

@@ -3,7 +3,7 @@ import { Type } from './Type'
 
 export class Number extends Type {
   /**
-   * Create a new number attribute instance.
+   * Create a new Number attribute instance.
    */
   constructor(model: Model, value: number | null) {
     super(model, value)

@@ -44,8 +44,8 @@ export class Model {
 
   /**
    * The registry for the model. It contains predefined model schema generated
-   * by the decorators, and gets evaluated and stored at `schema` property
-   * when registering models to the database
+   * by the property decorators and gets evaluated, and stored, on the `schema`
+   * property when registering models to the database.
    */
   protected static registries: ModelRegistries = {}
 
@@ -64,7 +64,7 @@ export class Model {
   }
 
   /**
-   * Build a schema by evaluating fields and registry.
+   * Build the schema by evaluating fields and registry.
    */
   static initializeSchema(): void {
     this.schemas[this.entity] = {}
@@ -90,7 +90,7 @@ export class Model {
   }
 
   /**
-   * Clear the list of booted models so they will be re-booted.
+   * Clear the list of booted models so they can be re-booted.
    */
   static clearBootedModels(): void {
     this.booted = {}
@@ -98,35 +98,35 @@ export class Model {
   }
 
   /**
-   * Create a new attr attribute instance.
+   * Create a new Attr attribute instance.
    */
   static attr(value: any): Attr {
     return new Attr(new this(), value)
   }
 
   /**
-   * Create a new string attribute instance.
+   * Create a new String attribute instance.
    */
   static string(value: string | null): Str {
     return new Str(new this(), value)
   }
 
   /**
-   * Create a new number attribute instance.
+   * Create a new Number attribute instance.
    */
   static number(value: number | null): Num {
     return new Num(new this(), value)
   }
 
   /**
-   * Create a new boolean attribute instance.
+   * Create a new Boolean attribute instance.
    */
   static boolean(value: boolean | null): Bool {
     return new Bool(new this(), value)
   }
 
   /**
-   * Create a new has one relation instance.
+   * Create a new HasOne relation instance.
    */
   static hasOne(
     related: typeof Model,
@@ -141,7 +141,7 @@ export class Model {
   }
 
   /**
-   * Create a new belongs to relation instance.
+   * Create a new BelongsTo relation instance.
    */
   static belongsTo(
     related: typeof Model,
@@ -156,7 +156,7 @@ export class Model {
   }
 
   /**
-   * Create a new has many relation instance.
+   * Create a new HasMany relation instance.
    */
   static hasMany(
     related: typeof Model,
@@ -171,7 +171,7 @@ export class Model {
   }
 
   /**
-   * Get the constructor for the model.
+   * Get the constructor for this model.
    */
   get $self(): typeof Model {
     return this.constructor as typeof Model
@@ -185,14 +185,14 @@ export class Model {
   }
 
   /**
-   * Get the entity for the model.
+   * Get the entity for this model.
    */
   get $entity(): string {
     return this.$self.entity
   }
 
   /**
-   * Get the primary key for the model.
+   * Get the primary key for this model.
    */
   get $primaryKey(): string {
     return this.$self.primaryKey
@@ -208,9 +208,9 @@ export class Model {
   }
 
   /**
-   * Create a new instance of the model. This method just provides a convenient
-   * way for us to generate fresh model instances of this current model. It's
-   * particularly useful during the hydration of new objects via the query.
+   * Create a new instance of this model. This method provides a convenient way
+   * to re-generate a fresh instance of this model. It's particularly useful
+   * during hydration through Query operations.
    */
   $newInstance(attributes?: Element, options?: ModelOptions): this {
     const model = new this.$self(attributes, options) as this
@@ -221,14 +221,14 @@ export class Model {
   }
 
   /**
-   * Get model fields for the model.
+   * Get the model fields for this model.
    */
   get $fields(): ModelFields {
     return this.$self.schemas[this.$entity]
   }
 
   /**
-   * Bootstrap the model.
+   * Bootstrap this model.
    */
   protected $boot(): void {
     if (!this.$self.booted[this.$entity]) {
@@ -239,15 +239,15 @@ export class Model {
   }
 
   /**
-   * Build a schema by evaluating fields and registry.
+   * Build the schema by evaluating fields and registry.
    */
   protected $initializeSchema(): void {
     this.$self.initializeSchema()
   }
 
   /**
-   * Fill the model by the given  Its default values will fill any
-   * missing field.
+   * Fill this model by the given attributes. Missing fields will be populated
+   * by the attributes default value.
    */
   $fill(attributes: Element = {}, options: ModelOptions = {}): this {
     const fillRelation = options.relations ?? true
@@ -267,7 +267,7 @@ export class Model {
   }
 
   /**
-   * Fill the model filed.
+   * Fill the given attribute with a given value specified by the given key.
    */
   protected $fillField(key: string, attr: Attribute, value: any): void {
     if (value !== undefined) {
@@ -291,7 +291,7 @@ export class Model {
   }
 
   /**
-   * Get the index id for the model or the given record.
+   * Get the index id of this model or for a given record.
    */
   $getIndexId(record?: Element): string {
     const target = record ?? this
@@ -300,14 +300,14 @@ export class Model {
   }
 
   /**
-   * Get the local key for the model.
+   * Get the local key for this model.
    */
   $getLocalKey(): string {
     return this.$primaryKey
   }
 
   /**
-   * Check if the model has any relations defined in the schema.
+   * Check if this model has any relations defined by the schema.
    */
   $hasRelation(): boolean {
     let result = false
@@ -353,7 +353,7 @@ export class Model {
   }
 
   /**
-   * Serialize given model POJO.
+   * Serialize this model, or the given model, as POJO.
    */
   $toJson(model?: Model, options: ModelOptions = {}): Element {
     model = model ?? this
@@ -380,7 +380,7 @@ export class Model {
   }
 
   /**
-   * Serialize given value.
+   * Serialize the given value.
    */
   protected serializeValue(v: any): any {
     if (v === null) {
@@ -399,14 +399,14 @@ export class Model {
   }
 
   /**
-   * Serialize an array into json.
+   * Serialize the given array to JSON.
    */
   protected serializeArray(a: any[]): any[] {
     return a.map((v) => this.serializeValue(v))
   }
 
   /**
-   * Serialize an object into json.
+   * Serialize the given object to JSON.
    */
   protected serializeObject(o: object): object {
     const obj = {}
@@ -419,7 +419,7 @@ export class Model {
   }
 
   /**
-   * Serialize given relation into json.
+   * Serialize the given relation to JSON.
    */
   protected serializeRelation(relation: Item): Element | null
   protected serializeRelation(relation: Collection): Element[]

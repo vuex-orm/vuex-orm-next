@@ -27,12 +27,12 @@ export class Repository<M extends Model> {
   protected store: Store<any>
 
   /**
-   * The model object.
+   * The model instance.
    */
   protected model: M
 
   /**
-   * Create a new repository instance.
+   * Create a new Repository instance.
    */
   constructor(store: Store<any>, model: M | Constructor<M>) {
     this.store = store
