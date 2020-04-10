@@ -1,4 +1,5 @@
 import './polyfills/Polyfills'
+import './types/vuex'
 
 export * from './data/Data'
 export * from './store/Store'

@@ -13,8 +13,7 @@
   },
 
   "dtsRollup": {
-    "enabled": true,
-    "untrimmedFilePath": "./dist/index.d.ts"
+    "enabled": false
   },
 
   "tsdocMetadata": {

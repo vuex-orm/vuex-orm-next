@@ -6,7 +6,7 @@
   "browser": "dist/vuex-orm.esm.js",
   "module": "dist/vuex-orm.esm-bundler.js",
   "unpkg": "dist/vuex-orm.global.js",
-  "typings": "dist/index.d.ts",
+  "typings": "dist/src/index.d.ts",
   "files": [
     "dist"
   ],

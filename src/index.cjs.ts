@@ -4,6 +4,13 @@ import { install } from './store/Store'
 import { Database } from './database/Database'
 import { Schema } from './schema/Schema'
 import { Model } from './model/Model'
+import { Attr } from './model/decorators/attributes/types/Attr'
+import { Str } from './model/decorators/attributes/types/Str'
+import { Num } from './model/decorators/attributes/types/Num'
+import { Bool } from './model/decorators/attributes/types/Bool'
+import { HasOne } from './model/decorators/attributes/relations/HasOne'
+import { BelongsTo } from './model/decorators/attributes/relations/BelongsTo'
+import { HasMany } from './model/decorators/attributes/relations/HasMany'
 import { Attribute } from './model/attributes/Attribute'
 import { Type } from './model/attributes/types/Type'
 import { Attr as AttrAttr } from './model/attributes/types/Attr'
@@ -23,6 +30,13 @@ export default {
   Database,
   Schema,
   Model,
+  Attr,
+  Str,
+  Num,
+  Bool,
+  HasOne,
+  BelongsTo,
+  HasMany,
   Attribute,
   Type,
   AttrAttr,

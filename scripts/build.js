@@ -47,8 +47,6 @@ function checkSize(file) {
 
 async function generateApiDocs() {
   await execa('yarn', ['build:dts'], { stdio: 'inherit' })
-
-  await fs.remove('dist/src')
 }
 
 run()
