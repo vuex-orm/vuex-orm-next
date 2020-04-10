@@ -13,7 +13,6 @@ import { Boolean as BooleanAttr } from './model/attributes/types/Boolean'
 import { Relation } from './model/attributes/relations/Relation'
 import { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
-import { mutations } from './modules/Mutations'
 import { Repository } from './repository/Repository'
 import { Interpretation } from './interpretation/Interpretation'
 import { Query } from './query/Query'
@@ -33,7 +32,6 @@ export default {
   Relation,
   HasOneAttr,
   HasManyAttr,
-  mutations,
   Repository,
   Interpretation,
   Query,
