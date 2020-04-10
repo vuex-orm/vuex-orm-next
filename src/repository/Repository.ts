@@ -11,6 +11,7 @@ import {
 import { Model } from '../model/Model'
 import { Interpretation } from '../interpretation/Interpretation'
 import { Query } from '../query/Query'
+import { OrderDirection } from '../query/Options'
 
 export type PersistMethod = 'insert' | 'merge'
 
@@ -74,6 +75,13 @@ export class Repository<M extends Model> {
    */
   orWhere(field: string, value: any): Query<M> {
     return this.query().orWhere(field, value)
+  }
+
+  /**
+   * Add an "order by" clause to the query.
+   */
+  orderBy(field: string, direction?: OrderDirection): Query<M> {
+    return this.query().orderBy(field, direction)
   }
 
   /**

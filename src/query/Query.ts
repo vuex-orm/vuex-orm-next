@@ -1,10 +1,16 @@
 import { Store } from 'vuex'
-import { isArray, isEmpty, groupBy } from '../support/Utils'
+import { isArray, isEmpty, orderBy, groupBy } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 import { Connection } from '../connection/Connection'
-import { Where, EagerLoad, EagerLoadConstraint } from './Options'
+import {
+  Where,
+  Order,
+  OrderDirection,
+  EagerLoad,
+  EagerLoadConstraint
+} from './Options'
 
 export class Query<M extends Model = Model> {
   /**
@@ -21,6 +27,11 @@ export class Query<M extends Model = Model> {
    * The where constraints for the query.
    */
   protected wheres: Where[] = []
+
+  /**
+   * The orderings for the query.
+   */
+  protected orders: Order[] = []
 
   /**
    * The maximum number of records to return.
@@ -89,6 +100,15 @@ export class Query<M extends Model = Model> {
    */
   orWhere(field: string, value: any): Query<M> {
     this.wheres.push({ field, value, boolean: 'or' })
+
+    return this
+  }
+
+  /**
+   * Add an "order by" clause to the query.
+   */
+  orderBy(field: string, direction: OrderDirection = 'asc'): Query<M> {
+    this.orders.push({ field, direction })
 
     return this
   }
@@ -203,6 +223,7 @@ export class Query<M extends Model = Model> {
     let models = this.getModels()
 
     models = this.filterWhere(models)
+    models = this.filterOrder(models)
     models = this.filterLimit(models)
 
     return models
@@ -246,6 +267,20 @@ export class Query<M extends Model = Model> {
     }
 
     return model[where.field] === where.value
+  }
+
+  /**
+   * Filter the given collection by the registered order conditions.
+   */
+  protected filterOrder(models: Collection<M>): Collection<M> {
+    if (this.orders.length === 0) {
+      return models
+    }
+
+    const fields = this.orders.map((order) => order.field)
+    const directions = this.orders.map((order) => order.direction)
+
+    return orderBy(models, fields, directions)
   }
 
   /**

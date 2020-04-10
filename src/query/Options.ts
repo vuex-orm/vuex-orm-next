@@ -11,6 +11,13 @@ export interface WhereGroup {
   or?: Where[]
 }
 
+export interface Order {
+  field: string
+  direction: OrderDirection
+}
+
+export type OrderDirection = 'asc' | 'desc'
+
 export interface EagerLoad {
   [name: string]: EagerLoadConstraint
 }
