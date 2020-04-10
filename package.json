@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vuex-orm/vuex-orm.git"
+    "url": "git+https://github.com/vuex-orm/vuex-orm-next.git"
   },
   "keywords": [
     "vue",
@@ -44,7 +44,7 @@
   "author": "Kia Ishii",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vuex-orm/vuex-orm/issues"
+    "url": "https://github.com/vuex-orm/vuex-orm-next/issues"
   },
   "peerDependencies": {
     "vuex": ">=3.1.0"
