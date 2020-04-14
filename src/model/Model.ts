@@ -64,15 +64,28 @@ export class Model {
   }
 
   /**
+   * Create a new model fields definition.
+   */
+  static fields(): ModelFields {
+    return {}
+  }
+
+  /**
    * Build the schema by evaluating fields and registry.
    */
   static initializeSchema(): void {
     this.schemas[this.entity] = {}
 
-    const registry = this.registries[this.entity]
+    const registry = {
+      ...this.fields(),
+      ...this.registries[this.entity]
+    }
 
     for (const key in registry) {
-      this.schemas[this.entity][key] = registry[key]()
+      const attribute = registry[key]
+
+      this.schemas[this.entity][key] =
+        typeof attribute === 'function' ? attribute() : attribute
     }
   }
 
