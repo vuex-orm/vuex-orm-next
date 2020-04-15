@@ -2,6 +2,11 @@ import { Store } from 'vuex'
 import { Element, Elements } from '../data/Data'
 import { Model } from '../model/Model'
 
+export interface ConnectionNamespace {
+  connection: string
+  entity: string
+}
+
 export class Connection<M extends Model> {
   /**
    * The store instance.
@@ -24,7 +29,7 @@ export class Connection<M extends Model> {
   /**
    * Get namespace for the module.
    */
-  private getNamespace(): { connection: string; entity: string } {
+  private getNamespace(): ConnectionNamespace {
     const connection = this.store.$database.connection
     const entity = this.model.$entity
 
