@@ -402,7 +402,7 @@ export class Query<M extends Model = Model> {
    * Destroy the models for the given id.
    */
   async destroy(id: string | number): Promise<Item<M>>
-  async destroy(ids: Array<string | number>): Promise<Collection<M>>
+  async destroy(ids: (string | number)[]): Promise<Collection<M>>
   async destroy(ids: any): Promise<any> {
     if (isArray(ids)) {
       return this.destroyMany(ids)
