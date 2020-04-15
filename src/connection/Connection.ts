@@ -59,14 +59,14 @@ export class Connection<M extends Model> {
   /**
    * Find a model by its primary key.
    */
-  find(id: string): Element | null {
+  find(id: string | number): Element | null {
     return this.getData()[id] ?? null
   }
 
   /**
    * Find multiple models by their primary keys.
    */
-  findIn(ids: string[]): Element[] {
+  findIn(ids: (string | number)[]): Element[] {
     const data = this.getData()
 
     return ids.map((id) => data[id])

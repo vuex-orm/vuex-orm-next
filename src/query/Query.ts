@@ -200,18 +200,14 @@ export class Query<M extends Model = Model> {
    * Find a record by its primary key.
    */
   findRaw(id: string | number): Element | null {
-    const indexId = this.normalizeIndexId(id)
-
-    return this.connection().find(indexId)
+    return this.connection().find(id)
   }
 
   /**
    * Find multiple records by their primary keys.
    */
   findInRaw(ids: (string | number)[]): Element[] {
-    const indexIds = this.normalizeIndexIds(ids)
-
-    return this.connection().findIn(indexIds)
+    return this.connection().findIn(ids)
   }
 
   /**
@@ -442,22 +438,6 @@ export class Query<M extends Model = Model> {
     this.connection().deleteAll()
 
     return models
-  }
-
-  /**
-   * Normalize the given index id. This method will convert the given key to
-   * the string since the index key must be a string.
-   */
-  protected normalizeIndexId(id: string | number): string {
-    return String(id)
-  }
-
-  /**
-   * Normalize the given index ids. This method will convert the given key to
-   * the string since the index key must be a string.
-   */
-  protected normalizeIndexIds(ids: (string | number)[]): string[] {
-    return ids.map((id) => String(id))
   }
 
   /**
