@@ -155,6 +155,22 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Get all models from the store. The difference with the `get` is that this
+   * method will not process any query chain. It'll always retrieve all models.
+   */
+  all(): Collection<M> {
+    const records = this.connection.get()
+
+    const collection = [] as Collection<M>
+
+    for (const id in records) {
+      collection.push(this.hydrate(records[id]))
+    }
+
+    return collection
+  }
+
+  /**
    * Retrieve models by processing whole query chain.
    */
   get(): Collection<M> {
@@ -211,26 +227,10 @@ export class Query<M extends Model = Model> {
   }
 
   /**
-   * Get all models from the state. The difference with the `get` is that this
-   * method will not process any query chain. It'll always retrieve all models.
-   */
-  getModels(): Collection<M> {
-    const records = this.connection.get()
-
-    const collection = [] as Collection<M>
-
-    for (const id in records) {
-      collection.push(this.hydrate(records[id]))
-    }
-
-    return collection
-  }
-
-  /**
    * Retrieve models by processing all filters set to the query chain.
    */
   select(): Collection<M> {
-    let models = this.getModels()
+    let models = this.all()
 
     models = this.filterWhere(models)
     models = this.filterOrder(models)
@@ -433,7 +433,7 @@ export class Query<M extends Model = Model> {
    * Delete all records in the store.
    */
   async deleteAll(): Promise<Collection<M>> {
-    const models = this.getModels()
+    const models = this.all()
 
     this.connection.deleteAll()
 
