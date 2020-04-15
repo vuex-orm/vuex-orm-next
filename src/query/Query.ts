@@ -32,6 +32,11 @@ export class Query<M extends Model = Model> {
   protected model: M
 
   /**
+   * The connection instance.
+   */
+  protected connection: Connection<M>
+
+  /**
    * The where constraints for the query.
    */
   protected wheres: Where<M, any>[] = []
@@ -62,6 +67,8 @@ export class Query<M extends Model = Model> {
   constructor(store: Store<any>, model: M) {
     this.store = store
     this.model = model
+
+    this.connection = new Connection(store, model)
   }
 
   /**
@@ -69,13 +76,6 @@ export class Query<M extends Model = Model> {
    */
   protected newQueryForRelation(relation: Relation): Query<Model> {
     return new Query(this.store, relation.getRelated().$setStore(this.store))
-  }
-
-  /**
-   * Create a new connection instance.
-   */
-  connection(): Connection<M> {
-    return new Connection(this.store, this.model)
   }
 
   /**
@@ -200,14 +200,14 @@ export class Query<M extends Model = Model> {
    * Find a record by its primary key.
    */
   findRaw(id: string | number): Element | null {
-    return this.connection().find(id)
+    return this.connection.find(id)
   }
 
   /**
    * Find multiple records by their primary keys.
    */
   findInRaw(ids: (string | number)[]): Element[] {
-    return this.connection().findIn(ids)
+    return this.connection.findIn(ids)
   }
 
   /**
@@ -215,7 +215,7 @@ export class Query<M extends Model = Model> {
    * method will not process any query chain. It'll always retrieve all models.
    */
   getModels(): Collection<M> {
-    const records = this.connection().get()
+    const records = this.connection.get()
 
     const collection = [] as Collection<M>
 
@@ -357,7 +357,7 @@ export class Query<M extends Model = Model> {
   async insert(records: Element[]): Promise<Collection<M>> {
     const models = this.hydrateMany(records)
 
-    this.connection().insert(this.dehydrate(models))
+    this.connection.insert(this.dehydrate(models))
 
     return models
   }
@@ -368,7 +368,7 @@ export class Query<M extends Model = Model> {
   async merge(records: Element[]): Promise<Collection<M>> {
     const models = this.getMergedModels(records)
 
-    this.connection().update(this.dehydrate(models))
+    this.connection.update(this.dehydrate(models))
 
     return models
   }
@@ -393,7 +393,7 @@ export class Query<M extends Model = Model> {
   async update(record: Element): Promise<Collection<M>> {
     const models = this.mergeModelsWithElement(this.get(), record)
 
-    this.connection().update(this.dehydrate(models))
+    this.connection.update(this.dehydrate(models))
 
     return models
   }
@@ -424,7 +424,7 @@ export class Query<M extends Model = Model> {
   async delete(): Promise<Collection<M>> {
     const models = this.get()
 
-    this.connection().delete(this.getIdsFromCollection(models))
+    this.connection.delete(this.getIdsFromCollection(models))
 
     return models
   }
@@ -435,7 +435,7 @@ export class Query<M extends Model = Model> {
   async deleteAll(): Promise<Collection<M>> {
     const models = this.getModels()
 
-    this.connection().deleteAll()
+    this.connection.deleteAll()
 
     return models
   }
