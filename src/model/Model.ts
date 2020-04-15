@@ -52,7 +52,7 @@ export class Model {
   /**
    * The array of booted models.
    */
-  protected static booted: { [name: string]: boolean } = {}
+  protected static booted: Record<string, boolean> = {}
 
   /**
    * Create a new model instance.
@@ -73,7 +73,7 @@ export class Model {
   /**
    * Build the schema by evaluating fields and registry.
    */
-  static initializeSchema(): void {
+  protected static initializeSchema(): void {
     this.schemas[this.entity] = {}
 
     const registry = {
@@ -441,10 +441,8 @@ export class Model {
       return null
     }
 
-    if (isArray(relation)) {
-      return relation.map((model) => model.$toJson())
-    }
-
-    return relation.$toJson()
+    return isArray(relation)
+      ? relation.map((model) => model.$toJson())
+      : relation.$toJson()
   }
 }
