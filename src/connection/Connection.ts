@@ -81,25 +81,14 @@ export class Connection<M extends Model> {
    * Commit `insert` mutation to the store.
    */
   insert(records: Element[]): void {
-    this.commit('insert', this.mapElements(records))
+    this.commit('insert', this.mapRecords(records))
   }
 
   /**
    * Commit `update` mutation to the store.
    */
   update(records: Element[]): void {
-    this.commit('update', this.mapElements(records))
-  }
-
-  /**
-   * Convert the given array of records into a dictionary of records keyed by
-   * it's primary key.
-   */
-  private mapElements(records: Element[]): Elements {
-    return records.reduce<Elements>((carry, record) => {
-      carry[this.model.$getIndexId(record)] = record
-      return carry
-    }, {})
+    this.commit('update', this.mapRecords(records))
   }
 
   /**
@@ -114,5 +103,16 @@ export class Connection<M extends Model> {
    */
   deleteAll(): void {
     this.commit('deleteAll')
+  }
+
+  /**
+   * Convert the given array of records into a dictionary of records keyed by
+   * it's primary key.
+   */
+  private mapRecords(records: Element[]): Elements {
+    return records.reduce<Elements>((carry, record) => {
+      carry[this.model.$getIndexId(record)] = record
+      return carry
+    }, {})
   }
 }
