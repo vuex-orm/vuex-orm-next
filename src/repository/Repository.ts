@@ -10,11 +10,6 @@ import {
   OrderDirection
 } from '../query/Options'
 
-export interface CollectionPromises {
-  indexes: string[]
-  promises: Promise<Collection<Model>>[]
-}
-
 export class Repository<M extends Model> {
   /**
    * The store instance.
