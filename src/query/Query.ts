@@ -6,9 +6,17 @@ import {
   orderBy,
   groupBy
 } from '../support/Utils'
-import { Element, Item, Collection } from '../data/Data'
+import {
+  Element,
+  Elements,
+  NormalizedData,
+  Item,
+  Collection,
+  Collections
+} from '../data/Data'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
+import { Interpreter } from '../interpreter/Interpreter'
 import { Connection } from '../connection/Connection'
 import {
   Where,
@@ -17,8 +25,14 @@ import {
   Order,
   OrderDirection,
   EagerLoad,
-  EagerLoadConstraint
+  EagerLoadConstraint,
+  PersistMethod
 } from './Options'
+
+export interface CollectionPromises {
+  indexes: string[]
+  promises: Promise<Collection<Model>>[]
+}
 
 export class Query<M extends Model = Model> {
   /**
@@ -30,6 +44,11 @@ export class Query<M extends Model = Model> {
    * The model object.
    */
   protected model: M
+
+  /**
+   * The interpreter instance.
+   */
+  protected interpreter: Interpreter<M>
 
   /**
    * The connection instance.
@@ -68,7 +87,15 @@ export class Query<M extends Model = Model> {
     this.store = store
     this.model = model
 
+    this.interpreter = new Interpreter(store, model)
     this.connection = new Connection(store, model)
+  }
+
+  /**
+   * Create a new query instance for the given model.
+   */
+  protected newQuery(model: string): Query<Model> {
+    return new Query(this.store, this.store.$database.getModel(model))
   }
 
   /**
@@ -209,7 +236,7 @@ export class Query<M extends Model = Model> {
    * Find multiple models by their primary keys.
    */
   findIn(ids: (string | number)[]): Collection<M> {
-    return this.hydrateMany(this.findInRaw(ids))
+    return this.hydrate(this.findInRaw(ids))
   }
 
   /**
@@ -354,34 +381,60 @@ export class Query<M extends Model = Model> {
   /**
    * Insert the given record to the store.
    */
-  async insert(records: Element[]): Promise<Collection<M>> {
-    const models = this.hydrateMany(records)
+  async insert(records: Element | Element[]): Promise<Collections> {
+    return this.persist('insert', records)
+  }
 
-    this.connection.insert(this.dehydrate(models))
+  /**
+   * Insert the given record to the store.
+   */
+  async add<E extends Element>(records: E[]): Promise<Collection<M>>
+  async add<E extends Element>(record: E): Promise<M>
+  async add(records: any): Promise<any> {
+    const models = this.hydrate(records)
+
+    this.connection.insert(models)
 
     return models
+  }
+
+  /**
+   * Update the given record to the store.
+   */
+  async update(records: Element | Element[]): Promise<Collections> {
+    return this.persist('update', records)
   }
 
   /**
    * Update records in the store by using the primary key of the given records.
    */
-  async merge(records: Element[]): Promise<Collection<M>> {
+  async merge(records: Element[]): Promise<Collection<M>>
+  async merge(record: Element): Promise<Item<M>>
+  async merge(records: any): Promise<any> {
     const models = this.getMergedModels(records)
 
-    this.connection.update(this.dehydrate(models))
+    if (models === null) {
+      return null
+    }
+
+    this.connection.update(models)
 
     return models
   }
 
   /**
-   * Get models by merging the records. This method will use the primary key
-   * in the records to fetch models and merge the given record to the model.
+   * Get models by merging the given records. This method will use the primary
+   * key in the records to fetch models and merge it with the record.
    */
-  protected getMergedModels(records: Element[]): Collection<M> {
-    return records.reduce<Collection<M>>((collection, record) => {
+  protected getMergedModels(records: Element[]): Collection<M>
+  protected getMergedModels(record: Element): Item<M>
+  protected getMergedModels(records: any): any {
+    const recorsArray = isArray(records) ? records : [records]
+
+    return recorsArray.reduce<Collection<M>>((collection, record) => {
       const model = this.find(this.model.$getIndexId(record))
 
-      model && collection.push(this.mergeModelWithElement(model, record))
+      model && collection.push(model.$fill(record))
 
       return collection
     }, [])
@@ -390,12 +443,105 @@ export class Query<M extends Model = Model> {
   /**
    * Update records in the store.
    */
-  async update(record: Element): Promise<Collection<M>> {
-    const models = this.mergeModelsWithElement(this.get(), record)
+  async revise(record: Element): Promise<Collection<M>> {
+    const models = this.get().map((model) => model.$fill(record))
 
-    this.connection.update(this.dehydrate(models))
+    this.connection.update(models)
 
     return models
+  }
+
+  /**
+   * Persist records to the store by the given method.
+   */
+  protected persist(
+    method: PersistMethod,
+    records: Element | Element[]
+  ): Promise<Collections> {
+    const normalizedData = this.interpret(records)
+
+    const { indexes, promises } = this.createCollectionPromises(
+      method,
+      normalizedData
+    )
+
+    return this.resolveCollectionPromises(indexes, promises)
+  }
+
+  /**
+   * Persist normalized records with the given method.
+   */
+  protected persistRecords(
+    method: PersistMethod,
+    records: Elements
+  ): Promise<Collection<M>> {
+    const mappedRecords = this.mapNormalizedData(records)
+
+    switch (method) {
+      case 'insert':
+        return this.add(mappedRecords)
+      case 'update':
+        return this.merge(mappedRecords)
+      default:
+        throw new Error(`[Vuex ORM] Invalid persist method: \`${method}\``)
+    }
+  }
+
+  /**
+   * Convert normalized data into an array of records.
+   */
+  protected mapNormalizedData(records: Elements): Element[] {
+    const items = [] as Element[]
+
+    for (const id in records) {
+      items.push(records[id])
+    }
+
+    return items
+  }
+
+  /**
+   * Interpret the given record.
+   */
+  protected interpret(records: Element | Element[]): NormalizedData {
+    return this.interpreter.process(records)
+  }
+
+  /**
+   * Create collection promises for the given normalized data.
+   */
+  protected createCollectionPromises(
+    method: PersistMethod,
+    data: NormalizedData
+  ): CollectionPromises {
+    const indexes: string[] = []
+    const promises: Promise<Collection<any>>[] = []
+
+    for (const entity in data) {
+      const records = data[entity]
+      const query = this.newQuery(entity)
+
+      indexes.push(entity)
+      promises.push(query.persistRecords(method, records))
+    }
+
+    return { indexes, promises }
+  }
+
+  /**
+   * Resolve all collection promises and create a new collections object.
+   */
+  protected async resolveCollectionPromises(
+    indexes: string[],
+    promises: Promise<Collection<any>>[]
+  ): Promise<Collections> {
+    return (await Promise.all(promises)).reduce<Collections>(
+      (collections, collection, index) => {
+        collections[indexes[index]] = collection
+        return collections
+      },
+      {}
+    )
   }
 
   /**
@@ -450,15 +596,12 @@ export class Query<M extends Model = Model> {
   /**
    * Instantiate new models with the given record.
    */
-  protected hydrate(record: Element): M {
-    return this.model.$newInstance(record, { relations: false })
-  }
-
-  /**
-   * Instantiate new models with the given collection of records.
-   */
-  protected hydrateMany(records: Element[]): Collection<M> {
-    return records.map((record) => this.hydrate(record))
+  protected hydrate(records: Element[]): Collection<M>
+  protected hydrate(record: Element): M
+  protected hydrate(records: any): any {
+    return isArray(records)
+      ? records.map((record) => this.hydrate(record))
+      : this.model.$newInstance(records, { relations: false })
   }
 
   /**
@@ -466,22 +609,5 @@ export class Query<M extends Model = Model> {
    */
   protected dehydrate(models: Collection<M>): Element[] {
     return models.map((model) => model.$getAttributes())
-  }
-
-  /**
-   * Merge the model with the given record.
-   */
-  protected mergeModelWithElement(model: M, record: Element): M {
-    return model.$fill(record)
-  }
-
-  /**
-   * Merge models with the given record.
-   */
-  protected mergeModelsWithElement(
-    models: Collection<M>,
-    record: Element
-  ): Collection<M> {
-    return models.map((model) => model.$fill(record))
   }
 }

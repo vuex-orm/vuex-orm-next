@@ -1,13 +1,6 @@
 import { Store } from 'vuex'
 import { Constructor } from '../types'
-import {
-  Element,
-  Elements,
-  NormalizedData,
-  Item,
-  Collection,
-  Collections
-} from '../data/Data'
+import { Element, Item, Collection, Collections } from '../data/Data'
 import { Model } from '../model/Model'
 import { Interpreter } from '../interpreter/Interpreter'
 import { Query } from '../query/Query'
@@ -16,8 +9,6 @@ import {
   WhereSecondaryClosure,
   OrderDirection
 } from '../query/Options'
-
-export type PersistMethod = 'insert' | 'merge'
 
 export interface CollectionPromises {
   indexes: string[]
@@ -38,19 +29,10 @@ export class Repository<M extends Model> {
   /**
    * Create a new Repository instance.
    */
-  constructor(store: Store<any>, model: M | Constructor<M>) {
+  constructor(store: Store<any>, model: Constructor<M>) {
     this.store = store
 
-    this.model = model instanceof Model ? model : new model().$setStore(store)
-  }
-
-  /**
-   * Create a new Repository instance for the given entity.
-   */
-  newRepository<T extends Model>(entity: string): Repository<T> {
-    const model = this.store.$database.getModel(entity)
-
-    return new Repository(this.store, model) as any
+    this.model = new model().$setStore(store)
   }
 
   /**
@@ -81,13 +63,9 @@ export class Repository<M extends Model> {
    * Add an "or where" clause to the query.
    */
   orWhere<T extends keyof M>(
-    field: T,
-    value: WhereSecondaryClosure<M, T>
-  ): Query<M>
-
-  orWhere<T extends keyof M>(field: T, value: M[T] | M[T][]): Query<M>
-
-  orWhere(field: any, value: any): any {
+    field: WherePrimaryClosure<M> | T,
+    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  ): Query<M> {
     return this.query().orWhere(field, value)
   }
 
@@ -124,99 +102,15 @@ export class Repository<M extends Model> {
   /**
    * Insert the given record to the store.
    */
-  insert(record: Element | Element[]): Promise<Collections> {
-    return this.persist('insert', record)
+  insert(records: Element | Element[]): Promise<Collections> {
+    return this.query().insert(records)
   }
 
   /**
    * Update records in the store.
    */
-  update(record: Element | Element[]): Promise<Collections> {
-    return this.persist('merge', record)
-  }
-
-  /**
-   * Persist records to the store by the given method.
-   */
-  protected persist(
-    method: PersistMethod,
-    record: Element | Element[]
-  ): Promise<Collections> {
-    const normalizedData = this.interpret(record)
-
-    const { indexes, promises } = this.createCollectionPromises(
-      method,
-      normalizedData
-    )
-
-    return this.resolveCollectionPromises(indexes, promises)
-  }
-
-  /**
-   * Persist normalized records with the given method.
-   */
-  protected persistElements(
-    method: PersistMethod,
-    records: Elements
-  ): Promise<Collection<M>> {
-    return this.query()[method](this.mapNormalizedData(records))
-  }
-
-  /**
-   * Create collection promises for the given normalized data.
-   */
-  protected createCollectionPromises(
-    method: PersistMethod,
-    data: NormalizedData
-  ): CollectionPromises {
-    const indexes: string[] = []
-    const promises: Promise<Collection<any>>[] = []
-
-    for (const entity in data) {
-      const records = data[entity]
-      const repository = this.newRepository(entity)
-
-      indexes.push(entity)
-      promises.push(repository.persistElements(method, records))
-    }
-
-    return { indexes, promises }
-  }
-
-  /**
-   * Resolve all collection promises and create a new collections object.
-   */
-  protected async resolveCollectionPromises(
-    indexes: string[],
-    promises: Promise<Collection<any>>[]
-  ): Promise<Collections> {
-    return (await Promise.all(promises)).reduce<Collections>(
-      (collections, collection, index) => {
-        collections[indexes[index]] = collection
-        return collections
-      },
-      {}
-    )
-  }
-
-  /**
-   * Convert normalized data into an array of records.
-   */
-  protected mapNormalizedData(records: Elements): Element[] {
-    const items = [] as Element[]
-
-    for (const id in records) {
-      items.push(records[id])
-    }
-
-    return items
-  }
-
-  /**
-   * Normalize the given record.
-   */
-  protected interpret(records: Element | Element[]): NormalizedData {
-    return this.interpreter().process(records)
+  update(records: Element | Element[]): Promise<Collections> {
+    return this.query().update(records)
   }
 
   /**

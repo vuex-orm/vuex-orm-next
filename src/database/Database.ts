@@ -80,7 +80,7 @@ export class Database {
    * Get a model by the specified entity name.
    */
   getModel<M extends Model>(name: string): M {
-    return this.models[name] as any
+    return this.models[name] as M
   }
 
   /**

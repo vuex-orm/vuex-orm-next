@@ -1,5 +1,6 @@
 import { Store } from 'vuex'
-import { Element, Elements } from '../data/Data'
+import { isArray } from '../support/Utils'
+import { Element, Elements, Collection } from '../data/Data'
 import { Model } from '../model/Model'
 
 export interface ConnectionNamespace {
@@ -80,15 +81,15 @@ export class Connection<M extends Model> {
   /**
    * Commit `insert` mutation to the store.
    */
-  insert(records: Element[]): void {
-    this.commit('insert', this.mapRecords(records))
+  insert(models: M | Collection<M>): void {
+    this.commit('insert', this.mapModels(models))
   }
 
   /**
    * Commit `update` mutation to the store.
    */
-  update(records: Element[]): void {
-    this.commit('update', this.mapRecords(records))
+  update(models: M | Collection<M>): void {
+    this.commit('update', this.mapModels(models))
   }
 
   /**
@@ -109,10 +110,12 @@ export class Connection<M extends Model> {
    * Convert the given array of records into a dictionary of records keyed by
    * it's primary key.
    */
-  private mapRecords(records: Element[]): Elements {
-    return records.reduce<Elements>((carry, record) => {
-      carry[this.model.$getIndexId(record)] = record
-      return carry
+  private mapModels(models: M | Collection<M>): Elements {
+    const modelArray = isArray(models) ? models : [models]
+
+    return modelArray.reduce<Elements>((records, model) => {
+      records[model.$getIndexId()] = model.$getAttributes()
+      return records
     }, {})
   }
 }

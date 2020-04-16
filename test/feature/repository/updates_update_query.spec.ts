@@ -21,7 +21,7 @@ describe('feature/repository/updates_update_query', () => {
       }
     })
 
-    await store.$repo(User).where('name', 'Jane Doe').update({ age: 50 })
+    await store.$repo(User).where('name', 'Jane Doe').revise({ age: 50 })
 
     assertState(store, {
       users: {
@@ -47,7 +47,7 @@ describe('feature/repository/updates_update_query', () => {
       .$repo(User)
       .where('name', 'Jane Doe')
       .orWhere('age', 20)
-      .update({ age: 50 })
+      .revise({ age: 50 })
 
     assertState(store, {
       users: {
