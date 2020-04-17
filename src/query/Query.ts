@@ -53,7 +53,7 @@ export class Query<M extends Model = Model> {
   /**
    * The connection instance.
    */
-  protected connection: Connection<M>
+  protected connection: Connection
 
   /**
    * The where constraints for the query.
@@ -88,7 +88,7 @@ export class Query<M extends Model = Model> {
     this.model = model
 
     this.interpreter = new Interpreter(store, model)
-    this.connection = new Connection(store, model)
+    this.connection = new Connection(store, model.$entity)
   }
 
   /**
@@ -393,7 +393,7 @@ export class Query<M extends Model = Model> {
   async add(records: any): Promise<any> {
     const models = this.hydrate(records)
 
-    this.connection.insert(models)
+    this.connection.insert(this.compile(models))
 
     return models
   }
@@ -417,7 +417,7 @@ export class Query<M extends Model = Model> {
       return null
     }
 
-    this.connection.update(models)
+    this.connection.update(this.compile(models))
 
     return models
   }
@@ -446,7 +446,7 @@ export class Query<M extends Model = Model> {
   async revise(record: Element): Promise<Collection<M>> {
     const models = this.get().map((model) => model.$fill(record))
 
-    this.connection.update(models)
+    this.connection.update(this.compile(models))
 
     return models
   }
@@ -609,5 +609,18 @@ export class Query<M extends Model = Model> {
    */
   protected dehydrate(models: Collection<M>): Element[] {
     return models.map((model) => model.$getAttributes())
+  }
+
+  /**
+   * Convert given models into an indexed object that is ready to be saved to
+   * the store.
+   */
+  protected compile(models: M | Collection<M>): Elements {
+    const modelArray = isArray(models) ? models : [models]
+
+    return modelArray.reduce<Elements>((records, model) => {
+      records[model.$getIndexId()] = model.$getAttributes()
+      return records
+    }, {})
   }
 }
