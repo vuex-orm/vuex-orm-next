@@ -129,8 +129,8 @@ export class Query<M extends Model = Model> {
   /**
    * Add a where clause on the primary key to the query.
    */
-  whereId<T extends keyof M>(ids: M[T] | M[T][]): this {
-    return this.where(this.model.$getPrimaryKey() as T, ids)
+  whereId(ids: string | number | (string | number)[]): this {
+    return this.where(this.model.$getKeyName() as any, ids)
   }
 
   /**
@@ -214,7 +214,7 @@ export class Query<M extends Model = Model> {
    * Execute the query and get the first result.
    */
   first(): Item<M> {
-    return this.limit(1).get()[0]
+    return this.limit(1).get()[0] ?? null
   }
 
   /**
@@ -223,34 +223,36 @@ export class Query<M extends Model = Model> {
   find(id: string | number): Item<M>
   find(ids: (string | number)[]): Collection<M>
   find(ids: any): any {
-    if (isArray(ids)) {
-      return this.findIn(ids)
-    }
-
-    const record = this.findRaw(ids)
-
-    return record ? this.hydrate(record) : null
+    return isArray(ids) ? this.findIn(ids) : this.whereId(ids).first()
   }
 
   /**
    * Find multiple models by their primary keys.
    */
   findIn(ids: (string | number)[]): Collection<M> {
-    return this.hydrate(this.findInRaw(ids))
+    return this.whereId(ids).get()
   }
 
   /**
-   * Find a record by its primary key.
+   * Get models by given index ids.
    */
-  findRaw(id: string | number): Element | null {
-    return this.connection.find(id)
+  protected pick(id: string): Item<M>
+  protected pick(ids: string[]): Collection<M>
+  protected pick(ids: any): any {
+    if (isArray(ids)) {
+      return this.pickIn(ids)
+    }
+
+    const record = this.connection.find(ids)
+
+    return record ? this.hydrate(record) : null
   }
 
   /**
-   * Find multiple records by their primary keys.
+   * Get models by given index ids.
    */
-  findInRaw(ids: (string | number)[]): Element[] {
-    return this.connection.findIn(ids)
+  protected pickIn(ids: string[]): Collection<M> {
+    return this.hydrate(this.connection.findIn(ids))
   }
 
   /**
@@ -432,7 +434,7 @@ export class Query<M extends Model = Model> {
     const recorsArray = isArray(records) ? records : [records]
 
     return recorsArray.reduce<Collection<M>>((collection, record) => {
-      const model = this.find(this.model.$getIndexId(record))
+      const model = this.pick(this.model.$getIndexId(record))
 
       model && collection.push(model.$fill(record))
 
@@ -560,7 +562,7 @@ export class Query<M extends Model = Model> {
   /**
    * Destroy the models for the given id.
    */
-  async destroyMany<T extends keyof M>(ids: M[T][]): Promise<Collection<M>> {
+  async destroyMany(ids: (string | number)[]): Promise<Collection<M>> {
     return this.whereId(ids).delete()
   }
 
@@ -570,7 +572,7 @@ export class Query<M extends Model = Model> {
   async delete(): Promise<Collection<M>> {
     const models = this.get()
 
-    this.connection.delete(this.getIdsFromCollection(models))
+    this.connection.delete(this.getIndexIdsFromCollection(models))
 
     return models
   }
@@ -589,7 +591,7 @@ export class Query<M extends Model = Model> {
   /**
    * Get an array of ids from the given collection.
    */
-  protected getIdsFromCollection(models: Collection<M>): string[] {
+  protected getIndexIdsFromCollection(models: Collection<M>): string[] {
     return models.map((model) => model.$getIndexId())
   }
 

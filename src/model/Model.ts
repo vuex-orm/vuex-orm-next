@@ -299,7 +299,7 @@ export class Model {
   /**
    * Get the primary key field name.
    */
-  $getPrimaryKey(): string {
+  $getKeyName(): string {
     return this.$primaryKey
   }
 

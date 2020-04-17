@@ -46,16 +46,16 @@ export class Connection {
   }
 
   /**
-   * Find a model by its primary key.
+   * Find a model by its index id.
    */
-  find(id: string | number): Element | null {
+  find(id: string): Element | null {
     return this.get()[id] ?? null
   }
 
   /**
-   * Find multiple models by their primary keys.
+   * Find multiple models by their index ids.
    */
-  findIn(ids: (string | number)[]): Element[] {
+  findIn(ids: string[]): Element[] {
     const data = this.get()
 
     return ids.map((id) => data[id])
