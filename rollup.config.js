@@ -6,8 +6,8 @@ import ts from 'rollup-plugin-typescript2'
 import { terser } from 'rollup-plugin-terser'
 
 const configs = [
-  { input: 'src/index.ts', file: 'dist/vuex-orm.esm.js', format: 'es', browser: true, env: 'development' },
-  { input: 'src/index.ts', file: 'dist/vuex-orm.esm.prod.js', format: 'es', browser: true, env: 'production' },
+  { input: 'src/index.ts', file: 'dist/vuex-orm.esm-browser.js', format: 'es', browser: true, env: 'development' },
+  { input: 'src/index.ts', file: 'dist/vuex-orm.esm-browser.prod.js', format: 'es', browser: true, env: 'production' },
   { input: 'src/index.ts', file: 'dist/vuex-orm.esm-bundler.js', format: 'es', env: 'development' },
   { input: 'src/index.cjs.ts', file: 'dist/vuex-orm.global.js', format: 'iife', env: 'development' },
   { input: 'src/index.cjs.ts', file: 'dist/vuex-orm.global.prod.js', format: 'iife', minify: true, env: 'production' },

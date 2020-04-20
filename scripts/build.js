@@ -5,8 +5,8 @@ const { gzipSync } = require('zlib')
 const { compress } = require('brotli')
 
 const files = [
-  'dist/vuex-orm.esm.js',
-  'dist/vuex-orm.esm.prod.js',
+  'dist/vuex-orm.esm-browser.js',
+  'dist/vuex-orm.esm-browser.prod.js',
   'dist/vuex-orm.esm-bundler.js',
   'dist/vuex-orm.global.js',
   'dist/vuex-orm.global.prod.js',

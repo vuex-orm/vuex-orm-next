@@ -3,9 +3,10 @@
   "version": "1.0.0-draft.1",
   "description": "The Vuex plugin to enable Object-Relational Mapping access to the Vuex Store.",
   "main": "dist/vuex-orm.cjs.js",
-  "browser": "dist/vuex-orm.esm.js",
+  "browser": "dist/vuex-orm.esm-browser.js",
   "module": "dist/vuex-orm.esm-bundler.js",
   "unpkg": "dist/vuex-orm.global.js",
+  "jsdelivr": "dist/vuex-orm.global.js",
   "typings": "dist/src/index.d.ts",
   "files": [
     "dist"
