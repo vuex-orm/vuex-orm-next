@@ -39,6 +39,9 @@ export class Interpreter<M extends Model> {
     return normalizedData
   }
 
+  /**
+   * Normalize the given data.
+   */
   private normalize(data: Element | Element[]): NormalizedData {
     const schema = isArray(data) ? [this.getSchema()] : this.getSchema()
 
