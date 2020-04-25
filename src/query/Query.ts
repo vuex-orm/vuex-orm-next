@@ -431,9 +431,9 @@ export class Query<M extends Model = Model> {
   protected getMergedModels(records: Element[]): Collection<M>
   protected getMergedModels(record: Element): Item<M>
   protected getMergedModels(records: any): any {
-    const recorsArray = isArray(records) ? records : [records]
+    const recordsArray = isArray(records) ? records : [records]
 
-    return recorsArray.reduce<Collection<M>>((collection, record) => {
+    return recordsArray.reduce<Collection<M>>((collection, record) => {
       const model = this.pick(this.model.$getIndexId(record))
 
       model && collection.push(model.$fill(record))
