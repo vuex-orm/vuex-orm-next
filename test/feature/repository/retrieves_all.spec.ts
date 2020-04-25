@@ -33,7 +33,7 @@ describe('feature/repository/retrieves_all', () => {
       { id: 3, name: 'Johnny Doe' }
     ]
 
-    expect(users.length).toBe(3)
+    expect(users).toHaveLength(3)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })

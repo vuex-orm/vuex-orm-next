@@ -37,7 +37,7 @@ describe('feature/repository/retrieves_where', () => {
       { id: 2, name: 'Jane Doe', age: 30 }
     ]
 
-    expect(users.length).toBe(2)
+    expect(users).toHaveLength(2)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })
@@ -57,7 +57,7 @@ describe('feature/repository/retrieves_where', () => {
 
     const expected = [{ id: 2, name: 'Jane Doe', age: 30 }]
 
-    expect(users.length).toBe(1)
+    expect(users).toHaveLength(1)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })

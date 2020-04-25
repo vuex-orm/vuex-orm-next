@@ -34,7 +34,7 @@ describe('feature/repository/retrieves_order_by', () => {
       { id: 1, name: 'James', age: 40 }
     ]
 
-    expect(users.length).toBe(3)
+    expect(users).toHaveLength(3)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })
@@ -58,7 +58,7 @@ describe('feature/repository/retrieves_order_by', () => {
       { id: 2, name: 'Andy', age: 30 }
     ]
 
-    expect(users.length).toBe(3)
+    expect(users).toHaveLength(3)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })
@@ -86,7 +86,7 @@ describe('feature/repository/retrieves_order_by', () => {
       { id: 2, name: 'Andy', age: 30 }
     ]
 
-    expect(users.length).toBe(5)
+    expect(users).toHaveLength(5)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })

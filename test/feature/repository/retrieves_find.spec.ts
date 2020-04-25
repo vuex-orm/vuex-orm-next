@@ -32,7 +32,7 @@ describe('feature/repository/retrieves_find', () => {
     assertModel(user, { id: 2, name: 'Jane Doe' })
   })
 
-  it('returns `null` if the reocrd is not found', () => {
+  it('returns `null` if the record is not found', () => {
     const store = createStore([User])
 
     fillState(store, {
