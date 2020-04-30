@@ -95,6 +95,17 @@ export class Repository<M extends Model> {
   }
 
   /**
+   * Create a new model instance. This method will not save the model to the
+   * store. It's pretty much the alternative to `new Model()`, but it injects
+   * the store instance to support model instance methods in SSR environment.
+   */
+  make(attributes?: Element): M {
+    return this.model.$newInstance(attributes, {
+      relations: false
+    })
+  }
+
+  /**
    * Insert the given record to the store.
    */
   insert(records: Element | Element[]): Promise<Collections> {
