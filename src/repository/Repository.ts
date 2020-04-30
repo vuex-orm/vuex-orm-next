@@ -2,7 +2,6 @@ import { Store } from 'vuex'
 import { Constructor } from '../types'
 import { Element, Item, Collection, Collections } from '../data/Data'
 import { Model } from '../model/Model'
-import { Interpreter } from '../interpreter/Interpreter'
 import { Query } from '../query/Query'
 import {
   WherePrimaryClosure,
@@ -26,15 +25,7 @@ export class Repository<M extends Model> {
    */
   constructor(store: Store<any>, model: Constructor<M>) {
     this.store = store
-
     this.model = new model().$setStore(store)
-  }
-
-  /**
-   * Create a new Interpreter instance.
-   */
-  interpreter(): Interpreter<M> {
-    return new Interpreter(this.store, this.model)
   }
 
   /**
