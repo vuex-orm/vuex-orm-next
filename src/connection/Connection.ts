@@ -83,9 +83,9 @@ export class Connection {
   }
 
   /**
-   * Commit `deleteAll` mutation to the store.
+   * Commit `flush` mutation to the store.
    */
-  deleteAll(): void {
-    this.commit('deleteAll')
+  flush(): void {
+    this.commit('flush')
   }
 }

@@ -580,10 +580,10 @@ export class Query<M extends Model = Model> {
   /**
    * Delete all records in the store.
    */
-  async deleteAll(): Promise<Collection<M>> {
+  async flush(): Promise<Collection<M>> {
     const models = this.all()
 
-    this.connection.deleteAll()
+    this.connection.flush()
 
     return models
   }

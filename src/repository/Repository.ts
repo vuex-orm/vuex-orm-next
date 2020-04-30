@@ -120,7 +120,7 @@ export class Repository<M extends Model> {
   /**
    * Delete all records in the store.
    */
-  deleteAll(): Promise<Collection<M>> {
-    return this.query().deleteAll()
+  flush(): Promise<Collection<M>> {
+    return this.query().flush()
   }
 }

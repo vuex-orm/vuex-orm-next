@@ -7,7 +7,7 @@ export interface Mutations<S extends State> extends MutationTree<S> {
   insert(state: S, records: Elements): void
   update(state: S, records: Elements): void
   delete(state: S, ids: string[]): void
-  deleteAll(state: S): void
+  flush(state: S): void
 }
 
 /**
@@ -49,7 +49,7 @@ function destroy(state: State, ids: string[]): void {
 /**
  * Commit `deleteAll` change to the store.
  */
-function destroyAll(state: State): void {
+function flush(state: State): void {
   state.data = {}
 }
 
@@ -58,5 +58,5 @@ export const mutations = {
   insert,
   update,
   delete: destroy,
-  deleteAll: destroyAll
+  flush
 }

@@ -1,7 +1,7 @@
 import { createStore, fillState, assertState } from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_delete_all', () => {
+describe('feature/repository/deletes_flush', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -20,7 +20,7 @@ describe('feature/repository/deletes_delete_all', () => {
       }
     })
 
-    await store.$repo(User).deleteAll()
+    await store.$repo(User).flush()
 
     assertState(store, {
       users: {}
