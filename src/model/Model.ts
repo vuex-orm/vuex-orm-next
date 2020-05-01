@@ -195,8 +195,8 @@ export class Model {
    */
   get $store(): Store<any> {
     assert(this._store !== undefined, [
-      'The store instance is not injected into the model instance. You might',
-      'be trying to instantiate the model directly. Please use',
+      'A Vuex Store instance is not injected into the model instance.',
+      'You might be trying to instantiate the model directly. Please use',
       '`repository.make` method to create a new model instance.'
     ])
 
