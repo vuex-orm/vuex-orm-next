@@ -1,5 +1,5 @@
 import { Store } from 'vuex'
-import { isArray } from '../support/Utils'
+import { isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
@@ -194,6 +194,12 @@ export class Model {
    * Get the store instance.
    */
   get $store(): Store<any> {
+    assert(this._store !== undefined, [
+      'A Vuex Store instance is not injected into the model instance.',
+      'You might be trying to instantiate the model directly. Please use',
+      '`repository.make` method to create a new model instance.'
+    ])
+
     return this._store
   }
 
