@@ -3,6 +3,7 @@ import { Store, Plugin } from 'vuex'
 import { Database } from '../database/Database'
 import { Model } from '../model/Model'
 import { Repository } from '../repository/Repository'
+import { plugins, components } from '../plugin/Plugin'
 
 export interface InstallOptions {
   namespace?: string
@@ -39,11 +40,24 @@ function mixin(
   database: Database,
   options: FilledInstallOptions
 ): void {
+  installPlugins(store, database)
+
   connectDatabase(store, database, options)
 
   mixinRepoFunction(store)
 
   startDatabase(store)
+}
+
+/**
+ * Execute registered plugins.
+ */
+function installPlugins(store: Store<any>, database: Database): void {
+  plugins.forEach((plugin) => {
+    const { func, options } = plugin
+
+    func.install(store, database, components, options)
+  })
 }
 
 /**
