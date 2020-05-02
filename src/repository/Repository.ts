@@ -1,4 +1,5 @@
 import { Store } from 'vuex'
+import { error } from '../support/Utils'
 import { Constructor } from '../types'
 import { Element, Item, Collection, Collections } from '../data/Data'
 import { Model } from '../model/Model'
@@ -9,7 +10,14 @@ import {
   OrderDirection
 } from '../query/Options'
 
-export class Repository<M extends Model> {
+export class Repository<M extends Model = Model> {
+  /**
+   * A special flag to indicate if this is the repository class or not. It's
+   * used when retrieving repository instance from `store.$repo()` method to
+   * determine whether the passed in class is either a repository or a model.
+   */
+  static _isRepository: boolean = true
+
   /**
    * The store instance.
    */
@@ -18,21 +26,78 @@ export class Repository<M extends Model> {
   /**
    * The model instance.
    */
-  protected model: M
+  protected model!: M
+
+  /**
+   * The model object to be used for the custom repository.
+   */
+  use?: typeof Model
 
   /**
    * Create a new Repository instance.
    */
-  constructor(store: Store<any>, model: Constructor<M>) {
+  constructor(store: Store<any>) {
     this.store = store
-    this.model = new model().$setStore(store)
+  }
+
+  /**
+   * Initialize the repository by setting the model instance.
+   */
+  initialize(model?: Constructor<M>): this {
+    // If there's a model passed in, just use that and return immediately.
+    if (model) {
+      this.model = new model().$setStore(this.store)
+
+      return this
+    }
+
+    // If no model was passed to the initializer, that means the user has
+    // passed repository to the `store.$repo` method instead of a model.
+    // In this case, we'll check if the user has set model to the `use`
+    // property and instantiate that.
+    if (this.use) {
+      this.model = (new this.use() as M).$setStore(this.store)
+
+      return this
+    }
+
+    // Else just return for now. If the user tries to call methods that require
+    // a model, the error will be thrown at that time.
+    return this
+  }
+
+  /**
+   * Get the model instance. If the model is not registered to the repository,
+   * it will throw an error. It happens when users use a custom repository
+   * without setting `use` property.
+   */
+  getModel(): M {
+    if (!this.model) {
+      error([
+        'The model is not registered. Please define the model to be used at',
+        '`use` property of the repository class.'
+      ])
+    }
+
+    return this.model
+  }
+
+  /**
+   * Create a new repository with the given model.
+   */
+  repo<M extends Model>(model: Constructor<M>): Repository<M>
+  repo<R extends Repository<any>>(repository: Constructor<R>): R
+  repo(modelOrRepository: any): any {
+    return modelOrRepository._isRepository
+      ? new modelOrRepository(this.store).initialize()
+      : new Repository(this.store).initialize(modelOrRepository)
   }
 
   /**
    * Create a new Query instance.
    */
   query(): Query<M> {
-    return new Query(this.store, this.model)
+    return new Query(this.store, this.getModel())
   }
 
   /**
@@ -91,7 +156,7 @@ export class Repository<M extends Model> {
    * the store instance to support model instance methods in SSR environment.
    */
   make(attributes?: Element): M {
-    return this.model.$newInstance(attributes, {
+    return this.getModel().$newInstance(attributes, {
       relations: false
     })
   }
