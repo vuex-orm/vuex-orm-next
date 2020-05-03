@@ -120,11 +120,15 @@ export class Database {
   private createModule<M extends Model>(model: M): void {
     const preserveState = !!this.store.state[this.connection][model.$entity]
 
-    this.store.registerModule([this.connection, model.$entity], {
-      namespaced: true,
-      state: this.createState(),
-      mutations: this.createMutations()
-    }, { preserveState })
+    this.store.registerModule(
+      [this.connection, model.$entity],
+      {
+        namespaced: true,
+        state: this.createState(),
+        mutations: this.createMutations()
+      },
+      { preserveState }
+    )
   }
 
   /**
@@ -147,6 +151,6 @@ export class Database {
    * Create schema from the given model.
    */
   private createSchema<M extends Model>(model: M): Normalizr.Entity {
-    return this.schemas[model.$entity] = new Schema(model).one()
+    return (this.schemas[model.$entity] = new Schema(model).one())
   }
 }

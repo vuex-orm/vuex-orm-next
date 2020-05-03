@@ -30,7 +30,7 @@ function createOptions(options: InstallOptions = {}): FilledInstallOptions {
 /**
  * Mixin Vuex ORM feature to the store.
  */
-function mixin(store: Store<any>, options: FilledInstallOptions ): void {
+function mixin(store: Store<any>, options: FilledInstallOptions): void {
   createDatabase(store, options)
 
   installPlugins(store)

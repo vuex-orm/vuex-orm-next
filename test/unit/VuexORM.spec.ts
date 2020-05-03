@@ -20,9 +20,7 @@ describe('unit/VuexORM', () => {
 
   it('can customize the namespace', () => {
     const store = new Vuex.Store({
-      plugins: [
-        VuexORM.install({ namespace: 'database' })
-      ]
+      plugins: [VuexORM.install({ namespace: 'database' })]
     })
 
     const expected = {
