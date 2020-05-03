@@ -1,7 +1,5 @@
-import { Constructor } from '../types'
 import { Store, Plugin } from 'vuex'
 import { Database } from '../database/Database'
-import { Model } from '../model/Model'
 import { Repository } from '../repository/Repository'
 import { plugins, components } from '../plugin/Plugin'
 
@@ -84,9 +82,9 @@ function startDatabase(store: Store<any>): void {
  * Mixin repo function to the store.
  */
 function mixinRepoFunction(store: Store<any>): void {
-  store.$repo = function <M extends Model>(
-    model: Constructor<M>
-  ): Repository<M> {
-    return new Repository(this, model)
+  store.$repo = function (modelOrRepository: any): any {
+    return modelOrRepository._isRepository
+      ? new modelOrRepository(this).initialize()
+      : new Repository(this).initialize(modelOrRepository)
   }
 }

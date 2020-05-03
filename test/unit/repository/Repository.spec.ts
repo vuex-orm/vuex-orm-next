@@ -1,5 +1,5 @@
 import { createStore, assertModel } from 'test/Helpers'
-import { Model, Attr, Str } from '@/index'
+import { Model, Attr, Str, Repository } from '@/index'
 
 describe('unit/repository/Repository', () => {
   class User extends Model {
@@ -7,6 +7,13 @@ describe('unit/repository/Repository', () => {
 
     @Attr() id!: any
     @Str('John Doe') name!: string
+  }
+
+  class Post extends Model {
+    static entity = 'posts'
+
+    @Attr() id!: any
+    @Str('Title 001') title!: string
   }
 
   it('creates a new model instance', () => {
@@ -30,5 +37,29 @@ describe('unit/repository/Repository', () => {
     expect(user).toBeInstanceOf(User)
     expect(user.$store).toBe(store)
     assertModel(user, { id: 1, name: 'Jane Doe' })
+  })
+
+  it('can create a new repository from the model', () => {
+    const store = createStore([User, Post])
+
+    const userRepo = store.$repo(User)
+
+    const postRepo = userRepo.repo(Post)
+
+    expect(postRepo.getModel()).toBeInstanceOf(Post)
+  })
+
+  it('can create a new repository from the custom repository', () => {
+    class PostRepository extends Repository<Post> {
+      use: typeof Post = Post
+    }
+
+    const store = createStore([User, Post])
+
+    const userRepo = store.$repo(User)
+
+    const postRepo = userRepo.repo(PostRepository)
+
+    expect(postRepo.getModel()).toBeInstanceOf(Post)
   })
 })

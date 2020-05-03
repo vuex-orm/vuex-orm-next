@@ -200,11 +200,18 @@ export function cloneDeep<T extends object>(target: T): T {
 }
 
 /**
+ * Throw a new error with the given message.
+ */
+export function error(message: string[]): never {
+  throw new Error(['[Vuex ORM]'].concat(message).join(' '))
+}
+
+/**
  * Check for the given condition, and if it's `false`, it will throw a new
  * error with the given message.
  */
 export function assert(condition: boolean, message: string[]): void {
   if (!condition) {
-    throw new Error(['[Vuex ORM]'].concat(message).join(' '))
+    error(message)
   }
 }

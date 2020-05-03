@@ -14,5 +14,6 @@ declare module 'vuex' {
      * Get a new Repository instance for the given model.
      */
     $repo<M extends Model>(model: Constructor<M>): Repository<M>
+    $repo<R extends Repository<any>>(repository: Constructor<R>): R
   }
 }
