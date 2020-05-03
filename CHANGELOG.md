@@ -1,3 +1,12 @@
+# [1.0.0-draft.3](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.2...v1.0.0-draft.3) (2020-05-03)
+
+
+### Bug Fixes
+
+* export missing `use` function ([656618a](https://github.com/vuex-orm/vuex-orm-next/commit/656618a5e0402141ce85c46d765c3828d45f96a4))
+
+
+
 # [1.0.0-draft.2](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.1...v1.0.0-draft.2) (2020-05-03)
 
 
