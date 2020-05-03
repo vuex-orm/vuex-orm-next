@@ -3,7 +3,7 @@ import { Database } from '../database/Database'
 import { Model } from '../model/Model'
 import { Repository } from '../repository/Repository'
 
-declare module 'vuex' {
+declare module 'vuex/types/index' {
   interface Store<S> {
     /**
      * The database instance.
