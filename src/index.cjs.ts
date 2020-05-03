@@ -1,6 +1,7 @@
 import './polyfills/Polyfills'
 
 import { install } from './store/Store'
+import { use } from './plugin/Plugin'
 import { Database } from './database/Database'
 import { Schema } from './schema/Schema'
 import { Model } from './model/Model'
@@ -27,6 +28,7 @@ import { Connection } from './connection/Connection'
 
 export default {
   install,
+  use,
   Database,
   Schema,
   Model,
