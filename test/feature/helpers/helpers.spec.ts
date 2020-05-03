@@ -34,7 +34,6 @@ describe('feature/helpers/helpers', () => {
     const vm = new Vue({
       store,
       computed: mapRepos({
-        uRepo: User,
         userRepo: UserRepository
       })
     })
