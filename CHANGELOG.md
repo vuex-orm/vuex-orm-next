@@ -1,3 +1,16 @@
+# [1.0.0-draft.2](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.1...v1.0.0-draft.2) (2020-05-03)
+
+
+### Features
+
+* add `make` method to create a new model instance ([538598a](https://github.com/vuex-orm/vuex-orm-next/commit/538598ad711fd16e71028bad43dd91137963c516))
+* add custom repository support ([#4](https://github.com/vuex-orm/vuex-orm-next/issues/4)) ([6b768d9](https://github.com/vuex-orm/vuex-orm-next/commit/6b768d939a19c811ebc40543dc60ce02412b70eb))
+* add plugin feature ([#3](https://github.com/vuex-orm/vuex-orm-next/issues/3)) ([4d4d5af](https://github.com/vuex-orm/vuex-orm-next/commit/4d4d5af0e400fa014bebb7f6e6e257d54fa917e1))
+* throw error when accessing `model.$store` without store being injected ([#2](https://github.com/vuex-orm/vuex-orm-next/issues/2)) ([2e0f341](https://github.com/vuex-orm/vuex-orm-next/commit/2e0f3417c6d99eac3e8476b5ff417525fb0e96f8))
+* **model:** add `static fields` method to define the model schema ([9030c37](https://github.com/vuex-orm/vuex-orm-next/commit/9030c37d0531f46a8fce2a02aecd45dacb20a84e))
+
+
+
 # [1.0.0-draft.1](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.0...v1.0.0-draft.1) (2020-04-13)
 
 
