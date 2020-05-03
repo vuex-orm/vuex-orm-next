@@ -15,7 +15,7 @@ describe('feature/helpers/helpers', () => {
   }
 
   it('maps repositories to vue component from models', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     const vm = new Vue({
       store,
@@ -29,7 +29,7 @@ describe('feature/helpers/helpers', () => {
   })
 
   it('maps repositories to vue component from repositories', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     const vm = new Vue({
       store,
