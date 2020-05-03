@@ -17,7 +17,7 @@ describe('unit/repository/Repository', () => {
   }
 
   it('creates a new model instance', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     const user = store.$repo(User).make()
 
@@ -27,7 +27,7 @@ describe('unit/repository/Repository', () => {
   })
 
   it('creates a new model instance with default values', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     const user = store.$repo(User).make({
       id: 1,
@@ -40,7 +40,7 @@ describe('unit/repository/Repository', () => {
   })
 
   it('can create a new repository from the model', () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     const userRepo = store.$repo(User)
 
@@ -54,7 +54,7 @@ describe('unit/repository/Repository', () => {
       use: typeof Post = Post
     }
 
-    const store = createStore([User, Post])
+    const store = createStore()
 
     const userRepo = store.$repo(User)
 

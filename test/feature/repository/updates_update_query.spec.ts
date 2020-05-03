@@ -11,7 +11,7 @@ describe('feature/repository/updates_update_query', () => {
   }
 
   it('updates a record specified by the query chain', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -33,7 +33,7 @@ describe('feature/repository/updates_update_query', () => {
   })
 
   it('updates multiple records specified by the query chain', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

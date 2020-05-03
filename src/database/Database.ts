@@ -1,10 +1,8 @@
-import { Store, Module as VuexModule } from 'vuex'
+import { Store } from 'vuex'
 import { schema as Normalizr } from 'normalizr'
-import { Constructor } from '../types'
 import { Schema } from '../schema/Schema'
 import { Model } from '../model/Model'
-import { RootModule } from '../modules/RootModule'
-import { Module } from '../modules/Module'
+import { Relation } from '../model/attributes/relations/Relation'
 import { State } from '../modules/State'
 import { mutations, Mutations } from '../modules/Mutations'
 
@@ -37,15 +35,6 @@ export class Database {
   started: boolean = false
 
   /**
-   * Register the given model.
-   */
-  register(model: Constructor<Model>): void {
-    const instance = new model()
-
-    this.models[instance.$entity] = instance
-  }
-
-  /**
    * Set the store.
    */
   setStore(store: Store<any>): this {
@@ -67,13 +56,39 @@ export class Database {
    * Initialize the database before a user can start using it.
    */
   start(): void {
-    this.injectStoreToModels()
-
-    this.createSchemas()
-
-    this.registerModules()
+    this.createRootModule()
 
     this.started = true
+  }
+
+  /**
+   * Register the given model.
+   */
+  register<M extends Model>(model: M): void {
+    if (!this.models[model.$entity]) {
+      this.models[model.$entity] = model
+
+      this.createModule(model)
+
+      this.createSchema(model)
+
+      this.registerRelatedModels(model)
+    }
+  }
+
+  /**
+   * Register all related models.
+   */
+  private registerRelatedModels<M extends Model>(model: M): void {
+    for (const name in model.$fields) {
+      const attr = model.$fields[name]
+
+      if (attr instanceof Relation) {
+        attr.getRelateds().forEach((m) => {
+          this.register(m.$setStore(this.store))
+        })
+      }
+    }
   }
 
   /**
@@ -91,77 +106,31 @@ export class Database {
   }
 
   /**
-   * Inject the store instance to all registered models.
-   */
-  private injectStoreToModels(): void {
-    for (const name in this.models) {
-      this.models[name].$setStore(this.store)
-    }
-  }
-
-  /**
-   * Create the schema definition from registered models and set it to the
-   * `schema` property. This schema will be used by the Interpreter to interpret
-   * the data before persisting them to the store.
-   */
-  private createSchemas(): void {
-    for (const name in this.models) {
-      this.schemas[name] = this.createSchema(this.models[name])
-    }
-  }
-
-  /**
-   * Create schema from the given model.
-   */
-  private createSchema<M extends Model>(model: M): Normalizr.Entity {
-    return new Schema(model).one()
-  }
-
-  /**
-   * Generate modules and register them to the store.
-   */
-  private registerModules(): void {
-    this.store.registerModule(this.connection, this.createModule())
-  }
-
-  /**
-   * Create modules from the registered models and modules.
-   */
-  private createModule(): VuexModule<any, any> {
-    const module = this.createRootModule()
-
-    for (const name in this.models) {
-      module.modules[name] = this.createSubModule()
-    }
-
-    return module
-  }
-
-  /**
    * Create root module.
    */
-  private createRootModule(): RootModule {
-    return {
-      namespaced: true,
-      modules: {}
-    }
+  private createRootModule(): void {
+    this.store.registerModule(this.connection, {
+      namespaced: true
+    })
   }
 
   /**
    * Create sub module.
    */
-  private createSubModule(): Module<State, any> {
-    return {
+  private createModule<M extends Model>(model: M): void {
+    const preserveState = !!this.store.state[this.connection][model.$entity]
+
+    this.store.registerModule([this.connection, model.$entity], {
       namespaced: true,
-      state: this.createSubState(),
-      mutations: this.createSubMutations()
-    }
+      state: this.createState(),
+      mutations: this.createMutations()
+    }, { preserveState })
   }
 
   /**
    * Create sub state.
    */
-  private createSubState(): State {
+  private createState(): State {
     return {
       data: {}
     }
@@ -170,7 +139,14 @@ export class Database {
   /**
    * Create sub mutations.
    */
-  private createSubMutations(): Mutations<State> {
+  private createMutations(): Mutations<State> {
     return mutations
+  }
+
+  /**
+   * Create schema from the given model.
+   */
+  private createSchema<M extends Model>(model: M): Normalizr.Entity {
+    return this.schemas[model.$entity] = new Schema(model).one()
   }
 }

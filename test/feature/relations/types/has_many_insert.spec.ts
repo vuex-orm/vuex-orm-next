@@ -21,7 +21,7 @@ describe('feature/relations/types/has_many_insert', () => {
   }
 
   it('inserts a record to the store with "has many" relation', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(User).insert({
       id: 1,
@@ -44,7 +44,7 @@ describe('feature/relations/types/has_many_insert', () => {
   })
 
   it('generates missing foreign key', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(User).insert({
       id: 1,
@@ -67,7 +67,7 @@ describe('feature/relations/types/has_many_insert', () => {
   })
 
   it('can insert a record with missing relational key', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(User).insert({
       id: 1,

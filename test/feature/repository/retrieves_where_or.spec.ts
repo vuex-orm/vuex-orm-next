@@ -16,7 +16,7 @@ describe('feature/repository/retrieves_where', () => {
   }
 
   it('can filter query by `or where` clause', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -43,7 +43,7 @@ describe('feature/repository/retrieves_where', () => {
   })
 
   it('the "or where" clause can be used alone', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

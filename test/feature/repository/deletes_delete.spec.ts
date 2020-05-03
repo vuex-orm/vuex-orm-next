@@ -10,7 +10,7 @@ describe('feature/repository/deletes_delete', () => {
   }
 
   it('deletes a record specified by the where clause', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -31,7 +31,7 @@ describe('feature/repository/deletes_delete', () => {
   })
 
   it('can delete multiple records specified by the where clause', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

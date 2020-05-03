@@ -12,12 +12,9 @@ type FilledInstallOptions = Required<InstallOptions>
 /**
  * Install Vuex ORM to the store.
  */
-export function install(
-  database: Database,
-  options?: InstallOptions
-): Plugin<any> {
+export function install(options?: InstallOptions): Plugin<any> {
   return (store) => {
-    mixin(store, database, createOptions(options))
+    mixin(store, createOptions(options))
   }
 }
 
@@ -33,14 +30,10 @@ function createOptions(options: InstallOptions = {}): FilledInstallOptions {
 /**
  * Mixin Vuex ORM feature to the store.
  */
-function mixin(
-  store: Store<any>,
-  database: Database,
-  options: FilledInstallOptions
-): void {
-  installPlugins(store, database)
+function mixin(store: Store<any>, options: FilledInstallOptions ): void {
+  createDatabase(store, options)
 
-  connectDatabase(store, database, options)
+  installPlugins(store)
 
   mixinRepoFunction(store)
 
@@ -48,27 +41,28 @@ function mixin(
 }
 
 /**
- * Execute registered plugins.
+ * Create a new database and connect to the store.
  */
-function installPlugins(store: Store<any>, database: Database): void {
-  plugins.forEach((plugin) => {
-    const { func, options } = plugin
+function createDatabase(
+  store: Store<any>,
+  options: FilledInstallOptions
+): void {
+  const database = new Database()
+    .setStore(store)
+    .setConnection(options.namespace)
 
-    func.install(store, database, components, options)
-  })
+  store.$database = database
 }
 
 /**
- * Connect the database to the store.
+ * Execute registered plugins.
  */
-function connectDatabase(
-  store: Store<any>,
-  database: Database,
-  options: FilledInstallOptions
-): void {
-  database.setStore(store).setConnection(options.namespace)
+function installPlugins(store: Store<any>): void {
+  plugins.forEach((plugin) => {
+    const { func, options } = plugin
 
-  store.$database = database
+    func.install(store, components, options)
+  })
 }
 
 /**
@@ -83,8 +77,15 @@ function startDatabase(store: Store<any>): void {
  */
 function mixinRepoFunction(store: Store<any>): void {
   store.$repo = function (modelOrRepository: any): any {
-    return modelOrRepository._isRepository
+    const repository = modelOrRepository._isRepository
       ? new modelOrRepository(this).initialize()
       : new Repository(this).initialize(modelOrRepository)
+
+    try {
+      store.$database.register(repository.getModel())
+    } catch (e) {
+    } finally {
+      return repository
+    }
   }
 }

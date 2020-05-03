@@ -26,7 +26,7 @@ describe('feature/relations/types/has_many_retrieve', () => {
   }
 
   it('can eager load has many relation', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -53,7 +53,7 @@ describe('feature/relations/types/has_many_retrieve', () => {
   })
 
   it('can eager load missing relation as empty array', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     fillState(store, {
       users: {

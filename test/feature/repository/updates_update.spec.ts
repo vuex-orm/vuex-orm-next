@@ -11,7 +11,7 @@ describe('feature/repository/updates_update', () => {
   }
 
   it('updates record by passing record with primary key', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -33,7 +33,7 @@ describe('feature/repository/updates_update', () => {
   })
 
   it('updates records by passing an array of records with primary key', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

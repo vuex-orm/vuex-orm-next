@@ -15,7 +15,7 @@ describe('feature/repository/retrieves_all', () => {
   }
 
   it('retrieves all records from the store', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

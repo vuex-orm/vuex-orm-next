@@ -10,7 +10,7 @@ describe('feature/repository/deletes_flush', () => {
   }
 
   it('deletes all records in the store', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

@@ -18,7 +18,7 @@ describe('feature/repository_custom/custom_repository', () => {
       }
     }
 
-    const store = createStore([User])
+    const store = createStore()
 
     const userRepo = store.$repo(UserRepository)
 
@@ -32,7 +32,7 @@ describe('feature/repository_custom/custom_repository', () => {
       }
     }
 
-    const store = createStore([])
+    const store = createStore()
 
     const userRepo = store.$repo(ARepository)
 
@@ -46,7 +46,7 @@ describe('feature/repository_custom/custom_repository', () => {
       }
     }
 
-    const store = createStore([])
+    const store = createStore()
 
     const userRepo = store.$repo(ARepository)
 

@@ -21,7 +21,7 @@ describe('feature/relations/types/belongs_to_retrieve', () => {
   }
 
   it('can eager load belongs to relation', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -45,7 +45,7 @@ describe('feature/relations/types/belongs_to_retrieve', () => {
   })
 
   it('can eager load missing relation as `null`', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     fillState(store, {
       users: {},

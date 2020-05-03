@@ -10,7 +10,7 @@ describe('feature/repository/inserts_insert', () => {
   }
 
   it('inserts a record to the store', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     await store.$repo(User).insert({ id: 1, name: 'John Doe' })
 
@@ -22,7 +22,7 @@ describe('feature/repository/inserts_insert', () => {
   })
 
   it('inserts records to the store', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     await store.$repo(User).insert([
       { id: 1, name: 'John Doe' },
@@ -38,7 +38,7 @@ describe('feature/repository/inserts_insert', () => {
   })
 
   it('does nothing if the given data is empty', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     await store.$repo(User).insert({})
     assertState(store, { users: {} })

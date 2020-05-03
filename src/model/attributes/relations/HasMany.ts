@@ -31,6 +31,13 @@ export class HasMany extends Relation {
   }
 
   /**
+   * Get all related models for the relationship.
+   */
+  getRelateds(): Model[] {
+    return [this.related]
+  }
+
+  /**
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {

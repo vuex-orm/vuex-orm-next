@@ -19,7 +19,6 @@ import { mutations, Mutations } from '../modules/Mutations'
 export interface VuexORMPlugin {
   install(
     store: Store<any>,
-    database: Database,
     components: VuexORMPluginComponents,
     options: any
   ): void

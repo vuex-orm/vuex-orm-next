@@ -30,9 +30,14 @@ export abstract class Relation extends Attribute {
   }
 
   /**
+   * Get all related models for the relationship.
+   */
+  abstract getRelateds(): Model[]
+
+  /**
    * Get the related model of the relation.
    */
-  public getRelated(): Model {
+  getRelated(): Model {
     return this.related
   }
 

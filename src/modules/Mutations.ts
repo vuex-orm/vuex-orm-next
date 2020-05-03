@@ -3,18 +3,10 @@ import { Elements } from '../data/Data'
 import { State } from './State'
 
 export interface Mutations<S extends State> extends MutationTree<S> {
-  mutate(state: S, callback: (state: S) => void): void
   insert(state: S, records: Elements): void
   update(state: S, records: Elements): void
   delete(state: S, ids: string[]): void
   flush(state: S): void
-}
-
-/**
- * Execute a generic mutation.
- */
-function mutate(state: State, callback: (state: State) => void): void {
-  callback(state)
 }
 
 /**
@@ -54,7 +46,6 @@ function flush(state: State): void {
 }
 
 export const mutations = {
-  mutate,
   insert,
   update,
   delete: destroy,

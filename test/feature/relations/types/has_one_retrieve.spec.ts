@@ -21,7 +21,7 @@ describe('feature/relations/types/has_one_retrieve', () => {
   }
 
   it('can eager load has one relation', async () => {
-    const store = createStore([User, Phone])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -48,7 +48,7 @@ describe('feature/relations/types/has_one_retrieve', () => {
   })
 
   it('can eager load missing relation as `null`', async () => {
-    const store = createStore([User, Phone])
+    const store = createStore()
 
     fillState(store, {
       users: {

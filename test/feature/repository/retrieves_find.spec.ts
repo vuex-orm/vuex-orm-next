@@ -16,7 +16,7 @@ describe('feature/repository/retrieves_find', () => {
   }
 
   it('can find a record by id', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -33,7 +33,7 @@ describe('feature/repository/retrieves_find', () => {
   })
 
   it('returns `null` if the record is not found', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -49,7 +49,7 @@ describe('feature/repository/retrieves_find', () => {
   })
 
   it('can find records by ids', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

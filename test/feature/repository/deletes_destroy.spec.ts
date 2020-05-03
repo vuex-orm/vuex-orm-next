@@ -10,7 +10,7 @@ describe('feature/repository/deletes_destroy', () => {
   }
 
   it('deletes record by the id', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -31,7 +31,7 @@ describe('feature/repository/deletes_destroy', () => {
   })
 
   it('returns `null` when no record was deleted', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -51,7 +51,7 @@ describe('feature/repository/deletes_destroy', () => {
   })
 
   it('deletes multiple records by an array of ids', async () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

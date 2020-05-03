@@ -4,10 +4,8 @@ import VuexORM, {
   Element,
   Elements,
   Collection,
-  Database,
   Model,
-  RootState,
-  State
+  RootState
 } from '@/index'
 
 Vue.use(Vuex)
@@ -16,15 +14,9 @@ interface Entities {
   [name: string]: Elements
 }
 
-export function createStore(models: typeof Model[]): Store<any> {
-  const database = new Database()
-
-  models.forEach((model) => {
-    database.register(model)
-  })
-
+export function createStore(): Store<any> {
   return new Store({
-    plugins: [VuexORM.install(database)],
+    plugins: [VuexORM.install()],
     strict: true
   })
 }
@@ -43,9 +35,11 @@ export function createState(entities: Entities): RootState {
 
 export function fillState(store: Store<any>, entities: Entities): void {
   for (const entity in entities) {
-    store.commit(`entities/${entity}/mutate`, (state: State): void => {
-      state.data = entities[entity]
-    })
+    if (!store.state.entities[entity]) {
+      store.state.entities[entity] = { data: {} }
+    }
+
+    store.state.entities[entity].data = entities[entity]
   }
 }
 

@@ -1,37 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VuexORM, { Database, Model } from '@/index'
+import VuexORM from '@/index'
 
 describe('unit/VuexORM', () => {
   Vue.use(Vuex)
 
   it('installs Vuex ORM to the store', () => {
-    class User extends Model {
-      static entity = 'users'
-    }
-
-    class Post extends Model {
-      static entity = 'posts'
-    }
-
-    const database = new Database()
-
-    database.register(User)
-    database.register(Post)
-
     const store = new Vuex.Store({
-      plugins: [VuexORM.install(database)]
+      plugins: [VuexORM.install()]
     })
 
     const expected = {
-      entities: {
-        users: {
-          data: {}
-        },
-        posts: {
-          data: {}
-        }
-      }
+      entities: {}
     }
 
     expect(store.state).toEqual(expected)
@@ -39,28 +19,14 @@ describe('unit/VuexORM', () => {
   })
 
   it('can customize the namespace', () => {
-    class User extends Model {
-      static entity = 'users'
-    }
-
-    const database = new Database()
-
-    database.register(User)
-
     const store = new Vuex.Store({
       plugins: [
-        VuexORM.install(database, {
-          namespace: 'database'
-        })
+        VuexORM.install({ namespace: 'database' })
       ]
     })
 
     const expected = {
-      database: {
-        users: {
-          data: {}
-        }
-      }
+      database: {}
     }
 
     expect(store.state).toEqual(expected)

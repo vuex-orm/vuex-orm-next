@@ -16,7 +16,7 @@ describe('feature/repository/retrieves_where', () => {
   }
 
   it('can filter the query by the `where` clause', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -39,7 +39,7 @@ describe('feature/repository/retrieves_where', () => {
   })
 
   it('can chain multiple `where` clause', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -63,7 +63,7 @@ describe('feature/repository/retrieves_where', () => {
   })
 
   it('can filter records by passing closure as a value', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -89,7 +89,7 @@ describe('feature/repository/retrieves_where', () => {
   })
 
   it('can filter records by passing closure as a field', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

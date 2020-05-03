@@ -21,7 +21,7 @@ describe('feature/relations/types/belongs_to_insert', () => {
   }
 
   it('inserts a record to the store with "belongs to" relation', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(Post).insert({
       id: 1,
@@ -41,7 +41,7 @@ describe('feature/relations/types/belongs_to_insert', () => {
   })
 
   it('generates missing foreign key', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(Post).insert({
       id: 1,
@@ -60,7 +60,7 @@ describe('feature/relations/types/belongs_to_insert', () => {
   })
 
   it('can insert a record with missing relational key', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(Post).insert({
       id: 1,
@@ -76,7 +76,7 @@ describe('feature/relations/types/belongs_to_insert', () => {
   })
 
   it('can insert a record with relational key set to `null`', async () => {
-    const store = createStore([User, Post])
+    const store = createStore()
 
     await store.$repo(Post).insert({
       id: 1,

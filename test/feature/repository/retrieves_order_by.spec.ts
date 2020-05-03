@@ -16,7 +16,7 @@ describe('feature/repository/retrieves_order_by', () => {
   }
 
   it('can sort the records by the `order by` clause', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -40,7 +40,7 @@ describe('feature/repository/retrieves_order_by', () => {
   })
 
   it('can sort the records by "desc" order', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {
@@ -64,7 +64,7 @@ describe('feature/repository/retrieves_order_by', () => {
   })
 
   it('can combine multiple orders', () => {
-    const store = createStore([User])
+    const store = createStore()
 
     fillState(store, {
       users: {

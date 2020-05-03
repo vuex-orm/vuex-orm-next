@@ -41,6 +41,13 @@ export class BelongsTo extends Relation {
   }
 
   /**
+   * Get all related models for the relationship.
+   */
+  getRelateds(): Model[] {
+    return [this.child]
+  }
+
+  /**
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
