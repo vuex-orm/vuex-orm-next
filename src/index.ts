@@ -34,10 +34,12 @@ export * from './interpreter/Interpreter'
 export * from './query/Query'
 export * from './query/Options'
 export * from './connection/Connection'
+export * from './helpers/Helpers'
 export * from './plugin/Plugin'
 
 import { install } from './store/Store'
 import { use } from './plugin/Plugin'
+import { mapRepos } from './helpers/Helpers'
 import { Database } from './database/Database'
 import { Schema } from './schema/Schema'
 import { Model } from './model/Model'
@@ -58,6 +60,7 @@ import { Connection } from './connection/Connection'
 export default {
   install,
   use,
+  mapRepos,
   Database,
   Schema,
   Model,
