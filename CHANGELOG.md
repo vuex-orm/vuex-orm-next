@@ -1,3 +1,13 @@
+# [1.0.0-draft.4](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.3...v1.0.0-draft.4) (2020-05-03)
+
+
+### Features
+
+* add `mapRepos` helper ([#5](https://github.com/vuex-orm/vuex-orm-next/issues/5)) ([4587db7](https://github.com/vuex-orm/vuex-orm-next/commit/4587db7599210d25f077cd2818b038c4982ed892))
+* add automatic database registration support ([07c9915](https://github.com/vuex-orm/vuex-orm-next/commit/07c991523d6bf15cf060832ef2bf5297f80a5e68))
+
+
+
 # [1.0.0-draft.3](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.2...v1.0.0-draft.3) (2020-05-03)
 
 
