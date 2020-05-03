@@ -88,9 +88,7 @@ export class Repository<M extends Model = Model> {
   repo<M extends Model>(model: Constructor<M>): Repository<M>
   repo<R extends Repository<any>>(repository: Constructor<R>): R
   repo(modelOrRepository: any): any {
-    return modelOrRepository._isRepository
-      ? new modelOrRepository(this.store).initialize()
-      : new Repository(this.store).initialize(modelOrRepository)
+    return this.store.$repo(modelOrRepository)
   }
 
   /**
