@@ -14,7 +14,7 @@ describe('feature/helpers/helpers', () => {
     use = User
   }
 
-  it('maps repositories to vue component from models', async () => {
+  it('can map repositories from models in Vue components', async () => {
     const store = createStore()
 
     const vm = new Vue({
@@ -28,7 +28,7 @@ describe('feature/helpers/helpers', () => {
     expect(vm.userRepo.getModel()).toBeInstanceOf(User)
   })
 
-  it('maps repositories to vue component from repositories', async () => {
+  it('can map repositories from abstract repositories in Vue components', async () => {
     const store = createStore()
 
     const vm = new Vue({
@@ -36,6 +36,20 @@ describe('feature/helpers/helpers', () => {
       computed: mapRepos({
         userRepo: UserRepository
       })
+    })
+
+    expect(vm.userRepo).toBeInstanceOf(Repository)
+    expect(vm.userRepo.getModel()).toBeInstanceOf(User)
+  })
+
+  it('can map repositories in Vue components using spread syntax', async () => {
+    const store = createStore()
+
+    const vm = new Vue({
+      store,
+      computed: {
+        ...mapRepos({ userRepo: User })
+      }
     })
 
     expect(vm.userRepo).toBeInstanceOf(Repository)

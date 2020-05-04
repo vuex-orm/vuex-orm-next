@@ -1,17 +1,23 @@
 # Installation
 
-You can install Vuex ORM via NPM, Yarn, or download it directly. Remember since Vuex ORM is a plugin of [Vuex](https://vuex.vuejs.org), you need to install Vuex alongside with Vuex ORM.
+You can install Vuex ORM via NPM, Yarn, or download it directly. Remember, since Vuex ORM is a plugin of [Vuex](https://vuex.vuejs.org), you need to install Vuex alongside with Vuex ORM.
 
-## NPM
+## Package Manager
 
-```console
-$ npm install vue vuex @vuex-orm/core@next --save
+You may install Vuex ORM through NPM or Yarn
+
+```bash
+$ npm install vue vuex @vuex-orm/core --save
+
+$ yarn add vue vuex @vuex-orm/core
 ```
 
-## Yarn
+If you aren't using typescript, you may also need to install the following babel compiler.
 
-```console
-$ yarn add vue vuex @vuex-orm/core@next
+```bash
+$ npm install --save-dev @babel/plugin-proposal-class-properties
+
+$ yarn add --dev @babel/plugin-proposal-class-properties
 ```
 
 ## Direct Download / CDN
@@ -20,7 +26,7 @@ Coming soon...
 
 ## Dev Build
 
-You have to clone directly from GitHub and build vuex yourself if you want to use the latest dev build.
+You have to clone directly from GitHub and build vuex ORM yourself if you want to use the latest dev build.
 
 ```console
 $ git clone https://github.com/vuex-orm/vuex-orm-next.git node_modules/@vuex-orm/core
