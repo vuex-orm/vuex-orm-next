@@ -155,7 +155,7 @@ describe('unit/events/Events', () => {
     expect(spyOnce).toHaveBeenCalledTimes(1)
     expect(spyOnce).toHaveBeenCalledWith(true)
     expect(spy).toHaveBeenCalledTimes(2)
-    expect(spy).toHaveBeenCalledWith(false)
+    expect(spy).toHaveBeenLastCalledWith(false)
 
     log.mockRestore()
   })
