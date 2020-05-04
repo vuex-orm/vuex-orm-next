@@ -134,6 +134,7 @@ describe('unit/events/Events', () => {
 
     const log = jest.spyOn(global.console, 'log').mockImplementation()
     const spy = jest.fn()
+    const spyOnce = jest.fn()
 
     const unsub = events.on('test', (bool) => {
       console.log(bool)
@@ -141,17 +142,20 @@ describe('unit/events/Events', () => {
     })
 
     events.on('test', spy)
-    events.once('test', spy)
+    events.once('test', spyOnce)
 
     expect(events.subscribers.test).toHaveLength(3)
 
     events.emit('test', true)
+    events.emit('test', false)
 
     expect(events.subscribers.test).toHaveLength(1)
     expect(log).toHaveBeenCalledTimes(1)
     expect(log).toHaveBeenCalledWith(true)
+    expect(spyOnce).toHaveBeenCalledTimes(1)
+    expect(spyOnce).toHaveBeenCalledWith(true)
     expect(spy).toHaveBeenCalledTimes(2)
-    expect(spy).toHaveBeenCalledWith(true)
+    expect(spy).toHaveBeenCalledWith(false)
 
     log.mockRestore()
   })
