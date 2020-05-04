@@ -1,47 +1,45 @@
-/**
- * Event subscriber args.
- */
 export type EventArgs<T> = T extends any[] ? T : never
 
-/**
- * Event subscriber handler.
- */
 export type EventListener<T, K extends keyof T> = (
   ...args: EventArgs<T[K]>
 ) => void
 
-/**
- * Event subscriber registry.
- */
 export type EventRegistry<T> = {
   [K in keyof T]?: EventListener<T, K>[]
 }
 
 /**
- * Events class for subscribing to and emitting of events.
+ * Events class for listening to and emitting of events.
  * @public
  */
 export class Events<T> {
   /**
-   * The registry for event listeners.
+   * The registry for listeners.
    */
-  subscribers: EventRegistry<T> = Object.create(null)
+  listeners: EventRegistry<T>
+
+  /**
+   * Creates an Events instance.
+   */
+  constructor() {
+    this.listeners = Object.create(null)
+  }
 
   /**
    * Register a handler for a specific event.
    * @returns a function that, when called, will unregister the handler.
    */
-  on<K extends keyof T>(name: K, fn: EventListener<T, K>): () => void {
-    if (!name || typeof fn !== 'function') {
+  on<K extends keyof T>(type: K, callback: EventListener<T, K>): () => void {
+    if (!type || typeof callback !== 'function') {
       return () => {}
     }
 
-    ;(this.subscribers[name] = this.subscribers[name]! || []).push(fn)
+    ;(this.listeners[type] = this.listeners[type]! || []).push(callback)
 
     return () => {
-      if (fn) {
-        this.off(name, fn)
-        ;(fn as any) = null
+      if (callback) {
+        this.off(type, callback)
+        ;(callback as any) = null
       }
     }
   }
@@ -51,54 +49,41 @@ export class Events<T> {
    * @returns a function that, when called, will self-execute and unregister the handler.
    */
   once<K extends keyof T>(
-    name: K,
-    fn: EventListener<T, K>
+    type: K,
+    callback: EventListener<T, K>
   ): EventListener<T, K> {
-    const callback = (...args: EventArgs<T[K]>) => {
-      this.off(name, callback)
+    const fn = (...args: EventArgs<T[K]>) => {
+      this.off(type, fn)
 
-      return fn(...args)
+      return callback(...args)
     }
 
-    this.on(name, callback)
+    this.on(type, fn)
 
-    return callback
+    return fn
   }
 
   /**
    * Unregister a handler for a specific event.
    */
-  off<K extends keyof T>(name: K, fn: EventListener<T, K>): void {
-    const subs = this.subscribers[name]
+  off<K extends keyof T>(type: K, callback: EventListener<T, K>): void {
+    const list = this.listeners[type]
 
-    if (!subs) {
+    if (!list) {
       return
     }
 
-    const i = subs.indexOf(fn)
+    const i = list.indexOf(callback)
 
-    i > -1 && subs.splice(i, 1)
+    i > -1 && list.splice(i, 1)
 
-    !subs.length && delete this.subscribers[name]
+    !list.length && delete this.listeners[type]
   }
 
   /**
    * Remove all handlers for a specific event.
    */
-  flush<K extends keyof T>(name: K): void {
-    name && this.subscribers[name] && delete this.subscribers[name]
-  }
-
-  /**
-   * Call all handlers for a specific event with the specified args(?).
-   */
-  emit<K extends keyof T>(name: K, ...args: EventArgs<T[K]>) {
-    const subs = this.subscribers[name]
-
-    if (!subs) {
-      return
-    }
-
-    subs.slice().forEach((fn) => fn(...args))
+  flush<K extends keyof T>(type: K): void {
+    type && this.listeners[type] && delete this.listeners[type]
   }
 }
