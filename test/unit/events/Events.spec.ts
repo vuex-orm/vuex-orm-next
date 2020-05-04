@@ -3,19 +3,19 @@ import { Events } from '@/events/Events'
 describe('unit/events/Events', () => {
   interface TEvents {
     test: [boolean]
-    trial: [string]
+    trial: []
   }
 
-  it('can register event subscribers', () => {
+  it('can register event listeners', () => {
     const events = new Events<TEvents>()
 
     const spy = jest.fn()
 
     events.on('test', spy)
 
-    expect(events.subscribers).toHaveProperty('test')
-    expect(events.subscribers.test).toHaveLength(1)
-    expect(events.subscribers.test).toEqual([spy])
+    expect(events['listeners']).toHaveProperty('test')
+    expect(events['listeners'].test).toHaveLength(1)
+    expect(events['listeners'].test).toEqual([spy])
   })
 
   it('can ignore empty event names', () => {
@@ -25,7 +25,7 @@ describe('unit/events/Events', () => {
       events.on(e as any, () => {})
     })
 
-    expect(events.subscribers).toEqual({})
+    expect(events['listeners']).toEqual({})
   })
 
   it('can ignore non-function handlers', () => {
@@ -36,7 +36,7 @@ describe('unit/events/Events', () => {
       cb()
     })
 
-    expect(events.subscribers).toEqual({})
+    expect(events['listeners']).toEqual({})
   })
 
   it('can emit events', () => {
@@ -52,28 +52,28 @@ describe('unit/events/Events', () => {
 
     expect(spy).toHaveBeenCalledTimes(1)
     expect(spy).toHaveBeenLastCalledWith(true)
-    expect(events.subscribers).toEqual({})
+    expect(events['listeners']).toEqual({})
   })
 
-  it('can noop when removing unknown subscribers', () => {
+  it('can noop when removing unknown listeners', () => {
     const events = new Events<TEvents>()
 
     const spy1 = jest.fn()
     const spy2 = jest.fn()
 
-    expect(events.subscribers.test).toBeUndefined()
+    expect(events['listeners'].test).toBeUndefined()
 
     events.off('test', spy1)
 
-    expect(events.subscribers.test).toBeUndefined()
+    expect(events['listeners'].test).toBeUndefined()
 
     events.on('test', spy2)
     events.off('test', spy1)
 
-    expect(events.subscribers.test).toEqual([spy2])
+    expect(events['listeners'].test).toEqual([spy2])
   })
 
-  it('can unsubscribe itself', () => {
+  it('can unregister itself', () => {
     const events = new Events<TEvents>()
 
     const spy = jest.fn()
@@ -81,34 +81,16 @@ describe('unit/events/Events', () => {
     events.on('test', spy)
     const unsub = events.on('test', spy)
 
-    expect(events.subscribers.test).toHaveLength(2)
+    expect(events['listeners'].test).toHaveLength(2)
 
     unsub()
     unsub()
 
-    expect(events.subscribers.test).toHaveLength(1)
-    expect(events.subscribers.test).toEqual([spy])
+    expect(events['listeners'].test).toHaveLength(1)
+    expect(events['listeners'].test).toEqual([spy])
   })
 
-  it('can flush event subscribers', () => {
-    const events = new Events<TEvents>()
-
-    const spy = jest.fn()
-
-    events.on('test', spy)
-    events.on('trial', spy)
-    events.on('test', spy)
-
-    expect(events.subscribers.test).toHaveLength(2)
-    expect(events.subscribers.trial).toHaveLength(1)
-
-    events.flush('test')
-
-    expect(events.subscribers.test).toBeUndefined()
-    expect(events.subscribers.trial).toHaveLength(1)
-  })
-
-  it('can subscribe one-time handlers', () => {
+  it('can register one-time listeners', () => {
     const events = new Events<TEvents>()
 
     const spy1 = jest.fn()
@@ -117,46 +99,49 @@ describe('unit/events/Events', () => {
     events.once('test', spy1)
     events.on('test', spy2)
 
-    expect(events.subscribers.test).toHaveLength(2)
+    expect(events['listeners'].test).toHaveLength(2)
 
     events.emit('test', true)
     events.emit('test', false)
 
-    expect(events.subscribers.test).toHaveLength(1)
+    expect(events['listeners'].test).toHaveLength(1)
     expect(spy1).toHaveBeenCalledTimes(1)
     expect(spy1).toHaveBeenCalledWith(true)
     expect(spy2).toHaveBeenCalledTimes(2)
     expect(spy2).toHaveBeenLastCalledWith(false)
   })
 
-  it('can unsubscribe itself within its own handler', () => {
+  it('can emit events to subscribers', () => {
     const events = new Events<TEvents>()
 
-    const log = jest.spyOn(global.console, 'log').mockImplementation()
     const spy = jest.fn()
-    const spyOnce = jest.fn()
 
-    const unsub = events.on('test', (bool) => {
-      console.log(bool)
-      unsub()
-    })
-
-    events.on('test', spy)
-    events.once('test', spyOnce)
-
-    expect(events.subscribers.test).toHaveLength(3)
+    const unsub = events.subscribe(spy)
 
     events.emit('test', true)
-    events.emit('test', false)
+    unsub()
+    events.emit('trial')
 
-    expect(events.subscribers.test).toHaveLength(1)
-    expect(log).toHaveBeenCalledTimes(1)
-    expect(log).toHaveBeenCalledWith(true)
-    expect(spyOnce).toHaveBeenCalledTimes(1)
-    expect(spyOnce).toHaveBeenCalledWith(true)
-    expect(spy).toHaveBeenCalledTimes(2)
-    expect(spy).toHaveBeenLastCalledWith(false)
+    expect(events['subscribers']).toEqual([])
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy).toHaveBeenCalledWith({ event: 'test', args: [true] })
+  })
 
-    log.mockRestore()
+  it('can remove all event listeners', () => {
+    const events = new Events<TEvents>()
+
+    const spy = jest.fn()
+
+    events.on('test', spy)
+    events.on('trial', spy)
+    events.on('test', spy)
+
+    expect(events['listeners'].test).toHaveLength(2)
+    expect(events['listeners'].trial).toHaveLength(1)
+
+    events.removeAllListeners('test')
+
+    expect(events['listeners'].test).toBeUndefined()
+    expect(events['listeners'].trial).toHaveLength(1)
   })
 })
