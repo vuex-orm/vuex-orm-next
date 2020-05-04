@@ -1,4 +1,4 @@
-import { Events } from '@/hookable/Events'
+import { Events } from '@/events/Events'
 
 describe('unit/events/Events', () => {
   interface TEvents {
