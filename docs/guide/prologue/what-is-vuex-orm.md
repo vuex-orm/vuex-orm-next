@@ -72,7 +72,7 @@ To deal with these challenges, a recommended approach is to treat a portion of y
 
 Vuex ORM manages both creating (normalizing) and retrieving data through a fluent, intuitive API.
 
-Let's use the example data above and store a blog post. Firstly, will will create *models* for posts, comments, and users:
+Let's use the example data above and store a blog post. Firstly, we will create *models* for our posts, comments, and users:
 
 ``` js
 class Post extends Model {
