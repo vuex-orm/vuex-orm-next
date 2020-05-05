@@ -1,9 +1,9 @@
 # Getting Started
 
-This page is a quick start guide to begin using Vuex ORM. It assumes you have a basic understanding of [Vuex](https://github.com/vuejs/vuex/). If you are not familiar with [Vuex](https://github.com/vuejs/vuex/), please visit [Vuex Documentation](https://vuex.vuejs.org) to learn about Vuex.
+This is a quick starting guide to begin using Vuex ORM. It assumes you have a basic understanding of Vuex. If you are not familiar with Vuex, please visit the [Vuex Documentation](https://vuex.vuejs.org) to learn more.
 
 ::: tip NOTE
-We use ES2015 syntax in our code examples for the rest of the docs. Also, we use "Class Property" to define some properties in the class. This syntax requires compilers such as [@babel/plugin-proposal-class-properties](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties).
+We use ES2015 syntax in our code examples for the rest of the docs. We also use class field declarations (e.g. `static` properties) in our classes which requires compiler plugins such as [@babel/plugin-proposal-class-properties](https://babeljs.io/docs/en/babel-plugin-proposal-class-properties).
 :::
 
 ## Setup
@@ -17,9 +17,11 @@ Don't worry. It's much easier than you think.
 
 ### Defining Models
 
-Models represent a schema of data that will be stored in Vuex. The schema often follows server's API response, but it also could be whatever you like.
+Models represent a schema of data that will be stored in Vuex. The schema often follows a servers API response, but it could also be whatever you like it to be.
 
-Models may have relationships with other models. For example, a post could *belong to* a user, or a post *has many* comments. We'll demonstrate what these models look like below.
+Models may have relationships with other models. For example, a post could *belong to* a user, or a post *has many* comments.
+
+The following examples will demonstrate what these models may look like:
 
 ```js
 // User Model
@@ -27,11 +29,11 @@ Models may have relationships with other models. For example, a post could *bel
 import { Model } from '@vuex-orm/core'
 
 export default class User extends Model {
-  // entity is required in all models to declare the module name in Vuex.
+  // entity is a required property for all models.
   static entity = 'users'
 
   // List of all fields (schema) of the post model. `this.attr()` declares
-  // a generic field type with a default value being the 1st argument.
+  // a generic field type with a default value as the first argument.
   static fields () {
     return {
       id: this.attr(null),
@@ -51,9 +53,9 @@ import User from './User'
 export default class Post extends Model {
   static entity = 'posts'
 
-  // `this.belongsTo(...)` declares this post `belongs to` a user The first
-  // argument is the Model class 'User'. The second is the field name for
-  // the foreign key 'userId'.
+  // `this.belongsTo(...)` declares this post belongs to a user. The first
+  // argument is the `User` model class. The second is the field name for
+  // the foreign key `userId`.
   static fields () {
     return {
       id: this.attr(null),
@@ -69,15 +71,15 @@ export default class Post extends Model {
 
 All models are declared by extending the Vuex ORM base `Model` class.
 
-These examples create a `User` model and a `Post` model. Our `Post` model has `belongsTo` relationship to `User` at the `author` key. We can now create posts that are associated with our users.
+These examples create a `User` model and a `Post` model. The `Post` model has a `belongsTo` relationship to `User` defined by the `author` key. It's now possible to create posts that are associated with users.
 
 You can learn more about models at [Model: Getting Started](../model/getting-started).
 
-### Installing Vuex ORM to Vuex
+### Installing Vuex ORM with Vuex
 
-Now it's time for you to register Vuex ORM to the Vuex. To do so, just add `VuexORM.install` as the Vuex plugin.
+Now it's time to register Vuex ORM with Vuex simply by adding `VuexORM.install()` as a Vuex plugin.
 
-An example Vuex Store creation file might look like this.
+The following is an example of what a Vuex Store creation file might look like:
 
 ```js
 import Vue from 'vue'
@@ -93,11 +95,11 @@ const store = new Vuex.Store({
 export default store
 ```
 
-Now you are ready to go. Vuex ORM creates a namespaced module called `entities` in Vuex. All models are registered under its `Model.entity` name when it gets used.
+Now you are ready to go. Vuex ORM creates a namespaced module called `entities` and registers all models within by their `entity` name.
 
 ## Create a Repository
 
-Vuex ORM follows the "Data Mapper" ORM pattern, which uses "repositories" to interact with the store. A repository is created from the `store.$repo` method, and passing in a model as the argument.
+Vuex ORM adopts the [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) pattern and uses _repositories_ to interact with the store. A repository is created using the `store.$repo()` method and passing in a model as the argument.
 
 ```js
 const postRepo = store.$repo(Post)
@@ -105,7 +107,7 @@ const postRepo = store.$repo(Post)
 postRepo.insert(posts)
 ```
 
-When creating repository in Vue Component, you could do the same by referencing the `this.$store`.
+When creating repositories in a Vue component, you can also use `this.$store`:
 
 ```js
 import Post from '@/models/Post'
@@ -121,7 +123,7 @@ export default {
 
 ### Map Repositories
 
-However, it might be a bit cumbersome to define repositories like this, especially when you have multiple repositories that you want to use. In such a case, you can use `mapRepos` helper to define repositories.
+However, it might be a bit cumbersome to create repositories like this, especially when you have multiple repositories that you want to use. In such cases, you can use the `mapRepos` helper:
 
 ```js
 import { mapRepos } from '@vuex-orm/core'
@@ -138,7 +140,7 @@ You can learn more about repositories at [Repository: Getting Started](../reposi
 
 ## Inserting Data
 
-Vuex ORM provides an `insert` method to insert new records to a collection. In our example below, we're passing in an array with a single post to insert. 
+Vuex ORM provides an `insert` method to insert new records to a collection. In the following example, we're passing in an array with a single post:
 
 ```js
 import { mapRepos } from '@vuex-orm/core'
@@ -197,7 +199,7 @@ This creates the following schema in the store:
 }
 ```
 
-Notice how `posts` and `users` are decoupled from each other by using relationships. This is what is meant by "normalizing" the data.
+Notice how `posts` and `users` are decoupled from each other by using relationships. This is what is meant by _normalizing_ data.
 
 ## Retrieving Data
 
@@ -232,7 +234,7 @@ export default {
 </script>
 ```
 
-Similar to Vuex getters, place your queries as computed properties. Note in our example above, we do not retrieve any users with our posts! We load relationships by adding `with` to our query chain:
+Similar to Vuex Getters, place your queries in computed properties. Note in the example above, we do not retrieve any users with our posts! We load relationships by adding `with` to our query chain:
 
 ```html
 <template>
@@ -266,4 +268,4 @@ export default {
 
 ## What's Next?
 
-Vuex ORM offers many more features that help you deal with common tasks. Please read through the documentation to find out more.
+Vuex ORM offers many more features that help you deal with common tasks. Please continue to read through the documentation to find out more.
