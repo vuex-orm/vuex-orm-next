@@ -127,6 +127,22 @@ describe('unit/events/Events', () => {
     expect(spy).toHaveBeenCalledWith({ event: 'test', args: [true] })
   })
 
+  it('can forward events within subscribers', () => {
+    const events1 = new Events<TEvents>()
+    const events2 = new Events<Pick<TEvents, 'test'>>()
+
+    const spy = jest.fn()
+
+    events2.subscribe(({ event, args }) => {
+      events1.emit(event, ...args)
+    })
+
+    events1.on('test', spy)
+    events2.emit('test', true)
+
+    expect(spy).toHaveBeenLastCalledWith(true)
+  })
+
   it('can remove all event listeners', () => {
     const events = new Events<TEvents>()
 
@@ -137,7 +153,6 @@ describe('unit/events/Events', () => {
     events.on('test', spy)
 
     expect(events['listeners'].test).toHaveLength(2)
-    expect(events['listeners'].trial).toHaveLength(1)
 
     events.removeAllListeners('test')
 
