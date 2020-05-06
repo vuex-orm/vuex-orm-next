@@ -1,3 +1,5 @@
+import { isFunction } from '../support/Utils'
+
 export type EventArgs<T> = T extends any[] ? T : never
 
 export type EventListener<T, K extends keyof T> = (
@@ -38,8 +40,8 @@ export class Events<T> {
    * @returns a function that, when called, will unregister the handler.
    */
   on<K extends keyof T>(event: K, callback: EventListener<T, K>): () => void {
-    if (!event || typeof callback !== 'function') {
-      return () => {}
+    if (!event || !isFunction(callback)) {
+      return () => {} // Non-blocking noop
     }
 
     ;(this.listeners[event] = this.listeners[event]! || []).push(callback)
@@ -47,7 +49,7 @@ export class Events<T> {
     return () => {
       if (callback) {
         this.off(event, callback)
-        ;(callback as any) = null
+        ;(callback as any) = null // Free up memory
       }
     }
   }
@@ -85,7 +87,7 @@ export class Events<T> {
 
     i > -1 && stack.splice(i, 1)
 
-    !stack.length && delete this.listeners[event]
+    stack.length === 0 && delete this.listeners[event]
   }
 
   /**
@@ -105,7 +107,7 @@ export class Events<T> {
   /**
    * Call all handlers for a given event with the specified args(?).
    */
-  emit<K extends keyof T>(event: K, ...args: EventArgs<T[K]>) {
+  emit<K extends keyof T>(event: K, ...args: EventArgs<T[K]>): void {
     const stack = this.listeners[event]
 
     if (stack) {
