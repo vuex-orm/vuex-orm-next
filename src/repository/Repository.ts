@@ -1,5 +1,5 @@
 import { Store } from 'vuex'
-import { error } from '../support/Utils'
+import { assert } from '../support/Utils'
 import { Constructor } from '../types'
 import { Element, Item, Collection, Collections } from '../data/Data'
 import { Model } from '../model/Model'
@@ -72,12 +72,10 @@ export class Repository<M extends Model = Model> {
    * without setting `use` property.
    */
   getModel(): M {
-    if (!this.model) {
-      error([
-        'The model is not registered. Please define the model to be used at',
-        '`use` property of the repository class.'
-      ])
-    }
+    assert(!!this.model, [
+      'The model is not registered. Please define the model to be used at',
+      '`use` property of the repository class.'
+    ])
 
     return this.model
   }
