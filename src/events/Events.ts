@@ -120,7 +120,7 @@ export class Events<T> {
   /**
    * Remove all listeners for a given event.
    */
-  removeAllListeners<K extends keyof T>(event: K): void {
+  protected removeAllListeners<K extends keyof T>(event: K): void {
     event && this.listeners[event] && delete this.listeners[event]
   }
 }
