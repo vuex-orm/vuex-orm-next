@@ -1,20 +1,22 @@
 # What is Vuex ORM?
 
-Vuex ORM is a plugin for Vuex to enable Object-Relational Mapping access to the Vuex Store. But why do we need ORM at the front-end?
+Vuex ORM is a plugin for Vuex that provides an easy and consistent API to handle Object Relational Mapping with a Vuex Store.
 
-Many applications deal with data that is nested or relational in nature. For example, a blog editor could have many Posts, each Post could have many Comments, and both Posts and Comments would be written by a User. Using data in such kind of "nested or relational" structure can be very difficult for JavaScript applications, especially those using the single tree state management system such as [Vuex](https://vuex.vuejs.org) or [Redux](http://redux.js.org).
+### Why do we need a client-side ORM?
 
-To nicely handle such data, one approach is to split the nested data into separate modules and decouple them from each other. Simply put, it's kind of like treating a portion of your store as if it were a database, and keep that data in a normalized form.
+Many applications deal with data that is nested or relational in nature. For example, a blog editor could have many posts, each post may have many comments, and both posts and comments could be written by any number of users. Deeply nested data structures creates many challenges for JavaScript applications, especially when using a single tree state management system such as [Vuex](https://vuex.vuejs.org/) or [Redux](http://redux.js.org/).
 
-[This is an excellent article](https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape/) that describes the difficulty of nested data structures. It also explains how to design normalized state, and Vuex ORM is heavily inspired by it.
+ To handle such data nicely, one approach splits the nested data into separate modules and decouples them from each other. Simply put, it treats a portion of your store like a normalized database with a flattened data structure.
 
-Note that in this documentation, we're borrowing many examples and texts from the article. I would like to credit [Redux](https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape) and the author of the section [Mark Erikson](https://github.com/markerikson) for the beautiful piece of article.
+[This excellent article](https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape/) describes the difficulty of nested data. It also explains how to design a normalized state, and Vuex ORM is heavily inspired by it.
 
-## Issue with Nested Relational Data
+Note that in this documentation, we borrow many examples and texts from the article. We would like to credit [Redux](https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape) and the author of the section [Mark Erikson](https://github.com/markerikson) for the beautiful article.
 
-Let's say you fetch posts data from a backend server. In many cases, the response might look something like:
+## Issues with Nested Relational Data
 
-```js
+Let's look at a typical example of fetching post data from a backend server. The response usually looks something like this:
+
+``` js
 [
   {
     id: 1,
@@ -59,67 +61,20 @@ Let's say you fetch posts data from a backend server. In many cases, the respons
 ]
 ```
 
-Notice that the structure of the data is a bit complex, and some of the data is repeated. It contains lots of `author` fields, which is a User. Some of them are the exact same User. If you save this data to the store as is, there will be a concern for several reasons:
+Notice that the structure is a bit complex, and contains duplicate author data for _User 3_. If we save this data to the store as-is, we are presented with several concerns: 
 
-- When a piece of data is duplicated in several places, it becomes harder to make sure that it is updated appropriately.
-- Nested data means that the corresponding logic to process this data has to be more nested and therefore more complex. In particular, trying to update a deeply nested field can become very ugly very fast.
+- Data is duplicated in several places, and it is harder to ensure an update reaches every location.
+- Nested data means that the corresponding logic to process this data is more complex. Trying to handle deeply nested fields becomes very ugly, very fast.
 
-Because of this, the recommended approach to managing nested or relational data in a store is to treat a portion of your store as if it were a database, and keep that data in a *normalized* form.
-
-## Normalizing Data
-
-The basic concepts of normalizing data are:
-
-- Each type of data gets its own "table" in the state.
-- Each "data table" should store the individual items in an object, with the IDs of the items as keys and the items themselves as the values.
-- Any references to individual items should be done by the foreign keys.
-
-As you may notice, it's pretty much the same as how ordinary relational database systems manage relations. We could do the same for our store.
-
-An example of a normalized state structure for the blog posts example above might look like:
-
-```js
-{
-  posts: {
-    1: { id: 1, userId: 1, body: '.....' },
-    2: { id: 2, userId: 2, body: '.....' }
-  },
-
-  comments: {
-    1: { id: 1, userId: 2, postId: 1, comment: '.....' },
-    2: { id: 2, userId: 2, postId: 1, comment: '.....' },
-    3: { id: 3, userId: 3, postId: 2, comment: '.....' },
-    4: { id: 4, userId: 1, postId: 2, comment: '.....' },
-    5: { id: 5, userId: 3, postId: 2, comment: '.....' }
-  },
-
-  users: {
-    1: { id: 1, name: 'User 1' },
-    2: { id: 2, name: 'User 2' },
-    3: { id: 3, name: 'User 3' }
-  }
-}
-```
-
-This state structure is much flatter overall. Compared to the original nested format, this is an improvement in several ways:
-
-- Because each item is only defined in one place, we don't have to try to make changes in multiple places if that item is updated.
-- The logic that interacts with the data doesn't have to deal with deep levels of nesting, so it will probably be much simpler.
-- The logic for retrieving or updating a given item is now fairly simple and consistent. Given an item's type and its id, we can directly look it up in a couple of simple steps, without having to dig through other objects to find it.
-
-Note that a normalized state structure generally implies that more components are connected and each component is responsible for looking up its own data, as opposed to a few connected components looking up large amounts of data and passing all that data downwards. As it turns out, having connected parent components simply pass item ids to connected children is a good pattern for optimizing UI performance as well, so keeping state normalized plays a key role in improving performance.
-
-However, it's still hard to actually organize such normalized data. You must write some kind of logic to "normalize" the input data, and also you must write logic to retrieve the data with also resolving any necessary relationships in mind. Here is where Vuex ORM comes in.
+To deal with these challenges, a recommended approach is to treat a portion of your store as if it were a database, and keep that data in a *normalized* form.
 
 ## How Vuex ORM Handles Data
 
-Vuex ORM will manage both creating (normalizing) and also retrieving data through fluent and sufficient API.
+Vuex ORM manages both creating (normalizing) and retrieving data through a fluent, intuitive API.
 
-Let's say we want to store above blog posts data. You'll first create a representing "Model" for Post, Comment, and User.
+Let's use the example data above and store a blog post. Firstly, we will create *models* for our posts, comments, and users:
 
-The Model would look like:
-
-```js
+``` js
 class Post extends Model {
   static entity = 'posts'
 
@@ -159,15 +114,15 @@ class User extends Model {
 }
 ```
 
-Then you may simply call `insert` method through the repository.
+With these models, we can retrieve a repository to interact with the data. We can insert the data into the store using the repository's insert method:
 
-```js
+``` js
 store.$repo(Post).insert(posts)
-````
+```
 
-With this simple method, Vuex ORM will automatically normalize the given data and save them inside Vuex Store State as following structure.
+Vuex ORM automatically normalizes and saves the posts inside the store with the following structure.
 
-```js
+``` js
 {
   entities: {
     posts: {
@@ -198,11 +153,11 @@ With this simple method, Vuex ORM will automatically normalize the given data an
 }
 ```
 
-Notice that Vuex ORM will even generate any missing foreign keys (in this case `userId`) during the normalization process.
+Notice that Vuex ORM even generates any missing foreign keys (in this case, `userId`) during the normalization process.
 
-Now, you can fetch these data using Model's fluent [Query Builder](../query/getting-started) just like any ordinary ORM library.
+Finally, we can retrieve the posts using a fluent query builder similar to many ORM libraries:
 
-```js
+``` js
 // Fetch all posts.
 const posts = store.$repo(Post).all()
 
@@ -212,9 +167,8 @@ const posts = store.$repo(Post).all()
     { id: 2, body: '.....' }
   ]
 */
-```
 
-```js
+
 // Fetch all posts with its relation.
 const posts = store.$repo(Post).with('author').get()
 
@@ -238,9 +192,8 @@ const posts = store.$repo(Post).with('author').get()
     }
   ]
 */
-```
 
-```js
+
 // Fetch data matching specific condition.
 const posts = store.$repo(Post).with('author').where('id', 1).get()
 
@@ -259,4 +212,24 @@ const posts = store.$repo(Post).with('author').where('id', 1).get()
 */
 ```
 
-Cool, isn't it? Are you ready to start using Vuex ORM? [Let's get started](getting-started.md).
+## Benefits of Normalizing Data
+
+Some basic concepts of normalizing data:
+
+- Each type of data gets its own *table* in the state.
+- Each *table* stores an individual item in an object, with the ID of the item as its key and the item as the value
+- Any references to related items is made through foreign keys.
+
+As you may notice, it's pretty much the same as how traditional relational database systems manage relations. With Vuex ORM we're doing the same in a store.
+
+The benefits of this approach are:
+
+- Without duplication, updates only take place once.
+- Our data logic doesn't struggle with deep nesting, and is much easier to write.
+- All we need to retrieve or modify our data is the id and model, using a simple query syntax.
+
+### Normalized Data in Components
+
+Normalized state structure usually implies that each component is responsible for looking up its own data, as opposed to a parent component gathering large amounts of data to be passed down to other components. As it turns out, connected parent components passing ids of items to connected children components is a good pattern for optimizing UI performance. 
+
+However, organizing such normalized data is still a challenging task. You'll need logic to handle "normalizing" input data, querying and retrieving data, and handling any relationships your data structure requires. This is where Vuex ORM can help.
