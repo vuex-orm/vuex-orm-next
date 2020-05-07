@@ -154,7 +154,7 @@ describe('unit/events/Events', () => {
 
     expect(events['listeners'].test).toHaveLength(2)
 
-    events.removeAllListeners('test')
+    events['removeAllListeners']('test')
 
     expect(events['listeners'].test).toBeUndefined()
     expect(events['listeners'].trial).toHaveLength(1)
