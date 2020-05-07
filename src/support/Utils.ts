@@ -202,7 +202,10 @@ export function cloneDeep<T extends object>(target: T): T {
 /**
  * Asserts that the condition is truthy, throwing immediately if not.
  */
-export function assert(condition: boolean, message: string[]): asserts condition {
+export function assert(
+  condition: boolean,
+  message: string[]
+): asserts condition {
   if (!condition) {
     throw new Error(['[Vuex ORM]'].concat(message).join(' '))
   }
