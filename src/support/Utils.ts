@@ -60,7 +60,7 @@ export function orderBy<T>(
 ): T[] {
   let index = -1
 
-  const result = collection.map((value) => {
+  const result = collection.map<SortableArray<T>>((value) => {
     const criteria = iteratees.map((iteratee) => {
       return typeof iteratee === 'function' ? iteratee(value) : value[iteratee]
     })
@@ -88,9 +88,11 @@ function baseSortBy<T>(
   array.sort(comparer)
 
   const newArray: T[] = []
+
   while (length--) {
     newArray[length] = array[length].value
   }
+
   return newArray
 }
 
@@ -102,7 +104,7 @@ function baseSortBy<T>(
  * Otherwise, specify an order of "desc" for descending or "asc" for
  * ascending sort order of corresponding values.
  */
-function compareMultiple(object: any, other: any, orders: string[]): number {
+function compareMultiple<T>(object: SortableArray<T>, other: SortableArray<T>, directions: string[]): number {
   let index = -1
 
   const objCriteria = object.criteria
@@ -113,9 +115,9 @@ function compareMultiple(object: any, other: any, orders: string[]): number {
     const result = compareAscending(objCriteria[index], othCriteria[index])
 
     if (result) {
-      const order = orders[index]
+      const direction = directions[index]
 
-      return result * (order === 'desc' ? -1 : 1)
+      return result * (direction === 'desc' ? -1 : 1)
     }
   }
 
