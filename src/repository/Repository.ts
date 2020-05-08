@@ -7,7 +7,8 @@ import { Query } from '../query/Query'
 import {
   WherePrimaryClosure,
   WhereSecondaryClosure,
-  OrderDirection
+  OrderDirection,
+  OrderBy
 } from '../query/Options'
 
 export class Repository<M extends Model = Model> {
@@ -119,7 +120,7 @@ export class Repository<M extends Model = Model> {
   /**
    * Add an "order by" clause to the query.
    */
-  orderBy(field: string, direction?: OrderDirection): Query<M> {
+  orderBy(field: OrderBy<M>, direction?: OrderDirection): Query<M> {
     return this.query().orderBy(field, direction)
   }
 
