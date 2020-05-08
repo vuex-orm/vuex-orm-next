@@ -104,7 +104,11 @@ function baseSortBy<T>(
  * Otherwise, specify an order of "desc" for descending or "asc" for
  * ascending sort order of corresponding values.
  */
-function compareMultiple<T>(object: SortableArray<T>, other: SortableArray<T>, directions: string[]): number {
+function compareMultiple<T>(
+  object: SortableArray<T>,
+  other: SortableArray<T>,
+  directions: string[]
+): number {
   let index = -1
 
   const objCriteria = object.criteria
