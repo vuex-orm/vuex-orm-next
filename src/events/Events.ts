@@ -14,6 +14,7 @@ export type EventSubscriber<T> = (arg: EventSubscriberArgs<T>) => void
 
 /**
  * Events class for listening to and emitting of events.
+ *
  * @public
  */
 export class Events<T> {
