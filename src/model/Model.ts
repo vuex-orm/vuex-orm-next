@@ -346,11 +346,9 @@ export class Model {
   $getRelation(name: string): Relation {
     const relation = this.$fields[name]
 
-    if (!(relation instanceof Relation)) {
-      throw new Error(
-        `[Vuex ORM] Relationship [${name}] on model [${this.$entity}] not found.`
-      )
-    }
+    assert(relation instanceof Relation, [
+      `Relationship [${name}] on model [${this.$entity}] not found.`
+    ])
 
     return relation
   }
@@ -401,37 +399,37 @@ export class Model {
   /**
    * Serialize the given value.
    */
-  protected serializeValue(v: any): any {
-    if (v === null) {
+  protected serializeValue(value: any): any {
+    if (value === null) {
       return null
     }
 
-    if (isArray(v)) {
-      return this.serializeArray(v)
+    if (isArray(value)) {
+      return this.serializeArray(value)
     }
 
-    if (typeof v === 'object') {
-      return this.serializeObject(v)
+    if (typeof value === 'object') {
+      return this.serializeObject(value)
     }
 
-    return v
+    return value
   }
 
   /**
    * Serialize the given array to JSON.
    */
-  protected serializeArray(a: any[]): any[] {
-    return a.map((v) => this.serializeValue(v))
+  protected serializeArray(value: any[]): any[] {
+    return value.map((v) => this.serializeValue(v))
   }
 
   /**
    * Serialize the given object to JSON.
    */
-  protected serializeObject(o: object): object {
+  protected serializeObject(value: object): object {
     const obj = {}
 
-    for (const key in o) {
-      obj[key] = this.serializeValue(o[key])
+    for (const key in value) {
+      obj[key] = this.serializeValue(value[key])
     }
 
     return obj
