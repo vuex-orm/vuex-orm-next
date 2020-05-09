@@ -23,6 +23,7 @@ import {
   WherePrimaryClosure,
   WhereSecondaryClosure,
   Order,
+  OrderBy,
   OrderDirection,
   EagerLoad,
   EagerLoadConstraint,
@@ -63,7 +64,7 @@ export class Query<M extends Model = Model> {
   /**
    * The orderings for the query.
    */
-  protected orders: Order[] = []
+  protected orders: Order<M>[] = []
 
   /**
    * The maximum number of records to return.
@@ -148,7 +149,7 @@ export class Query<M extends Model = Model> {
   /**
    * Add an "order by" clause to the query.
    */
-  orderBy(field: string, direction: OrderDirection = 'asc'): Query<M> {
+  orderBy(field: OrderBy<M>, direction: OrderDirection = 'asc'): Query<M> {
     this.orders.push({ field, direction })
 
     return this

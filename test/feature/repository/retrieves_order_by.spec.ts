@@ -15,7 +15,7 @@ describe('feature/repository/retrieves_order_by', () => {
     @Num(0) age!: number
   }
 
-  it('can sort the records by the `order by` clause', () => {
+  it('can sort records using the `orderBy` modifier', () => {
     const store = createStore()
 
     fillState(store, {
@@ -39,7 +39,7 @@ describe('feature/repository/retrieves_order_by', () => {
     assertModels(users, expected)
   })
 
-  it('can sort the records by "desc" order', () => {
+  it('can sort records in descending order', () => {
     const store = createStore()
 
     fillState(store, {
@@ -63,7 +63,7 @@ describe('feature/repository/retrieves_order_by', () => {
     assertModels(users, expected)
   })
 
-  it('can combine multiple orders', () => {
+  it('can sort records by combining multiple `orderBy` modifiers', () => {
     const store = createStore()
 
     fillState(store, {
@@ -87,6 +87,33 @@ describe('feature/repository/retrieves_order_by', () => {
     ]
 
     expect(users).toHaveLength(5)
+    assertInstanceOf(users, User)
+    assertModels(users, expected)
+  })
+
+  it('can sort records by specifying a callback', () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'James', age: 40 },
+        2: { id: 2, name: 'Andy', age: 30 },
+        3: { id: 3, name: 'David', age: 20 }
+      }
+    })
+
+    const users = store
+      .$repo(User)
+      .orderBy((user) => user.age, 'desc')
+      .get()
+
+    const expected = [
+      { id: 1, name: 'James', age: 40 },
+      { id: 2, name: 'Andy', age: 30 },
+      { id: 3, name: 'David', age: 20 }
+    ]
+
+    expect(users).toHaveLength(3)
     assertInstanceOf(users, User)
     assertModels(users, expected)
   })
