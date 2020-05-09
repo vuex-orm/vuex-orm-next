@@ -37,11 +37,12 @@ export class Events<T> {
 
   /**
    * Register a listener for a given event.
-   * @returns a function that, when called, will unregister the handler.
+   *
+   * @returns A function that, when called, will unregister the handler.
    */
   on<K extends keyof T>(event: K, callback: EventListener<T, K>): () => void {
     if (!event || !isFunction(callback)) {
-      return () => {} // Non-blocking noop
+      return () => {} // Non-blocking noop.
     }
 
     ;(this.listeners[event] = this.listeners[event]! || []).push(callback)
@@ -49,14 +50,15 @@ export class Events<T> {
     return () => {
       if (callback) {
         this.off(event, callback)
-        ;(callback as any) = null // Free up memory
+        ;(callback as any) = null // Free up memory.
       }
     }
   }
 
   /**
    * Register a one-time listener for a given event.
-   * @returns a function that, when called, will self-execute and unregister the handler.
+   *
+   * @returns A function that, when called, will self-execute and unregister the handler.
    */
   once<K extends keyof T>(
     event: K,
@@ -92,7 +94,8 @@ export class Events<T> {
 
   /**
    * Register a handler for wildcard event subscriber.
-   * @returns a function that, when called, will unregister the handler.
+   *
+   * @returns A function that, when called, will unregister the handler.
    */
   subscribe(callback: EventSubscriber<T>): () => void {
     this.subscribers.push(callback)
