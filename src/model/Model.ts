@@ -61,6 +61,10 @@ export class Model {
     this.$boot()
 
     this.$fill(attributes, options)
+
+    // Prevent `_store` from becoming cyclic object value and causing
+    // v-bind side-effects by negating enumerability.
+    Object.defineProperty(this, '_store', { enumerable: false, writable: true })
   }
 
   /**
