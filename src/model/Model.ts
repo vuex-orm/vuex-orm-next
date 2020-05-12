@@ -1,6 +1,7 @@
 import { Store } from 'vuex'
 import { isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
+import { Enumerable } from './decorators/Enumerable'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
 import { String as Str } from './attributes/types/String'
@@ -24,6 +25,7 @@ export class Model {
   /**
    * The store instance.
    */
+  @Enumerable(false)
   protected _store!: Store<any>
 
   /**
@@ -61,10 +63,6 @@ export class Model {
     this.$boot()
 
     this.$fill(attributes, options)
-
-    // Prevent `_store` from becoming cyclic object value and causing
-    // v-bind side-effects by negating enumerability.
-    Object.defineProperty(this, '_store', { enumerable: false, writable: true })
   }
 
   /**
