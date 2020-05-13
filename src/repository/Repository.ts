@@ -166,6 +166,13 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Insert the given records to the store by replacing any existing records.
+   */
+  fresh(records: Element | Element[]): Promise<Collections> {
+    return this.query().fresh(records)
+  }
+
+  /**
    * Update records in the store.
    */
   update(records: Element | Element[]): Promise<Collections> {

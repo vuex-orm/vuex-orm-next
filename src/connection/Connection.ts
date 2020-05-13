@@ -69,6 +69,13 @@ export class Connection {
   }
 
   /**
+   * Commit `fresh` mutation to the store.
+   */
+  fresh(records: Elements): void {
+    this.commit('fresh', records)
+  }
+
+  /**
    * Commit `update` mutation to the store.
    */
   update(records: Elements): void {
