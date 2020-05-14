@@ -10,6 +10,7 @@ export * from './model/decorators/attributes/types/Attr'
 export * from './model/decorators/attributes/types/Str'
 export * from './model/decorators/attributes/types/Num'
 export * from './model/decorators/attributes/types/Bool'
+export * from './model/decorators/attributes/types/Uid'
 export * from './model/decorators/attributes/relations/HasOne'
 export * from './model/decorators/attributes/relations/BelongsTo'
 export * from './model/decorators/attributes/relations/HasMany'
@@ -20,6 +21,7 @@ export { Attr as AttrAttr } from './model/attributes/types/Attr'
 export { String as StringAttr } from './model/attributes/types/String'
 export { Number as NumberAttr } from './model/attributes/types/Number'
 export { Boolean as BooleanAttr } from './model/attributes/types/Boolean'
+export { Uid as UidAttr } from './model/attributes/types/Uid'
 export * from './model/attributes/relations/Relation'
 export { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
 export { BelongsTo as BelongsToAttr } from './model/attributes/relations/BelongsTo'
@@ -49,6 +51,7 @@ import { Attr as AttrAttr } from './model/attributes/types/Attr'
 import { String as StringAttr } from './model/attributes/types/String'
 import { Number as NumberAttr } from './model/attributes/types/Number'
 import { Boolean as BooleanAttr } from './model/attributes/types/Boolean'
+import { Uid as UidAttr } from './model/attributes/types/Uid'
 import { Relation } from './model/attributes/relations/Relation'
 import { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
@@ -70,6 +73,7 @@ export default {
   StringAttr,
   NumberAttr,
   BooleanAttr,
+  UidAttr,
   Relation,
   HasOneAttr,
   HasManyAttr,

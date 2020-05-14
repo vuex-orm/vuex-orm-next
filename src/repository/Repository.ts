@@ -47,7 +47,7 @@ export class Repository<M extends Model = Model> {
   initialize(model?: Constructor<M>): this {
     // If there's a model passed in, just use that and return immediately.
     if (model) {
-      this.model = new model().$setStore(this.store)
+      this.model = new model(null).$setStore(this.store)
 
       return this
     }
@@ -57,7 +57,7 @@ export class Repository<M extends Model = Model> {
     // In this case, we'll check if the user has set model to the `use`
     // property and instantiate that.
     if (this.use) {
-      this.model = (new this.use() as M).$setStore(this.store)
+      this.model = (new this.use(null) as M).$setStore(this.store)
 
       return this
     }
