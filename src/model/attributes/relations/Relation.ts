@@ -1,6 +1,6 @@
 import { Schema as NormalizrSchema } from 'normalizr'
 import { Schema } from '../../../schema/Schema'
-import { Element, NormalizedData, Collection } from '../../../data/Data'
+import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
 import { Attribute } from '../Attribute'
@@ -47,9 +47,9 @@ export abstract class Relation extends Attribute {
   abstract define(schema: Schema): NormalizrSchema
 
   /**
-   * Attach the relational key to the given data.
+   * Attach the relational key to the given relation.
    */
-  abstract attach(ids: any, record: Element, data: NormalizedData): void
+  abstract attach(record: Element, child: Element): void
 
   /**
    * Set the constraints for an eager loading relation.

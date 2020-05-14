@@ -30,7 +30,7 @@ export class Schema {
       return this.schemas[model.$entity]
     }
 
-    const schema = this.newEntity(model)
+    const schema = this.newEntity(model, this.model)
 
     this.schemas[model.$entity] = schema
 
@@ -51,9 +51,9 @@ export class Schema {
   /**
    * Create a new normalizr entity.
    */
-  private newEntity(model: Model): Normalizr.Entity {
+  private newEntity(model: Model, parent: Model): Normalizr.Entity {
     const entity = model.$entity
-    const idAttribute = this.idAttribute(model)
+    const idAttribute = this.idAttribute(model, parent)
 
     return new Normalizr.Entity(entity, {}, { idAttribute })
   }
@@ -61,8 +61,17 @@ export class Schema {
   /**
    * The id attribute option for the normalizr entity.
    */
-  private idAttribute(model: Model): Normalizr.StrategyFunction<string> {
-    return (record) => model.$getIndexId(record)
+  private idAttribute(model: Model, parent: Model): Normalizr.StrategyFunction<string> {
+    return (record, parentRecord, key) => {
+      // If the `key` is not `null`, that means this record is a nested
+      // relationship of the parent model. In this case, we'll attach any
+      // missing foreign keys to the record first.
+      if (key !== null) {
+        (parent.$fields[key] as Relation).attach(parentRecord, record)
+      }
+
+      return model.$getIndexId(record)
+    }
   }
 
   /**
