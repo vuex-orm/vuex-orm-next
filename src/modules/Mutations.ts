@@ -17,6 +17,13 @@ function insert(state: State, records: Elements): void {
 }
 
 /**
+ * Commit `fresh` change to the store.
+ */
+function fresh(state: State, records: Elements): void {
+  state.data = records
+}
+
+/**
  * Commit `update` change to the store.
  */
 function update(state: State, records: Elements): void {
@@ -47,6 +54,7 @@ function flush(state: State): void {
 
 export const mutations = {
   insert,
+  fresh,
   update,
   delete: destroy,
   flush
