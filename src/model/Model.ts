@@ -1,7 +1,7 @@
 import { Store } from 'vuex'
 import { isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
-import { Enumerable } from './decorators/Enumerable'
+import { NonEnumerable } from './decorators/NonEnumerable'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
 import { String as Str } from './attributes/types/String'
@@ -22,12 +22,6 @@ export interface ModelOptions {
 }
 
 export class Model {
-  /**
-   * The store instance.
-   */
-  @Enumerable(false)
-  protected _store!: Store<any>
-
   /**
    * The name of the model.
    */
@@ -55,6 +49,12 @@ export class Model {
    * The array of booted models.
    */
   protected static booted: Record<string, boolean> = {}
+
+  /**
+   * The store instance.
+   */
+  @NonEnumerable
+  protected _store!: Store<any>
 
   /**
    * Create a new model instance.
