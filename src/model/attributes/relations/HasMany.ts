@@ -1,6 +1,6 @@
 import { Schema as NormalizrSchema } from 'normalizr'
 import { Schema } from '../../../schema/Schema'
-import { Element, NormalizedData, Collection } from '../../../data/Data'
+import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
 import { Relation, Dictionary } from './Relation'
@@ -45,20 +45,10 @@ export class HasMany extends Relation {
   }
 
   /**
-   * Attach the relational key to the given data object.
+   * Attach the relational key to the given relation.
    */
-  attach(
-    ids: (string | number)[],
-    record: Element,
-    data: NormalizedData
-  ): void {
-    ids.forEach((id) => {
-      const relatedElement = data[this.related.$entity]?.[id]
-
-      if (relatedElement) {
-        relatedElement[this.foreignKey] = record[this.localKey]
-      }
-    })
+  attach(record: Element, child: Element): void {
+    child[this.foreignKey] = record[this.localKey]
   }
 
   /**
