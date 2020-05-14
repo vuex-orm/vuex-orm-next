@@ -61,13 +61,16 @@ export class Schema {
   /**
    * The id attribute option for the normalizr entity.
    */
-  private idAttribute(model: Model, parent: Model): Normalizr.StrategyFunction<string> {
+  private idAttribute(
+    model: Model,
+    parent: Model
+  ): Normalizr.StrategyFunction<string> {
     return (record, parentRecord, key) => {
       // If the `key` is not `null`, that means this record is a nested
       // relationship of the parent model. In this case, we'll attach any
       // missing foreign keys to the record first.
       if (key !== null) {
-        (parent.$fields[key] as Relation).attach(parentRecord, record)
+        ;(parent.$fields[key] as Relation).attach(parentRecord, record)
       }
 
       return model.$getIndexId(record)
