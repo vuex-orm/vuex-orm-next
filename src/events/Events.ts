@@ -59,7 +59,8 @@ export class Events<T> {
   /**
    * Register a one-time listener for a given event.
    *
-   * @returns A function that, when called, will self-execute and unregister the handler.
+   * @returns A function that, when called, will self-execute and unregister
+   *          the handler.
    */
   once<K extends keyof T>(
     event: K,
