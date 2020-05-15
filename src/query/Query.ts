@@ -630,13 +630,6 @@ export class Query<M extends Model = Model> {
   }
 
   /**
-   * Convert all models into the plain record.
-   */
-  protected dehydrate(models: Collection<M>): Element[] {
-    return models.map((model) => model.$getAttributes())
-  }
-
-  /**
    * Convert given models into an indexed object that is ready to be saved to
    * the store.
    */
