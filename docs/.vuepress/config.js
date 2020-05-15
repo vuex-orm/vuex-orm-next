@@ -42,7 +42,8 @@ const sidebars = {
       title: 'Degging Deeper',
       collapsable: false,
       children: [
-        ['/guide/digging-deeper/plugins', 'Plugins']
+        ['/guide/digging-deeper/plugins', 'Plugins'],
+        ['/guide/digging-deeper/typescript', 'TypeScript']
       ]
     }
   ]
