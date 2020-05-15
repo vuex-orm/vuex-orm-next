@@ -17,23 +17,21 @@ describe('unit/decorators/NonEnumerable', () => {
     const cls = new StdClass()
 
     expect(cls.propertyIsEnumerable('hidden')).toBe(false)
-    expect(cls.propertyIsEnumerable('visible')).toBe(true)
   })
 
   it('should appear in own property detection', () => {
     const cls = new StdClass()
 
-    expect(Object.getOwnPropertyNames(cls)).toEqual(['hidden', 'visible'])
+    expect(Object.getOwnPropertyNames(cls)).toContain('hidden')
     expect(Object.prototype.hasOwnProperty.call(cls, 'hidden')).toBe(true)
-    expect(Object.prototype.hasOwnProperty.call(cls, 'visible')).toBe(true)
   })
 
   it('should not appear during property enumeration', () => {
     const cls = new StdClass()
 
-    expect(Object.keys(cls)).toEqual(['visible'])
+    expect(Object.keys(cls)).not.toContain('hidden')
+    expect(Object.values(cls)).not.toContain('i am hidden')
     expect(Object.entries(cls)).toEqual([['visible', 'i am visible']])
-    expect(Object.values(cls)).toEqual(['i am visible'])
 
     for (const prop in cls) {
       expect(prop).not.toBe('hidden')
