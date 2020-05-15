@@ -61,40 +61,35 @@ export class Schema {
   }
 
   /**
-   * The id attribute option for the normalizr entity.
+   * The `id` attribute option for the normalizr entity.
    *
-   * During the process, it will generate any missing primary keys defined as
-   * the uid field because it's required to generate the index id. If the
-   * primary key is missing, and the primary key is not defined as the uid
-   * field, it will throw an error.
+   * Generates any missing primary keys declared by a Uid attribute. Missing
+   * primary keys where the designated attributes do not exist will
+   * throw an error.
    *
-   * Note that we only want to generate uids for the primary key because the
-   * primary key is required to generate the index id, but other fields
-   * are not.
+   * Note that this will only generate uids for primary key attributes since it
+   * is required to generate the "index id" while the other attributes are not.
    *
-   * It's especially important when we want to "update" records. When updating
-   * records, we want to keep the missing field as-is. Otherwise, it will get
-   * overridden by the newly generated uid value.
+   * It's especially important when attempting to "update" records since we'll
+   * want to retain the missing attributes in-place to prevent them being
+   * overridden by newly generated uid values.
    *
-   * For the primary key, well, if there's no primary key, we don't know what
-   * record to update anyway. If users passed records with missing uid primary
-   * keys to the "update" method, it would fail because the uid value will
-   * never exist in the store.
+   * If uid primary keys are omitted, when invoking the "update" method, it will
+   * fail because the uid values will never exist in the store.
    *
-   * While it would be nice to throw an error in such a case instead of
-   * silently failing the update, we don't have a way to detect whether users
+   * While it would be nice to throw an error in such a case, instead of
+   * silently failing an update, we don't have a way to detect whether users
    * are trying to "update" records or "inserting" new records at this stage.
-   * Maybe we will come up with something in the future.
+   * Something to consider for future revisions.
    */
   private idAttribute(
     model: Model,
     parent: Model
   ): Normalizr.StrategyFunction<string> {
-    // We'll first check if the model contains any uid fields. If so, we have
-    // to generate the uids during the normalization process, so we'll keep
-    // that check result here. This way, we can use this result while
-    // processing each record, instead of looping through the model fields
-    // each time.
+    // We'll first check if the model contains any uid attributes. If so, we
+    // generate the uids during the normalization process, so we'll keep that
+    // check result here. This way, we can use this result while processing each
+    // record, instead of looping through the model fields each time.
     const uidFields = this.getUidPrimaryKeyPairs(model)
 
     return (record, parentRecord, key) => {
@@ -131,7 +126,7 @@ export class Schema {
   }
 
   /**
-   * Get all primary keys defined as an uid attribute for the given model.
+   * Get all primary keys defined by the Uid attribute for the given model.
    */
   private getUidPrimaryKeyPairs(model: Model): Record<string, Uid> {
     const attributes = {} as Record<string, Uid>

@@ -63,7 +63,7 @@ export class Model {
    * Usually, users should never pass `null`, but it's useful when registering
    * models to the database since all pre-registered models are for referencing
    * its model setting during the various process, but the fields are
-   * not required.
+   * not always required.
    */
   constructor(attributes?: Element | null, options?: ModelOptions) {
     this.$boot()

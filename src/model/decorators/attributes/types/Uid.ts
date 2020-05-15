@@ -1,7 +1,7 @@
 import { PropertyDecorator } from '../../Contracts'
 
 /**
- * Create a UID attribute property decorator.
+ * Create a Uid attribute property decorator.
  */
 export function Uid(): PropertyDecorator {
   return (target, propertyKey) => {
