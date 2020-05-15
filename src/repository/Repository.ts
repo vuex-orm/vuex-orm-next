@@ -1,8 +1,9 @@
 import { Store } from 'vuex'
-import { assert } from '../support/Utils'
 import { Constructor } from '../types'
+import { assert } from '../support/Utils'
 import { Element, Item, Collection, Collections } from '../data/Data'
 import { Model } from '../model/Model'
+import { ModelConstructor } from '../model/ModelConstructor'
 import { Query } from '../query/Query'
 import {
   WherePrimaryClosure,
@@ -44,10 +45,10 @@ export class Repository<M extends Model = Model> {
   /**
    * Initialize the repository by setting the model instance.
    */
-  initialize(model?: Constructor<M>): this {
+  initialize(model?: ModelConstructor<M>): this {
     // If there's a model passed in, just use that and return immediately.
     if (model) {
-      this.model = new model(null).$setStore(this.store)
+      this.model = model.newRawInstance().$setStore(this.store)
 
       return this
     }
@@ -57,7 +58,7 @@ export class Repository<M extends Model = Model> {
     // In this case, we'll check if the user has set model to the `use`
     // property and instantiate that.
     if (this.use) {
-      this.model = (new this.use(null) as M).$setStore(this.store)
+      this.model = (this.use.newRawInstance() as M).$setStore(this.store)
 
       return this
     }

@@ -19,6 +19,7 @@ export type ModelRegistries = Record<string, ModelRegistry>
 export type ModelRegistry = Record<string, () => Attribute>
 
 export interface ModelOptions {
+  fill?: boolean
   relations?: boolean
 }
 
@@ -58,17 +59,13 @@ export class Model {
 
   /**
    * Create a new model instance.
-   *
-   * If the given `attributes` is `null`, it will skip generating model fields.
-   * Usually, users should never pass `null`, but it's useful when registering
-   * models to the database since all pre-registered models are for referencing
-   * its model setting during the various process, but the fields are
-   * not always required.
    */
-  constructor(attributes?: Element | null, options?: ModelOptions) {
+  constructor(attributes?: Element, options: ModelOptions = {}) {
     this.$boot()
 
-    attributes !== null && this.$fill(attributes, options)
+    const fill = options.fill ?? true
+
+    fill && this.$fill(attributes, options)
 
     // Prevent `_store` from becoming cyclic object value and causing
     // v-bind side-effects by negating enumerability.
@@ -130,38 +127,53 @@ export class Model {
   }
 
   /**
+   * Create a new model instance without field values being populated.
+   *
+   * This method is mainly fo the internal use when registering models to the
+   * database. Since all pre-registered models are for referencing its model
+   * setting during the various process, but the fields are not required.
+   *
+   * Use this method when you want create a new model instance for:
+   * - Registering model to a component (eg. Repository, Query, etc.)
+   * - Registering model to attributes (String, Has Many, etc.)
+   */
+  static newRawInstance<M extends typeof Model>(this: M): InstanceType<M> {
+    return new this(undefined, { fill: false }) as InstanceType<M>
+  }
+
+  /**
    * Create a new Attr attribute instance.
    */
   static attr(value: any): Attr {
-    return new Attr(new this(null), value)
+    return new Attr(this.newRawInstance(), value)
   }
 
   /**
    * Create a new String attribute instance.
    */
   static string(value: string | null): Str {
-    return new Str(new this(null), value)
+    return new Str(this.newRawInstance(), value)
   }
 
   /**
    * Create a new Number attribute instance.
    */
   static number(value: number | null): Num {
-    return new Num(new this(null), value)
+    return new Num(this.newRawInstance(), value)
   }
 
   /**
    * Create a new Boolean attribute instance.
    */
   static boolean(value: boolean | null): Bool {
-    return new Bool(new this(null), value)
+    return new Bool(this.newRawInstance(), value)
   }
 
   /**
    * Create a new Uid attribute instance.
    */
   static uid(): Uid {
-    return new Uid(new this(null))
+    return new Uid(this.newRawInstance())
   }
 
   /**
@@ -172,11 +184,11 @@ export class Model {
     foreignKey: string,
     localKey?: string
   ): HasOne {
-    const model = new this(null)
+    const model = this.newRawInstance()
 
     localKey = localKey ?? model.$getLocalKey()
 
-    return new HasOne(model, new related(null), foreignKey, localKey)
+    return new HasOne(model, related.newRawInstance(), foreignKey, localKey)
   }
 
   /**
@@ -187,11 +199,11 @@ export class Model {
     foreignKey: string,
     ownerKey?: string
   ): BelongsTo {
-    const instance = new related(null)
+    const instance = related.newRawInstance()
 
     ownerKey = ownerKey ?? instance.$getLocalKey()
 
-    return new BelongsTo(new this(null), instance, foreignKey, ownerKey)
+    return new BelongsTo(this.newRawInstance(), instance, foreignKey, ownerKey)
   }
 
   /**
@@ -202,11 +214,11 @@ export class Model {
     foreignKey: string,
     localKey?: string
   ): HasMany {
-    const model = new this(null)
+    const model = this.newRawInstance()
 
     localKey = localKey ?? model.$getLocalKey()
 
-    return new HasMany(model, new related(null), foreignKey, localKey)
+    return new HasMany(model, related.newRawInstance(), foreignKey, localKey)
   }
 
   /**
