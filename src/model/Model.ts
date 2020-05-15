@@ -1,11 +1,13 @@
 import { Store } from 'vuex'
-import { isArray, assert } from '../support/Utils'
+import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
+import { Database } from '../database/Database'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
 import { String as Str } from './attributes/types/String'
 import { Number as Num } from './attributes/types/Number'
 import { Boolean as Bool } from './attributes/types/Boolean'
+import { Uid } from './attributes/types/Uid'
 import { Relation } from './attributes/relations/Relation'
 import { HasOne } from './attributes/relations/HasOne'
 import { BelongsTo } from './attributes/relations/BelongsTo'
@@ -17,6 +19,7 @@ export type ModelRegistries = Record<string, ModelRegistry>
 export type ModelRegistry = Record<string, () => Attribute>
 
 export interface ModelOptions {
+  fill?: boolean
   relations?: boolean
 }
 
@@ -57,10 +60,12 @@ export class Model {
   /**
    * Create a new model instance.
    */
-  constructor(attributes?: Element, options?: ModelOptions) {
+  constructor(attributes?: Element, options: ModelOptions = {}) {
     this.$boot()
 
-    this.$fill(attributes, options)
+    const fill = options.fill ?? true
+
+    fill && this.$fill(attributes, options)
 
     // Prevent `_store` from becoming cyclic object value and causing
     // v-bind side-effects by negating enumerability.
@@ -115,31 +120,60 @@ export class Model {
   }
 
   /**
+   * Clear registries.
+   */
+  static clearRegistries(): void {
+    this.registries = {}
+  }
+
+  /**
+   * Create a new model instance without field values being populated.
+   *
+   * This method is mainly fo the internal use when registering models to the
+   * database. Since all pre-registered models are for referencing its model
+   * setting during the various process, but the fields are not required.
+   *
+   * Use this method when you want create a new model instance for:
+   * - Registering model to a component (eg. Repository, Query, etc.)
+   * - Registering model to attributes (String, Has Many, etc.)
+   */
+  static newRawInstance<M extends typeof Model>(this: M): InstanceType<M> {
+    return new this(undefined, { fill: false }) as InstanceType<M>
+  }
+
+  /**
    * Create a new Attr attribute instance.
    */
   static attr(value: any): Attr {
-    return new Attr(new this(), value)
+    return new Attr(this.newRawInstance(), value)
   }
 
   /**
    * Create a new String attribute instance.
    */
   static string(value: string | null): Str {
-    return new Str(new this(), value)
+    return new Str(this.newRawInstance(), value)
   }
 
   /**
    * Create a new Number attribute instance.
    */
   static number(value: number | null): Num {
-    return new Num(new this(), value)
+    return new Num(this.newRawInstance(), value)
   }
 
   /**
    * Create a new Boolean attribute instance.
    */
   static boolean(value: boolean | null): Bool {
-    return new Bool(new this(), value)
+    return new Bool(this.newRawInstance(), value)
+  }
+
+  /**
+   * Create a new Uid attribute instance.
+   */
+  static uid(): Uid {
+    return new Uid(this.newRawInstance())
   }
 
   /**
@@ -150,11 +184,11 @@ export class Model {
     foreignKey: string,
     localKey?: string
   ): HasOne {
-    const model = new this()
+    const model = this.newRawInstance()
 
     localKey = localKey ?? model.$getLocalKey()
 
-    return new HasOne(model, new related(), foreignKey, localKey)
+    return new HasOne(model, related.newRawInstance(), foreignKey, localKey)
   }
 
   /**
@@ -165,11 +199,11 @@ export class Model {
     foreignKey: string,
     ownerKey?: string
   ): BelongsTo {
-    const instance = new related()
+    const instance = related.newRawInstance()
 
     ownerKey = ownerKey ?? instance.$getLocalKey()
 
-    return new BelongsTo(new this(), instance, foreignKey, ownerKey)
+    return new BelongsTo(this.newRawInstance(), instance, foreignKey, ownerKey)
   }
 
   /**
@@ -180,11 +214,11 @@ export class Model {
     foreignKey: string,
     localKey?: string
   ): HasMany {
-    const model = new this()
+    const model = this.newRawInstance()
 
     localKey = localKey ?? model.$getLocalKey()
 
-    return new HasMany(model, new related(), foreignKey, localKey)
+    return new HasMany(model, related.newRawInstance(), foreignKey, localKey)
   }
 
   /**
@@ -205,6 +239,13 @@ export class Model {
     ])
 
     return this._store
+  }
+
+  /**
+   * Get the database instance.
+   */
+  get $database(): Database {
+    return this.$store.$database
   }
 
   /**
@@ -316,10 +357,11 @@ export class Model {
   /**
    * Get the index id of this model or for a given record.
    */
-  $getIndexId(record?: Element): string {
+  $getIndexId(record?: Element): string | null {
     const target = record ?? this
+    const id = target[this.$primaryKey]
 
-    return String(target[this.$primaryKey])
+    return isNullish(id) ? null : String(id)
   }
 
   /**

@@ -7,6 +7,7 @@ import { Attr } from '../model/attributes/types/Attr'
 import { String } from '../model/attributes/types/String'
 import { Number } from '../model/attributes/types/Number'
 import { Boolean } from '../model/attributes/types/Boolean'
+import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { HasOne } from '../model/attributes/relations/HasOne'
 import { HasMany } from '../model/attributes/relations/HasMany'
@@ -38,6 +39,7 @@ export interface VuexORMPluginComponents {
   String: typeof String
   Number: typeof Number
   Boolean: typeof Boolean
+  Uid: typeof Uid
   Relation: typeof Relation
   HasOne: typeof HasOne
   HasMany: typeof HasMany
@@ -67,6 +69,7 @@ export const components: VuexORMPluginComponents = {
   String,
   Number,
   Boolean,
+  Uid,
   Relation,
   HasOne,
   HasMany,

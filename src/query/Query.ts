@@ -455,7 +455,7 @@ export class Query<M extends Model = Model> {
     const recordsArray = isArray(records) ? records : [records]
 
     return recordsArray.reduce<Collection<M>>((collection, record) => {
-      const model = this.pick(this.model.$getIndexId(record))
+      const model = this.pick(this.model.$getIndexId(record)!)
 
       model && collection.push(model.$fill(record))
 
@@ -615,7 +615,7 @@ export class Query<M extends Model = Model> {
    * Get an array of ids from the given collection.
    */
   protected getIndexIdsFromCollection(models: Collection<M>): string[] {
-    return models.map((model) => model.$getIndexId())
+    return models.map((model) => model.$getIndexId()!)
   }
 
   /**
@@ -644,7 +644,7 @@ export class Query<M extends Model = Model> {
     const modelArray = isArray(models) ? models : [models]
 
     return modelArray.reduce<Elements>((records, model) => {
-      records[model.$getIndexId()] = model.$getAttributes()
+      records[model.$getIndexId()!] = model.$getAttributes()
       return records
     }, {})
   }

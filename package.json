@@ -52,7 +52,9 @@
     "vuex": ">=3.1.0"
   },
   "dependencies": {
-    "normalizr": "^3.6.0"
+    "@types/uuid": "^7.0.3",
+    "normalizr": "^3.6.0",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@microsoft/api-documenter": "^7.8.0",
