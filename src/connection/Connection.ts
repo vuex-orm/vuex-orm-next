@@ -53,6 +53,15 @@ export class Connection {
   }
 
   /**
+   * Find multiple models by their index ids.
+   */
+  findIn(ids: string[]): Element[] {
+    const data = this.get()
+
+    return ids.map((id) => data[id])
+  }
+
+  /**
    * Commit `insert` mutation to the store.
    */
   insert(records: Elements): void {
