@@ -46,7 +46,7 @@ function destroy(state: State, ids: string[]): void {
 }
 
 /**
- * Commit `deleteAll` change to the store.
+ * Commit `flush` change to the store.
  */
 function flush(state: State): void {
   state.data = {}
