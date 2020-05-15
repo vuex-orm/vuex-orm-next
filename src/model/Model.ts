@@ -2,6 +2,7 @@ import { Store } from 'vuex'
 import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
 import { Database } from '../database/Database'
+import { NonEnumerable } from './decorators/NonEnumerable'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
 import { String as Str } from './attributes/types/String'
@@ -24,11 +25,6 @@ export interface ModelOptions {
 }
 
 export class Model {
-  /**
-   * The store instance.
-   */
-  protected _store!: Store<any>
-
   /**
    * The name of the model.
    */
@@ -58,6 +54,12 @@ export class Model {
   protected static booted: Record<string, boolean> = {}
 
   /**
+   * The store instance.
+   */
+  @NonEnumerable
+  protected _store!: Store<any>
+
+  /**
    * Create a new model instance.
    */
   constructor(attributes?: Element, options: ModelOptions = {}) {
@@ -66,10 +68,6 @@ export class Model {
     const fill = options.fill ?? true
 
     fill && this.$fill(attributes, options)
-
-    // Prevent `_store` from becoming cyclic object value and causing
-    // v-bind side-effects by negating enumerability.
-    Object.defineProperty(this, '_store', { enumerable: false, writable: true })
   }
 
   /**
