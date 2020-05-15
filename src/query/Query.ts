@@ -402,6 +402,26 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Insert the given records to the store by replacing any existing records.
+   */
+  fresh(records: Element | Element[]): Promise<Collections> {
+    return this.persist('fresh', records)
+  }
+
+  /**
+   * Insert the given records to the store by replacing any existing records.
+   */
+  async replace<E extends Element>(records: E[]): Promise<Collection<M>>
+  async replace<E extends Element>(record: E): Promise<M>
+  async replace(records: any): Promise<any> {
+    const models = this.hydrate(records)
+
+    this.connection.fresh(this.compile(models))
+
+    return models
+  }
+
+  /**
    * Update the given record to the store.
    */
   async update(records: Element | Element[]): Promise<Collections> {
@@ -435,7 +455,7 @@ export class Query<M extends Model = Model> {
     const recordsArray = isArray(records) ? records : [records]
 
     return recordsArray.reduce<Collection<M>>((collection, record) => {
-      const model = this.pick(this.model.$getIndexId(record))
+      const model = this.pick(this.model.$getIndexId(record)!)
 
       model && collection.push(model.$fill(record))
 
@@ -483,6 +503,8 @@ export class Query<M extends Model = Model> {
     switch (method) {
       case 'insert':
         return this.add(mappedRecords)
+      case 'fresh':
+        return this.replace(mappedRecords)
       case 'update':
         return this.merge(mappedRecords)
       default:
@@ -593,7 +615,7 @@ export class Query<M extends Model = Model> {
    * Get an array of ids from the given collection.
    */
   protected getIndexIdsFromCollection(models: Collection<M>): string[] {
-    return models.map((model) => model.$getIndexId())
+    return models.map((model) => model.$getIndexId()!)
   }
 
   /**
@@ -622,7 +644,7 @@ export class Query<M extends Model = Model> {
     const modelArray = isArray(models) ? models : [models]
 
     return modelArray.reduce<Elements>((records, model) => {
-      records[model.$getIndexId()] = model.$getAttributes()
+      records[model.$getIndexId()!] = model.$getAttributes()
       return records
     }, {})
   }

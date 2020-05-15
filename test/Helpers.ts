@@ -1,3 +1,4 @@
+import { v1 as uuid } from 'uuid'
 import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 import VuexORM, {
@@ -67,4 +68,8 @@ export function assertInstanceOf(
   collection.forEach((item) => {
     expect(item).toBeInstanceOf(model)
   })
+}
+
+export function mockUid(ids: any[]): void {
+  ids.forEach((id) => (uuid as jest.Mock).mockImplementationOnce(() => id))
 }

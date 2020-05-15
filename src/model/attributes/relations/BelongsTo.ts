@@ -1,6 +1,6 @@
 import { Schema as NormalizrSchema } from 'normalizr'
 import { Schema } from '../../../schema/Schema'
-import { Element, NormalizedData, Collection } from '../../../data/Data'
+import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
 import { Relation } from './Relation'
@@ -55,14 +55,10 @@ export class BelongsTo extends Relation {
   }
 
   /**
-   * Attach the relational key to the given data object.
+   * Attach the relational key to the given relation.
    */
-  attach(id: string | number, record: Element, data: NormalizedData): void {
-    const childRecord = data[this.child.$entity]?.[id]
-
-    if (childRecord) {
-      record[this.foreignKey] = childRecord[this.ownerKey]
-    }
+  attach(record: Element, child: Element): void {
+    record[this.foreignKey] = child[this.ownerKey]
   }
 
   /**

@@ -1,4 +1,6 @@
 import { schema as Normalizr, Schema as NormalizrSchema } from 'normalizr'
+import { isNullish, assert } from '../support/Utils'
+import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 
@@ -30,7 +32,7 @@ export class Schema {
       return this.schemas[model.$entity]
     }
 
-    const schema = this.newEntity(model)
+    const schema = this.newEntity(model, this.model)
 
     this.schemas[model.$entity] = schema
 
@@ -51,18 +53,92 @@ export class Schema {
   /**
    * Create a new normalizr entity.
    */
-  private newEntity(model: Model): Normalizr.Entity {
+  private newEntity(model: Model, parent: Model): Normalizr.Entity {
     const entity = model.$entity
-    const idAttribute = this.idAttribute(model)
+    const idAttribute = this.idAttribute(model, parent)
 
     return new Normalizr.Entity(entity, {}, { idAttribute })
   }
 
   /**
-   * The id attribute option for the normalizr entity.
+   * The `id` attribute option for the normalizr entity.
+   *
+   * Generates any missing primary keys declared by a Uid attribute. Missing
+   * primary keys where the designated attributes do not exist will
+   * throw an error.
+   *
+   * Note that this will only generate uids for primary key attributes since it
+   * is required to generate the "index id" while the other attributes are not.
+   *
+   * It's especially important when attempting to "update" records since we'll
+   * want to retain the missing attributes in-place to prevent them being
+   * overridden by newly generated uid values.
+   *
+   * If uid primary keys are omitted, when invoking the "update" method, it will
+   * fail because the uid values will never exist in the store.
+   *
+   * While it would be nice to throw an error in such a case, instead of
+   * silently failing an update, we don't have a way to detect whether users
+   * are trying to "update" records or "inserting" new records at this stage.
+   * Something to consider for future revisions.
    */
-  private idAttribute(model: Model): Normalizr.StrategyFunction<string> {
-    return (record) => model.$getIndexId(record)
+  private idAttribute(
+    model: Model,
+    parent: Model
+  ): Normalizr.StrategyFunction<string> {
+    // We'll first check if the model contains any uid attributes. If so, we
+    // generate the uids during the normalization process, so we'll keep that
+    // check result here. This way, we can use this result while processing each
+    // record, instead of looping through the model fields each time.
+    const uidFields = this.getUidPrimaryKeyPairs(model)
+
+    return (record, parentRecord, key) => {
+      // If the `key` is not `null`, that means this record is a nested
+      // relationship of the parent model. In this case, we'll attach any
+      // missing foreign keys to the record first.
+      if (key !== null) {
+        ;(parent.$fields[key] as Relation).attach(parentRecord, record)
+      }
+
+      // Next, we'll generate any missing primary key fields defined as
+      // uid field.
+      for (const key in uidFields) {
+        if (isNullish(record[key])) {
+          record[key] = uidFields[key].make(record[key])
+        }
+      }
+
+      // Finally, we'll check if the model has a valid index id. If not, that
+      // means users have passed in the record without a primary key, and the
+      // primary key field is not defined as uid field. In this case, we'll
+      // throw an error. Otherwise, everything is fine, so let's return the
+      // index id.
+      const indexId = model.$getIndexId(record)
+
+      assert(!isNullish(indexId), [
+        'The record is missing the primary key. If you want to persist record',
+        'without the primary key, please defined the primary key field as',
+        '`uid` field.'
+      ])
+
+      return indexId
+    }
+  }
+
+  /**
+   * Get all primary keys defined by the Uid attribute for the given model.
+   */
+  private getUidPrimaryKeyPairs(model: Model): Record<string, Uid> {
+    const attributes = {} as Record<string, Uid>
+
+    const key = model.$getKeyName()
+    const attr = model.$fields[key]
+
+    if (attr instanceof Uid) {
+      attributes[key] = attr
+    }
+
+    return attributes
   }
 
   /**
