@@ -184,7 +184,7 @@ export class Model {
   ): HasOne {
     const model = this.newRawInstance()
 
-    localKey = localKey ?? model.$getLocalKey()
+    localKey = localKey ?? model.$getKeyName()
 
     return new HasOne(model, related.newRawInstance(), foreignKey, localKey)
   }
@@ -199,7 +199,7 @@ export class Model {
   ): BelongsTo {
     const instance = related.newRawInstance()
 
-    ownerKey = ownerKey ?? instance.$getLocalKey()
+    ownerKey = ownerKey ?? instance.$getKeyName()
 
     return new BelongsTo(this.newRawInstance(), instance, foreignKey, ownerKey)
   }
@@ -214,7 +214,7 @@ export class Model {
   ): HasMany {
     const model = this.newRawInstance()
 
-    localKey = localKey ?? model.$getLocalKey()
+    localKey = localKey ?? model.$getKeyName()
 
     return new HasMany(model, related.newRawInstance(), foreignKey, localKey)
   }
@@ -360,13 +360,6 @@ export class Model {
     const id = target[this.$primaryKey]
 
     return isNullish(id) ? null : String(id)
-  }
-
-  /**
-   * Get the local key for this model.
-   */
-  $getLocalKey(): string {
-    return this.$primaryKey
   }
 
   /**
