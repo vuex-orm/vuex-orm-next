@@ -1,7 +1,7 @@
 import { createStore, fillState, assertModel } from 'test/Helpers'
 import { Model, Attr, Str, HasOne } from '@/index'
 
-describe('feature/relations/types/has_one_retrieve', () => {
+describe('feature/relations/has_one_retrieve', () => {
   class User extends Model {
     static entity = 'users'
 

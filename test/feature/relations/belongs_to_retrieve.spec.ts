@@ -1,7 +1,7 @@
 import { createStore, fillState, assertModel } from 'test/Helpers'
 import { Model, Attr, Str, BelongsTo } from '@/index'
 
-describe('feature/relations/types/belongs_to_retrieve', () => {
+describe('feature/relations/belongs_to_retrieve', () => {
   class User extends Model {
     static entity = 'users'
 

@@ -1,7 +1,7 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
 import { Model, Attr, Uid, Str, HasMany } from '@/index'
 
-describe('feature/relations/types/has_many_insert_uid', () => {
+describe('feature/relations/has_many_insert_uid', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })

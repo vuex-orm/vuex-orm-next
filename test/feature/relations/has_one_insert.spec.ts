@@ -1,44 +1,44 @@
 import { createStore, assertState } from 'test/Helpers'
-import { Model, Attr, Str, HasMany } from '@/index'
+import { Model, Attr, Str, HasOne } from '@/index'
 
-describe('feature/relations/types/has_many_insert', () => {
+describe('feature/relations/has_one_insert', () => {
   class User extends Model {
     static entity = 'users'
 
     @Attr() id!: number
     @Str('') name!: string
 
-    @HasMany(() => Post, 'userId')
-    posts!: Post[]
+    @HasOne(() => Phone, 'userId')
+    phone!: Phone | null
   }
 
-  class Post extends Model {
-    static entity = 'posts'
+  class Phone extends Model {
+    static entity = 'phones'
 
     @Attr() id!: number
     @Attr() userId!: number
-    @Str('') title!: string
+    @Str('') number!: string
   }
 
-  it('inserts a record to the store with "has many" relation', async () => {
+  it('inserts a record to the store with "has one" relation', async () => {
     const store = createStore()
 
     await store.$repo(User).insert({
       id: 1,
       name: 'John Doe',
-      posts: [
-        { id: 1, userId: 1, title: 'Title 01' },
-        { id: 2, userId: 1, title: 'Title 02' }
-      ]
+      phone: {
+        id: 1,
+        userId: 1,
+        number: '123-4567-8912'
+      }
     })
 
     assertState(store, {
       users: {
         1: { id: 1, name: 'John Doe' }
       },
-      posts: {
-        1: { id: 1, userId: 1, title: 'Title 01' },
-        2: { id: 2, userId: 1, title: 'Title 02' }
+      phones: {
+        1: { id: 1, userId: 1, number: '123-4567-8912' }
       }
     })
   })
@@ -49,19 +49,18 @@ describe('feature/relations/types/has_many_insert', () => {
     await store.$repo(User).insert({
       id: 1,
       name: 'John Doe',
-      posts: [
-        { id: 1, title: 'Title 01' },
-        { id: 2, title: 'Title 02' }
-      ]
+      phone: {
+        id: 1,
+        number: '123-4567-8912'
+      }
     })
 
     assertState(store, {
       users: {
         1: { id: 1, name: 'John Doe' }
       },
-      posts: {
-        1: { id: 1, userId: 1, title: 'Title 01' },
-        2: { id: 2, userId: 1, title: 'Title 02' }
+      phones: {
+        1: { id: 1, userId: 1, number: '123-4567-8912' }
       }
     })
   })
@@ -78,7 +77,24 @@ describe('feature/relations/types/has_many_insert', () => {
       users: {
         1: { id: 1, name: 'John Doe' }
       },
-      posts: {}
+      phones: {}
+    })
+  })
+
+  it('can insert a record with relational key set to `null`', async () => {
+    const store = createStore()
+
+    await store.$repo(User).insert({
+      id: 1,
+      name: 'John Doe',
+      phone: null
+    })
+
+    assertState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe' }
+      },
+      phones: {}
     })
   })
 })

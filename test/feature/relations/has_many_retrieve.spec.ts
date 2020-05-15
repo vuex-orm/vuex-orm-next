@@ -6,7 +6,7 @@ import {
 } from 'test/Helpers'
 import { Model, Attr, Str, HasMany } from '@/index'
 
-describe('feature/relations/types/has_many_retrieve', () => {
+describe('feature/relations/has_many_retrieve', () => {
   class User extends Model {
     static entity = 'users'
 
