@@ -51,7 +51,7 @@ describe('unit/repository/Repository', () => {
 
   it('can create a new repository from the custom repository', () => {
     class PostRepository extends Repository<Post> {
-      use: typeof Post = Post
+      use = Post
     }
 
     const store = createStore()

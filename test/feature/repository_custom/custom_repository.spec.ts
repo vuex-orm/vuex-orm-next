@@ -11,7 +11,7 @@ describe('feature/repository_custom/custom_repository', () => {
     }
 
     class UserRepository extends Repository<User> {
-      use: typeof User = User
+      use = User
 
       custom(): number {
         return 1
