@@ -64,4 +64,27 @@ describe('feature/relations/belongs_to_retrieve', () => {
       author: null
     })
   })
+
+  it('ignores the relation with the empty foreign key', async () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe' }
+      },
+      posts: {
+        1: { id: 1, userId: null, title: 'Title 01' }
+      }
+    })
+
+    const post = store.$repo(Post).with('author').first()!
+
+    expect(post).toBeInstanceOf(Post)
+    assertModel(post, {
+      id: 1,
+      userId: null,
+      title: 'Title 01',
+      author: null
+    })
+  })
 })
