@@ -454,13 +454,15 @@ export class Query<M extends Model = Model> {
   protected getMergedModels(records: any): any {
     const recordsArray = isArray(records) ? records : [records]
 
-    return recordsArray.reduce<Collection<M>>((collection, record) => {
+    const models = recordsArray.reduce<Collection<M>>((collection, record) => {
       const model = this.pick(this.model.$getIndexId(record)!)
 
       model && collection.push(model.$fill(record))
 
       return collection
     }, [])
+
+    return isArray(records) ? models : models[0] ?? null
   }
 
   /**
