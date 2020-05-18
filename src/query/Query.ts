@@ -156,7 +156,7 @@ export class Query<M extends Model = Model> {
   }
 
   /**
-   * Set the "take" value of the query.
+   * Set the "limit" value of the query.
    */
   limit(value: number): this {
     this.take = value
