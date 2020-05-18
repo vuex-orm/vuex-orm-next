@@ -509,8 +509,6 @@ export class Query<M extends Model = Model> {
         return this.replace(mappedRecords)
       case 'update':
         return this.merge(mappedRecords)
-      default:
-        throw new Error(`[Vuex ORM] Invalid persist method: \`${method}\``)
     }
   }
 
