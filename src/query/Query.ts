@@ -4,7 +4,8 @@ import {
   isFunction,
   isEmpty,
   orderBy,
-  groupBy
+  groupBy,
+  assert
 } from '../support/Utils'
 import {
   Element,
@@ -575,6 +576,11 @@ export class Query<M extends Model = Model> {
   async destroy(id: string | number): Promise<Item<M>>
   async destroy(ids: (string | number)[]): Promise<Collection<M>>
   async destroy(ids: any): Promise<any> {
+    assert(!this.model.$hasCompositeKey(), [
+      "You can't use the `destroy` method on the model with the composite key.",
+      'Please use `delete` method instead.'
+    ])
+
     if (isArray(ids)) {
       return this.destroyMany(ids)
     }
