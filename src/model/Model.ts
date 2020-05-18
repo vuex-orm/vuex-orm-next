@@ -1,7 +1,6 @@
 import { Store } from 'vuex'
 import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
-import { Database } from '../database/Database'
 import { NonEnumerable } from './decorators/NonEnumerable'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
@@ -240,13 +239,6 @@ export class Model {
   }
 
   /**
-   * Get the database instance.
-   */
-  get $database(): Database {
-    return this.$store.$database
-  }
-
-  /**
    * Get the entity for this model.
    */
   get $entity(): string {
@@ -360,21 +352,6 @@ export class Model {
     const id = target[this.$primaryKey]
 
     return isNullish(id) ? null : String(id)
-  }
-
-  /**
-   * Check if this model has any relations defined by the schema.
-   */
-  $hasRelation(): boolean {
-    let result = false
-
-    for (const key in this.$fields) {
-      if (this.$fields[key] instanceof Relation) {
-        result = true
-      }
-    }
-
-    return result
   }
 
   /**
