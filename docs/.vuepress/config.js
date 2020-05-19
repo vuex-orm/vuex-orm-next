@@ -23,7 +23,9 @@ const sidebars = {
       title: 'Relationships',
       collapsable: false,
       children: [
-        ['/guide/relationships/getting-started', 'Getting Started']
+        ['/guide/relationships/getting-started', 'Getting Started'],
+        ['/guide/relationships/one-to-one', 'One To One'],
+        ['/guide/relationships/one-to-many', 'One To Many']
       ]
     },
     {
@@ -35,13 +37,6 @@ const sidebars = {
         ['/guide/repository/inserting-data', 'Inserting Data'],
         ['/guide/repository/updating-data', 'Updating Data'],
         ['/guide/repository/deleting-data', 'Deleting Data']
-      ]
-    },
-    {
-      title: 'Query',
-      collapsable: false,
-      children: [
-        ['/guide/query/getting-started', 'Getting Started']
       ]
     },
     {
