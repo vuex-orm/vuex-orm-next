@@ -1,6 +1,6 @@
 # Model: Decorators
 
-Vuex ORM provides field decorators to Typescript users for better type support when defining the schema for an entity. Simply put, decorators replace the need to define the `fields` method.
+Vuex ORM provides property decorators to Typescript users for better type support when defining the schema for an entity. Simply put, decorators replace the need to define the `fields` method.
 
 The following example defines a User model using decorators on properties that form the schema for the users entity:
 
