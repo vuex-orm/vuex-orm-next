@@ -14,7 +14,8 @@ const sidebars = {
       title: 'Model',
       collapsable: false,
       children: [
-        ['/guide/model/getting-started', 'Getting Started']
+        ['/guide/model/getting-started', 'Getting Started'],
+        ['/guide/model/accessors', 'Accessors']
       ]
     },
     {
