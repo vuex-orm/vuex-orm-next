@@ -54,15 +54,15 @@ You can install a plugin by passing the imported plugin module to `VuexORM.use()
 
 ```js
 import VuexORM from '@vuex-orm/core'
-import myPlugin from 'my-plugin'
+import plugin from 'plugin'
 
-VuexORM.use(myPlugin)
+VuexORM.use(plugin)
 ```
 
 If your plugin offers user-defined options, these can be passed as the second argument.
 
 ```js
-VuexORM.use(myPlugin, { someOption: true })
+VuexORM.use(plugin, { someOption: true })
 ```
 
 Plugins should be installed prior to the Vuex ORM installation with Vuex.
