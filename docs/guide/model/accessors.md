@@ -1,10 +1,8 @@
 # Model: Accessors
 
-The accessors allow you to format attribute values of the data when retrieving them on a model instance. For example, you might want to modify some value to display nicely on the browser, but you still want to keep actual data as is inside Vuex Store.
+Model accessors are computed properties which have access to the model instance and all it's properties and methods. You can define accessors on models to create virtual properties using methods and ES6 getters. Accessors are exempt from persistence and are hidden from model serialization.
 
-## Defining Accessors
-
-To define an accessor, just create a getter or a method in the model. In this example, we'll define `fullName` getter and `prefix` method to the User model.
+The following example defines an accessor on a User model as `fullName`, using ES6 getters, which combines the `firstName` and `lastName` attributes from the model schema, and also a prefix method to allow customizing the `firstName`.
 
 ```js
 class User extends Model {
@@ -28,17 +26,12 @@ class User extends Model {
     return `${prefix} ${this.fullName}`
   }
 }
-```
 
-As you can see, these are just ordinary JavaScript class definitions. You are free to define anything inside a class to modify data. You may access the value by simply calling those getters or methods.
+const user = store.$repo(User).make({
+  firstName: 'John',
+  lastName: 'Doe'
+})
 
-```js
-// Let's say you have following user inside Vuex Store.
-{ id: 1, firstName: 'John', lastName: 'Doe' }
-
-const user = store.$repo(User).find(1)
-
-user.fullName // <- 'John Doe'
-
-user.prefix('Sir.') // <- 'Sir. John Doe'
+console.log(user.fullName) // 'John Doe'
+console.log(user.prefix('Sir.')) // 'Sir. John Doe'
 ```
