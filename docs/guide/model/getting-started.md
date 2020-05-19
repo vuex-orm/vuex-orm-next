@@ -1,8 +1,8 @@
-# Models: Getting Started
+# Model: Getting Started
 
 A model defines an entity schema that will be handled by Vuex ORM. You can visualize a model  as a table definition in a database. You can use models wherever your application needs to manage a collection of entities, whether they actually correspond to a database or not. Models encapsulate most of the functionality that you'll need to work with your data.
 
-## Defining Models
+## Defining A Model
 
 You can create a model by defining a new class that extends the Vuex ORM base `Model`. All models require two static properties, an `entity` and `fields` property.
 
@@ -40,7 +40,7 @@ Vuex ORM supports the most common Javascript datatypes including primitives, obj
 Attributes take a single argument – the fields **default value**. This default value is used in the event the field is missing when inserting data.
 
 :::tip Attribute Decorators
-Typescript users can define attributes using decorators. To learn more about these, please take a look at [TypeScript](../digging-deeper/typescript) page.
+Typescript users can define attributes using decorators. To learn more about these, please take a look at the [Decorators](decorators) section.
 :::
 
 ### Generic Type
