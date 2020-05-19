@@ -4,7 +4,7 @@ Vuex ORM supports the "Data Mapper" pattern to interact with the store. The Data
 
 In Data Mapper, your models are very dumb – they just define their properties and may have some "dummy" methods. Simply said, data mapper is an approach to access your database within repositories instead of models.
 
-## Retrieving repository for the model
+## Retrieving Repository For The Model
 
 Repositories always correspond to a model. For example, if you have a User model, then you would insert, retrieve, update, and delete user records through user repository. Let's say you have the User model defined like this.
 
@@ -77,7 +77,7 @@ export default {
 }
 ```
 
-## Interacting with Store
+## Interacting With Store
 
 As mentioned earlier, you may use repositories to retrieve, insert, update, and delete data in the store. Please refer to the corresponding pages to learn more about how to interact with the store.
 
