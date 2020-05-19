@@ -1,10 +1,10 @@
 # Plugins
 
-You may add additional features to the Vuex ORM through plugins. Plugins usually add global-level functionality to Vuex ORM. Vuex ORM plugin works very similarly to Vue Plugin.
+You can add additional features to Vuex ORM by creating your own plugins. Plugins can add global-level functionality to Vuex ORM and work very similarly to Vue Plugin.
 
 ## Writing A Plugin
 
-A Vuex ORM plugin should be an object that exposes an install method. The method will be called with the Vuex Store instance as the first augument, then Vuex ORM components such as `Model`, `Repository`, `Query` and such, as the third argument, along with possible options as force argument.
+A Vuex ORM plugin should be an object that exposes an install method. The method will be called with the Vuex Store instance as the first argument, Vuex ORM components (see [Extendable Components](#extendable-components) for a comprehensive list) as the second argument, and possible user-defined options for your plugin as the third argument.
 
 ```js
 const plugin = {
@@ -20,13 +20,15 @@ const plugin = {
     }
   }
 }
+
+export default plugin
 ```
 
-The plugin `install` method will be invoked right before Vuex ORM does the initial setup.
+The plugin `install` method will be invoked immediately before Vuex ORM begins it's initial setup.
 
 ### Extendable Components
 
-The following components are included within the `components` argument.
+The following components are included by the `components` argument.
 
 - Database
 - Model
@@ -46,19 +48,21 @@ The following components are included within the `components` argument.
 - Connection
 - mutations
 
-## Using a Plugin
+## Using A Plugin
 
-Use plugins by calling the `VuexORM.use()` method.
+You can install a plugin by passing the imported plugin module to `VuexORM.use()`.
 
 ```js
 import VuexORM from '@vuex-orm/core'
-import plugin from 'vuex-orm-plugin'
+import myPlugin from 'my-plugin'
 
-VuexORM.use(plugin)
+VuexORM.use(myPlugin)
 ```
 
-You can optionally pass in some options too.
+If your plugin offers user-defined options, these can be passed as the second argument.
 
 ```js
-VuexORM.use(plugin, { someOption: true })
+VuexORM.use(myPlugin, { someOption: true })
 ```
+
+Plugins should be installed prior to the Vuex ORM installation with Vuex.
