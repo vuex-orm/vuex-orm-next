@@ -45,9 +45,9 @@ class User extends Model {
 }
 ```
 
-### Decorator Reference
+## Available Decorators
 
-#### `@Attr`
+### `@Attr`
 
 Marks a property on the model as a [generic attribute](getting-started.md#generic-type) type. For example:
 
@@ -68,7 +68,7 @@ export class User extends Model {
 }
 ```
 
-#### `@Str`
+### `@Str`
 
 Marks a property on the model as a [string attribute](getting-started.md#string-type) type. For example:
 
@@ -86,7 +86,7 @@ export class User extends Model {
 }
 ```
 
-#### `@Num`
+### `@Num`
 
 Marks a property on the model as a [number attribute](getting-started.md#string-type) type. For example:
 
@@ -104,7 +104,7 @@ export class User extends Model {
 }
 ```
 
-#### `@Bool`
+### `@Bool`
 
 Marks a property on the model as a [boolean attribute](getting-started.md#boolean-type) type. For example:
 
@@ -122,7 +122,7 @@ export class User extends Model {
 }
 ```
 
-#### `@Uid`
+### `@Uid`
 
 Marks a property on the model as a [Uid attribute](getting-started.md#uid-type) type. For example:
 
@@ -137,43 +137,27 @@ class User extends Model {
 }
 ```
 
-### Relationships
+## Relationships
 
 Decorators on relation properties accept the same argument signature as their corresponding field attribute type with the exception that model references should be defined as a closure that return the model constructor (to avoid circular dependencies).
 
-#### `@HasOne`
+### `@HasOne`
 
 Marks a property on the model as a [hasOne attribute](../relationships/getting-started.md) type. For example:
 
 ```ts
 import { Model, HasOne } from '@vuex-orm/core'
-import Post from '@/models/Post'
+import Phone from '@/models/Phone'
 
 class User extends Model {
   static entity = 'users'
 
-  @HasOne(() => Post, 'userId')
-  phone: Post | null
+  @HasOne(() => Phone, 'userId')
+  phone: Phone | null
 }
 ```
 
-#### `@HasMany`
-
-Marks a property on the model as a [hasMany attribute](../relationships/getting-started.md) type. For example:
-
-```ts
-import { Model, HasMany } from '@vuex-orm/core'
-import Post from '@/models/Post'
-
-class User extends Model {
-  static entity = 'users'
-
-  @HasMany(() => Post, 'userId')
-  posts: Post[]
-}
-```
-
-#### `@BelongsTo`
+### `@BelongsTo`
 
 Marks a property on the model as a [belongsTo attribute](../relationships/getting-started.md) type. For example:
 
@@ -185,9 +169,25 @@ class Post extends Model {
   static entity = 'posts'
 
   @Attr(null)
-  postId!: number
+  userId!: number | null
 
-  @BelongsTo(() => User, 'postId')
+  @BelongsTo(() => User, 'userId')
+  user: User | null
+}
+```
+
+### `@HasMany`
+
+Marks a property on the model as a [hasMany attribute](../relationships/getting-started.md) type. For example:
+
+```ts
+import { Model, HasMany } from '@vuex-orm/core'
+import Post from '@/models/Post'
+
+class User extends Model {
+  static entity = 'users'
+
+  @HasMany(() => Post, 'userId')
   posts: Post[]
 }
 ```
