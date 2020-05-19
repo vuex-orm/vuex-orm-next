@@ -1,5 +1,5 @@
 import { schema as Normalizr, Schema as NormalizrSchema } from 'normalizr'
-import { isNullish, assert } from '../support/Utils'
+import { isNullish, isArray, assert } from '../support/Utils'
 import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
@@ -115,7 +115,7 @@ export class Schema {
       // index id.
       const indexId = model.$getIndexId(record)
 
-      assert(!isNullish(indexId), [
+      assert(indexId !== null, [
         'The record is missing the primary key. If you want to persist record',
         'without the primary key, please defined the primary key field as',
         '`uid` field.'
@@ -129,14 +129,20 @@ export class Schema {
    * Get all primary keys defined by the Uid attribute for the given model.
    */
   private getUidPrimaryKeyPairs(model: Model): Record<string, Uid> {
+    const key = model.$getKeyName()
+    const keys = isArray(key) ? key : [key]
+
     const attributes = {} as Record<string, Uid>
 
-    const key = model.$getKeyName()
-    const attr = model.$fields[key]
+    keys.forEach((k) => {
+      const attr = model.$fields[k]
 
-    if (attr instanceof Uid) {
-      attributes[key] = attr
-    }
+      if (attr instanceof Uid) {
+        attributes[k] = attr
+      }
+
+      model.$fields[k]
+    })
 
     return attributes
   }

@@ -14,7 +14,8 @@ const sidebars = {
       title: 'Model',
       collapsable: false,
       children: [
-        ['/guide/model/getting-started', 'Getting Started']
+        ['/guide/model/getting-started', 'Getting Started'],
+        ['/guide/model/accessors', 'Accessors']
       ]
     },
     {
@@ -28,7 +29,11 @@ const sidebars = {
       title: 'Repository',
       collapsable: false,
       children: [
-        ['/guide/repository/getting-started', 'Getting Started']
+        ['/guide/repository/getting-started', 'Getting Started'],
+        ['/guide/repository/retrieving-data', 'Retrieving Data'],
+        ['/guide/repository/inserting-data', 'Inserting Data'],
+        ['/guide/repository/updating-data', 'Updating Data'],
+        ['/guide/repository/deleting-data', 'Deleting Data']
       ]
     },
     {
@@ -39,10 +44,9 @@ const sidebars = {
       ]
     },
     {
-      title: 'Degging Deeper',
+      title: 'Digging Deeper',
       collapsable: false,
       children: [
-        ['/guide/digging-deeper/typescript', 'TypeScript'],
         ['/guide/digging-deeper/plugins', 'Plugins']
       ]
     }

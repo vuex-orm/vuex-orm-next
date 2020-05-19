@@ -1,7 +1,6 @@
 import { Store } from 'vuex'
 import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
-import { Database } from '../database/Database'
 import { NonEnumerable } from './decorators/NonEnumerable'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
@@ -33,7 +32,7 @@ export class Model {
   /**
    * The primary key for the model.
    */
-  static primaryKey: string = 'id'
+  static primaryKey: string | string[] = 'id'
 
   /**
    * The schema for the model. It contains the result of the `fields`
@@ -184,7 +183,7 @@ export class Model {
   ): HasOne {
     const model = this.newRawInstance()
 
-    localKey = localKey ?? model.$getKeyName()
+    localKey = localKey ?? model.$getLocalKey()
 
     return new HasOne(model, related.newRawInstance(), foreignKey, localKey)
   }
@@ -199,7 +198,7 @@ export class Model {
   ): BelongsTo {
     const instance = related.newRawInstance()
 
-    ownerKey = ownerKey ?? instance.$getKeyName()
+    ownerKey = ownerKey ?? instance.$getLocalKey()
 
     return new BelongsTo(this.newRawInstance(), instance, foreignKey, ownerKey)
   }
@@ -214,7 +213,7 @@ export class Model {
   ): HasMany {
     const model = this.newRawInstance()
 
-    localKey = localKey ?? model.$getKeyName()
+    localKey = localKey ?? model.$getLocalKey()
 
     return new HasMany(model, related.newRawInstance(), foreignKey, localKey)
   }
@@ -240,13 +239,6 @@ export class Model {
   }
 
   /**
-   * Get the database instance.
-   */
-  get $database(): Database {
-    return this.$store.$database
-  }
-
-  /**
    * Get the entity for this model.
    */
   get $entity(): string {
@@ -256,7 +248,7 @@ export class Model {
   /**
    * Get the primary key for this model.
    */
-  get $primaryKey(): string {
+  get $primaryKey(): string | string[] {
     return this.$self.primaryKey
   }
 
@@ -348,8 +340,52 @@ export class Model {
   /**
    * Get the primary key field name.
    */
-  $getKeyName(): string {
+  $getKeyName(): string | string[] {
     return this.$primaryKey
+  }
+
+  /**
+   * Get primary key value for the model. If the model has the composite key,
+   * it will return an array of ids.
+   */
+  $getKey(record?: Element): string | number | (string | number)[] | null {
+    record = record ?? this
+
+    if (this.$hasCompositeKey()) {
+      return this.$getCompositeKey(record)
+    }
+
+    const id = record[this.$getKeyName() as string]
+
+    return isNullish(id) ? null : id
+  }
+
+  /**
+   * Check whether the model has composite key.
+   */
+  $hasCompositeKey(): boolean {
+    return isArray(this.$getKeyName())
+  }
+
+  /**
+   * Get the composite key values for the given model as an array of ids.
+   */
+  protected $getCompositeKey(record: Element): (string | number)[] | null {
+    let ids = [] as (string | number)[] | null
+
+    ;(this.$getKeyName() as string[]).every((key) => {
+      const id = record[key]
+
+      if (isNullish(id)) {
+        ids = null
+        return false
+      }
+
+      ;(ids as (string | number)[]).push(id)
+      return true
+    })
+
+    return ids === null ? null : ids
   }
 
   /**
@@ -357,24 +393,32 @@ export class Model {
    */
   $getIndexId(record?: Element): string | null {
     const target = record ?? this
-    const id = target[this.$primaryKey]
 
-    return isNullish(id) ? null : String(id)
+    const id = this.$getKey(target)
+
+    return id === null ? null : this.$stringifyId(id)
   }
 
   /**
-   * Check if this model has any relations defined by the schema.
+   * Stringify the given id.
    */
-  $hasRelation(): boolean {
-    let result = false
+  protected $stringifyId(id: string | number | (string | number)[]): string {
+    return isArray(id) ? JSON.stringify(id) : String(id)
+  }
 
-    for (const key in this.$fields) {
-      if (this.$fields[key] instanceof Relation) {
-        result = true
-      }
-    }
+  /**
+   * Get the local key name for the model.
+   */
+  $getLocalKey(): string {
+    // If the model has a composite key, we can't use it as a local key for the
+    // relation. The user must provide the key name explicitly, so we'll throw
+    // an error here.
+    assert(!this.$hasCompositeKey(), [
+      'Please provide the local key for the relationship. The model with the',
+      "composite key can't infer its local key."
+    ])
 
-    return result
+    return this.$getKeyName() as string
   }
 
   /**

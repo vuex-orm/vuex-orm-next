@@ -126,6 +126,20 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Set the "limit" value of the query.
+   */
+  limit(value: number): Query<M> {
+    return this.query().limit(value)
+  }
+
+  /**
+   * Set the "offset" value of the query.
+   */
+  offset(value: number): Query<M> {
+    return this.query().offset(value)
+  }
+
+  /**
    * Set the relationships that should be eager loaded.
    */
   with(name: string): Query<M> {
