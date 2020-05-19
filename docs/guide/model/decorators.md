@@ -178,7 +178,7 @@ class User extends Model {
 Marks a property on the model as a [belongsTo attribute](../relationships/getting-started.md) type. For example:
 
 ```ts
-import { Model, HasMany } from '@vuex-orm/core'
+import { Model, BelongsTo } from '@vuex-orm/core'
 import User from '@/models/User'
 
 class Post extends Model {
