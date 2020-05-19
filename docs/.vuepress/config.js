@@ -15,7 +15,8 @@ const sidebars = {
       collapsable: false,
       children: [
         ['/guide/model/getting-started', 'Getting Started'],
-        ['/guide/model/accessors', 'Accessors']
+        ['/guide/model/accessors', 'Accessors'],
+        ['/guide/model/decorators', 'Decorators']
       ]
     },
     {
@@ -47,8 +48,7 @@ const sidebars = {
       title: 'Digging Deeper',
       collapsable: false,
       children: [
-        ['/guide/digging-deeper/plugins', 'Plugins'],
-        ['/guide/digging-deeper/typescript', 'TypeScript']
+        ['/guide/digging-deeper/plugins', 'Plugins']
       ]
     }
   ]
