@@ -9,7 +9,8 @@ import {
   WherePrimaryClosure,
   WhereSecondaryClosure,
   OrderDirection,
-  OrderBy
+  OrderBy,
+  EagerLoadConstraint
 } from '../query/Options'
 
 export class Repository<M extends Model = Model> {
@@ -101,9 +102,9 @@ export class Repository<M extends Model = Model> {
   /**
    * Add a basic where clause to the query.
    */
-  where<T extends keyof M>(
-    field: WherePrimaryClosure<M> | T,
-    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  where(
+    field: WherePrimaryClosure | string,
+    value?: WhereSecondaryClosure | any
   ): Query<M> {
     return this.query().where(field, value)
   }
@@ -111,9 +112,9 @@ export class Repository<M extends Model = Model> {
   /**
    * Add an "or where" clause to the query.
    */
-  orWhere<T extends keyof M>(
-    field: WherePrimaryClosure<M> | T,
-    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  orWhere(
+    field: WherePrimaryClosure | string,
+    value?: WhereSecondaryClosure | any
   ): Query<M> {
     return this.query().orWhere(field, value)
   }
@@ -142,8 +143,8 @@ export class Repository<M extends Model = Model> {
   /**
    * Set the relationships that should be eager loaded.
    */
-  with(name: string): Query<M> {
-    return this.query().with(name)
+  with(name: string, callback?: EagerLoadConstraint): Query<M> {
+    return this.query().with(name, callback)
   }
 
   /**

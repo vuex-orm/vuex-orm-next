@@ -90,6 +90,36 @@ Of course, you may chain more than one `with(...)` method to retrieve multiple r
 const user = store.$repo(User).with('posts').with('phone').first()
 ```
 
+### Loading Nested Relationships
+
+To load nested relationships, you may pass constraints to the 2nd argument. For example, let's load all of the book's authors and all of the author's personal contacts:
+
+```js
+const books = store.$repo(Book).with('author', (query) => {
+  query.with('contacts')
+}).get()
+```
+
+Learn more about the constraining query in the next section.
+
+### Constraining a Relationship Query
+
+Sometimes you may wish to load a relationship, but also specify additional query conditions for the loading query. Here's an example:
+
+```js
+const users = store.$repo(User).with('posts', (query) => {
+  query.where('published', true)
+}).get()
+```
+
+In this example, it will only load posts where the post's `published` filed matches the `true` first. You may call other query builder methods to further customize the loading operation:
+
+```js
+const users = store.$repo(User).with('posts', (query) => {
+  query.orderBy('createdAt', 'desc')
+}).get()
+```
+
 ## Inserting Relationships
 
 When inserting new records into the store, Vuex ORM automatically normalizes and stores data that contains any nested relationships in it's data structure. For example, let's say you have the `User` model that has a relationship to the `Post` model:

@@ -60,7 +60,7 @@ export class Query<M extends Model = Model> {
   /**
    * The where constraints for the query.
    */
-  protected wheres: Where<M, any>[] = []
+  protected wheres: Where[] = []
 
   /**
    * The orderings for the query.
@@ -110,9 +110,9 @@ export class Query<M extends Model = Model> {
   /**
    * Add a basic where clause to the query.
    */
-  where<T extends keyof M>(
-    field: WherePrimaryClosure<M> | T,
-    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  where(
+    field: WherePrimaryClosure | string,
+    value?: WhereSecondaryClosure | any
   ): this {
     this.wheres.push({ field, value, boolean: 'and' })
 
@@ -122,7 +122,7 @@ export class Query<M extends Model = Model> {
   /**
    * Add a "where in" clause to the query.
    */
-  whereIn<T extends keyof M>(field: T, values: M[T][]): this {
+  whereIn(field: string, values: any[]): this {
     this.wheres.push({ field, value: values, boolean: 'and' })
 
     return this
@@ -138,9 +138,9 @@ export class Query<M extends Model = Model> {
   /**
    * Add an "or where" clause to the query.
    */
-  orWhere<T extends keyof M>(
-    field: WherePrimaryClosure<M> | T,
-    value?: WhereSecondaryClosure<M, T> | M[T] | M[T][]
+  orWhere(
+    field: WherePrimaryClosure | string,
+    value?: WhereSecondaryClosure | any
   ): this {
     this.wheres.push({ field, value, boolean: 'or' })
 
@@ -177,8 +177,8 @@ export class Query<M extends Model = Model> {
   /**
    * Set the relationships that should be eager loaded.
    */
-  with(name: string): Query<M> {
-    this.eagerLoad[name] = () => {}
+  with(name: string, callback: EagerLoadConstraint = () => {}): Query<M> {
+    this.eagerLoad[name] = callback
 
     return this
   }
@@ -302,7 +302,7 @@ export class Query<M extends Model = Model> {
   /**
    * The function to compare where clause to the given model.
    */
-  protected whereComparator(model: M, where: Where<M, any>): boolean {
+  protected whereComparator(model: M, where: Where): boolean {
     if (isFunction(where.field)) {
       return where.field(model)
     }

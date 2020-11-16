@@ -1,21 +1,19 @@
 import { Model } from '../model/Model'
 import { Query } from './Query'
 
-export interface Where<M extends Model, K extends keyof M> {
-  field: WherePrimaryClosure<M> | K
-  value: WhereSecondaryClosure<M, K> | M[K] | M[K][]
+export interface Where {
+  field: WherePrimaryClosure | string
+  value: WhereSecondaryClosure | any
   boolean: 'and' | 'or'
 }
 
-export type WherePrimaryClosure<M extends Model> = (model: M) => boolean
+export type WherePrimaryClosure = (model: any) => boolean
 
-export type WhereSecondaryClosure<M extends Model, K extends keyof M> = (
-  value: M[K]
-) => boolean
+export type WhereSecondaryClosure = (value: any) => boolean
 
-export interface WhereGroup<M extends Model, K extends keyof M> {
-  and?: Where<M, K>[]
-  or?: Where<M, K>[]
+export interface WhereGroup {
+  and?: Where[]
+  or?: Where[]
 }
 
 export interface Order<M extends Model> {
