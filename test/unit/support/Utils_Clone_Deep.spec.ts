@@ -19,7 +19,7 @@ describe('unit/support/Utils_Clone_Deep', () => {
 
     expect(clone).toStrictEqual(data)
 
-    delete data.nested[0].deep[0].deeper.id
+    data.nested[0].deep[0].deeper.id = 4
 
     expect(clone).not.toStrictEqual(data)
   })

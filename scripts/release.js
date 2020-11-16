@@ -9,11 +9,12 @@ const currentVersion = require('../package.json').version
 const versionIncrements = [
   'patch',
   'minor',
-  'major',
-  'prepatch',
-  'preminor',
-  'premajor',
-  'prerelease'
+  'major'
+]
+
+const tags = [
+  'latest',
+  'next'
 ]
 
 const inc = (i) => semver.inc(currentVersion, i, 'draft')
@@ -45,6 +46,15 @@ async function main() {
   if (!semver.valid(targetVersion)) {
     throw new Error(`Invalid target version: ${targetVersion}`)
   }
+
+  const { tag } = await prompt({
+    type: 'select',
+    name: 'tag',
+    message: 'Select tag type',
+    choices: tags
+  })
+
+  console.log(tag)
 
   const { yes } = await prompt({
     type: 'confirm',
