@@ -75,7 +75,7 @@ describe('feature/repository/retrieves_where', () => {
 
     const users = store
       .$repo(User)
-      .where('age', (value) => value === 30)
+      .where('age', (value: any) => value === 30)
       .get()
 
     const expected = [
