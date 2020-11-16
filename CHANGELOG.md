@@ -1,3 +1,13 @@
+# [1.0.0-draft.6](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.5...v1.0.0-draft.6) (2020-11-16)
+
+
+### Features
+
+* add `merge` method to the repository ([3fcbf6a](https://github.com/vuex-orm/vuex-orm-next/commit/3fcbf6a40f95fd20182c9ab45ed33545a81ac0b8))
+* add eager load constraints feature ([ec7f274](https://github.com/vuex-orm/vuex-orm-next/commit/ec7f2744ab9bea551740bec1a09dd562bca47b90))
+
+
+
 # [1.0.0-draft.5](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.4...v1.0.0-draft.5) (2020-11-16)
 
 
