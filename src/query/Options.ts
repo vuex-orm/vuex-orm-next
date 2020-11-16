@@ -1,4 +1,3 @@
-import { Model } from '../model/Model'
 import { Query } from './Query'
 
 export interface Where {
@@ -16,12 +15,12 @@ export interface WhereGroup {
   or?: Where[]
 }
 
-export interface Order<M extends Model> {
-  field: OrderBy<M>
+export interface Order {
+  field: OrderBy
   direction: OrderDirection
 }
 
-export type OrderBy<M extends Model> = string | ((model: M) => any)
+export type OrderBy = string | ((model: any) => any)
 
 export type OrderDirection = 'asc' | 'desc'
 

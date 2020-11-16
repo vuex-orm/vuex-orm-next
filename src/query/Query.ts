@@ -65,7 +65,7 @@ export class Query<M extends Model = Model> {
   /**
    * The orderings for the query.
    */
-  protected orders: Order<M>[] = []
+  protected orders: Order[] = []
 
   /**
    * The maximum number of records to return.
@@ -150,7 +150,7 @@ export class Query<M extends Model = Model> {
   /**
    * Add an "order by" clause to the query.
    */
-  orderBy(field: OrderBy<M>, direction: OrderDirection = 'asc'): Query<M> {
+  orderBy(field: OrderBy, direction: OrderDirection = 'asc'): Query<M> {
     this.orders.push({ field, direction })
 
     return this
@@ -286,7 +286,7 @@ export class Query<M extends Model = Model> {
   /**
    * Get comparator for the where clause.
    */
-  protected getWhereComparator(): (model: M) => boolean {
+  protected getWhereComparator(): (model: any) => boolean {
     const { and, or } = groupBy(this.wheres, (where) => where.boolean)
 
     return (model) => {

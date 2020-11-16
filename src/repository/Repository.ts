@@ -122,7 +122,7 @@ export class Repository<M extends Model = Model> {
   /**
    * Add an "order by" clause to the query.
    */
-  orderBy(field: OrderBy<M>, direction?: OrderDirection): Query<M> {
+  orderBy(field: OrderBy, direction?: OrderDirection): Query<M> {
     return this.query().orderBy(field, direction)
   }
 

@@ -1,6 +1,7 @@
 import { Store } from 'vuex'
 import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
+import { Query } from '../query/Query'
 import { NonEnumerable } from './decorators/NonEnumerable'
 import { Attribute } from './attributes/Attribute'
 import { Attr } from './attributes/types/Attr'
@@ -253,12 +254,10 @@ export class Model {
   }
 
   /**
-   * Set the store instance.
+   * Get the model fields for this model.
    */
-  $setStore(store: Store<any>): this {
-    this._store = store
-
-    return this
+  get $fields(): ModelFields {
+    return this.$self.schemas[this.$entity]
   }
 
   /**
@@ -275,10 +274,19 @@ export class Model {
   }
 
   /**
-   * Get the model fields for this model.
+   * Create a new query instance.
    */
-  get $fields(): ModelFields {
-    return this.$self.schemas[this.$entity]
+  $query(): Query<this> {
+    return new Query(this.$store, this)
+  }
+
+  /**
+   * Set the store instance.
+   */
+  $setStore(store: Store<any>): this {
+    this._store = store
+
+    return this
   }
 
   /**
@@ -448,6 +456,37 @@ export class Model {
    */
   $getAttributes(): Element {
     return this.$toJson(this, { relations: false })
+  }
+
+  /**
+   * Delete the model from the database.
+   */
+  async $delete(): Promise<boolean> {
+    const key = this.$getKeyName()
+
+    return isArray(key)
+      ? this.$deleteByCompositeKeyName(key)
+      : this.$deleteByKeyName(key)
+  }
+
+  /**
+   * Delete the model from the database by ID.
+   */
+  protected async $deleteByKeyName(key: string): Promise<boolean> {
+    return !!(await this.$query().destroy(this[key]))
+  }
+
+  /**
+   * Delete the model from the database by composite key.
+   */
+  protected async $deleteByCompositeKeyName(keys: string[]): Promise<boolean> {
+    const query = this.$query()
+
+    keys.forEach((key) => {
+      query.where(key, this[key])
+    })
+
+    return (await query.delete()).length > 0
   }
 
   /**
