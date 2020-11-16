@@ -195,6 +195,15 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Update records in the store without normalization.
+   */
+  merge(records: Element[]): Promise<Collection<M>>
+  merge(record: Element): Promise<Item<M>>
+  merge(records: any): Promise<any> {
+    return this.query().merge(records)
+  }
+
+  /**
    * Destroy the models for the given id.
    */
   destroy(id: string | number): Promise<Item<M>>

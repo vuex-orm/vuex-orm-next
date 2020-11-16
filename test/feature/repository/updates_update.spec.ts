@@ -56,4 +56,73 @@ describe('feature/repository/updates_update', () => {
       }
     })
   })
+
+  it('updates a record without normalization', async () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe', age: 40 },
+        2: { id: 2, name: 'Jane Doe', age: 30 },
+        3: { id: 3, name: 'Johnny Doe', age: 20 }
+      }
+    })
+
+    await store.$repo(User).merge({ id: 2, age: 50 })
+
+    assertState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe', age: 40 },
+        2: { id: 2, name: 'Jane Doe', age: 50 },
+        3: { id: 3, name: 'Johnny Doe', age: 20 }
+      }
+    })
+  })
+
+  it('updates an array of records without normalization', async () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe', age: 40 },
+        2: { id: 2, name: 'Jane Doe', age: 30 },
+        3: { id: 3, name: 'Johnny Doe', age: 20 }
+      }
+    })
+
+    await store.$repo(User).merge([
+      { id: 2, age: 50 },
+      { id: 3, age: 60 }
+    ])
+
+    assertState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe', age: 40 },
+        2: { id: 2, name: 'Jane Doe', age: 50 },
+        3: { id: 3, name: 'Johnny Doe', age: 60 }
+      }
+    })
+  })
+
+  it('does nothing if no matching record was found', async () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe', age: 40 },
+        2: { id: 2, name: 'Jane Doe', age: 30 },
+        3: { id: 3, name: 'Johnny Doe', age: 20 }
+      }
+    })
+
+    await store.$repo(User).merge({ id: 4, age: 50 })
+
+    assertState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe', age: 40 },
+        2: { id: 2, name: 'Jane Doe', age: 30 },
+        3: { id: 3, name: 'Johnny Doe', age: 20 }
+      }
+    })
+  })
 })
