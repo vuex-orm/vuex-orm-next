@@ -1,3 +1,27 @@
+# [1.0.0-draft.5](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.4...v1.0.0-draft.5) (2020-11-16)
+
+
+### Bug Fixes
+
+* **model:** prevent `_store` from becoming a cyclic object value. ([#11](https://github.com/vuex-orm/vuex-orm-next/issues/11)) ([cc98785](https://github.com/vuex-orm/vuex-orm-next/commit/cc9878590903f359b14f7b73bbee753827608623))
+
+
+### Features
+
+* `orderBy` supports passing a handler as a field param ([#9](https://github.com/vuex-orm/vuex-orm-next/issues/9)) ([0696d40](https://github.com/vuex-orm/vuex-orm-next/commit/0696d40eb6810f5c92cd2441c80907858bf001bf))
+* add "fresh" feature ([#13](https://github.com/vuex-orm/vuex-orm-next/issues/13)) ([fa9d30e](https://github.com/vuex-orm/vuex-orm-next/commit/fa9d30e5afc95d792ebb8fef86aebc599fcb3fa4))
+* add limit and offset method to the repository ([ac00263](https://github.com/vuex-orm/vuex-orm-next/commit/ac002638a7547ed218c6c7be1f57d4b19508735c))
+* add uid attribute ([#16](https://github.com/vuex-orm/vuex-orm-next/issues/16)) ([e676dd1](https://github.com/vuex-orm/vuex-orm-next/commit/e676dd1b18eb8fcd7f6367a862057307489abfe6))
+* Events API ([#8](https://github.com/vuex-orm/vuex-orm-next/issues/8)) ([465c5d5](https://github.com/vuex-orm/vuex-orm-next/commit/465c5d5ba306c6bbb526822adb169dfbe97a5829))
+* support composite key ([#23](https://github.com/vuex-orm/vuex-orm-next/issues/23)) ([e6208e9](https://github.com/vuex-orm/vuex-orm-next/commit/e6208e90cd968040c495bb186310fa8d7309cfae))
+
+
+### Reverts
+
+* findin connection method ([c78a13c](https://github.com/vuex-orm/vuex-orm-next/commit/c78a13cb596d0abe4fd0d5459a4c7de74ae646c5))
+
+
+
 # [1.0.0-draft.4](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.3...v1.0.0-draft.4) (2020-05-03)
 
 
