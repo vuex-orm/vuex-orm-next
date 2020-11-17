@@ -22,7 +22,7 @@ describe('unit/repository/Repository', () => {
     const user = store.$repo(User).make()
 
     expect(user).toBeInstanceOf(User)
-    expect(user.$store).toBe(store)
+    expect(user.$store()).toBe(store)
     assertModel(user, { id: null, name: 'John Doe' })
   })
 
@@ -35,7 +35,7 @@ describe('unit/repository/Repository', () => {
     })
 
     expect(user).toBeInstanceOf(User)
-    expect(user.$store).toBe(store)
+    expect(user.$store()).toBe(store)
     assertModel(user, { id: 1, name: 'Jane Doe' })
   })
 

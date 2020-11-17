@@ -8,8 +8,10 @@ export function Bool(
   options: TypeOptions = {}
 ): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () => {
-      const attr = target.$self.boolean(value)
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () => {
+      const attr = self.boolean(value)
 
       if (options.nullable) {
         attr.nullable()

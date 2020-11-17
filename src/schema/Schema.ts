@@ -28,13 +28,15 @@ export class Schema {
   one(model?: Model): Normalizr.Entity {
     model = model || this.model
 
-    if (this.schemas[model.$entity]) {
-      return this.schemas[model.$entity]
+    const entity = model.$entity()
+
+    if (this.schemas[entity]) {
+      return this.schemas[entity]
     }
 
     const schema = this.newEntity(model, this.model)
 
-    this.schemas[model.$entity] = schema
+    this.schemas[entity] = schema
 
     const definition = this.definition(model)
 
@@ -54,7 +56,7 @@ export class Schema {
    * Create a new normalizr entity.
    */
   private newEntity(model: Model, parent: Model): Normalizr.Entity {
-    const entity = model.$entity
+    const entity = model.$entity()
     const idAttribute = this.idAttribute(model, parent)
 
     return new Normalizr.Entity(entity, {}, { idAttribute })
@@ -97,7 +99,7 @@ export class Schema {
       // relationship of the parent model. In this case, we'll attach any
       // missing foreign keys to the record first.
       if (key !== null) {
-        ;(parent.$fields[key] as Relation).attach(parentRecord, record)
+        ;(parent.$fields()[key] as Relation).attach(parentRecord, record)
       }
 
       // Next, we'll generate any missing primary key fields defined as
@@ -129,19 +131,18 @@ export class Schema {
    * Get all primary keys defined by the Uid attribute for the given model.
    */
   private getUidPrimaryKeyPairs(model: Model): Record<string, Uid> {
+    const fields = model.$fields()
     const key = model.$getKeyName()
     const keys = isArray(key) ? key : [key]
 
     const attributes = {} as Record<string, Uid>
 
     keys.forEach((k) => {
-      const attr = model.$fields[k]
+      const attr = fields[k]
 
       if (attr instanceof Uid) {
         attributes[k] = attr
       }
-
-      model.$fields[k]
     })
 
     return attributes
@@ -151,10 +152,11 @@ export class Schema {
    * Create a definition for the given model.
    */
   private definition(model: Model): NormalizrSchema {
+    const fields = model.$fields()
     const definition: NormalizrSchema = {}
 
-    for (const key in model.$fields) {
-      const field = model.$fields[key]
+    for (const key in fields) {
+      const field = fields[key]
 
       if (field instanceof Relation) {
         definition[key] = field.define(this)

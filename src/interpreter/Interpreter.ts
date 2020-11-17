@@ -43,6 +43,6 @@ export class Interpreter<M extends Model> {
    * Get the schema from the database.
    */
   private getSchema(): Normalizr.Entity {
-    return this.store.$database.getSchema(this.model.$entity)
+    return this.store.$database.getSchema(this.model.$entity())
   }
 }

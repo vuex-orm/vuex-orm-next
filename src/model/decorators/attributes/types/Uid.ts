@@ -5,6 +5,8 @@ import { PropertyDecorator } from '../../Contracts'
  */
 export function Uid(): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () => target.$self.uid())
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () => self.uid())
   }
 }

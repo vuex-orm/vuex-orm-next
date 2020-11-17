@@ -10,8 +10,10 @@ export function BelongsTo(
   ownerKey?: string
 ): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () =>
-      target.$self.belongsTo(related(), foreignKey, ownerKey)
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () =>
+      self.belongsTo(related(), foreignKey, ownerKey)
     )
   }
 }

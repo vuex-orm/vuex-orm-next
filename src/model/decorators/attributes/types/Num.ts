@@ -8,8 +8,10 @@ export function Num(
   options: TypeOptions = {}
 ): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () => {
-      const attr = target.$self.number(value)
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () => {
+      const attr = self.number(value)
 
       if (options.nullable) {
         attr.nullable()

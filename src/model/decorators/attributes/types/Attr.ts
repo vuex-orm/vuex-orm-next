@@ -5,6 +5,8 @@ import { PropertyDecorator } from '../../Contracts'
  */
 export function Attr(value?: any): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () => target.$self.attr(value))
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () => self.attr(value))
   }
 }

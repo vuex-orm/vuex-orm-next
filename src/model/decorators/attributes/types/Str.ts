@@ -8,8 +8,10 @@ export function Str(
   options: TypeOptions = {}
 ): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () => {
-      const attr = target.$self.string(value)
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () => {
+      const attr = self.string(value)
 
       if (options.nullable) {
         attr.nullable()

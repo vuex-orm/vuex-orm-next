@@ -65,8 +65,10 @@ export class Database {
    * Register the given model.
    */
   register<M extends Model>(model: M): void {
-    if (!this.models[model.$entity]) {
-      this.models[model.$entity] = model
+    const entity = model.$entity()
+
+    if (!this.models[entity]) {
+      this.models[entity] = model
 
       this.createModule(model)
 
@@ -80,8 +82,10 @@ export class Database {
    * Register all related models.
    */
   private registerRelatedModels<M extends Model>(model: M): void {
-    for (const name in model.$fields) {
-      const attr = model.$fields[name]
+    const fields = model.$fields()
+
+    for (const name in fields) {
+      const attr = fields[name]
 
       if (attr instanceof Relation) {
         attr.getRelateds().forEach((m) => {
@@ -118,10 +122,11 @@ export class Database {
    * Create sub module.
    */
   private createModule<M extends Model>(model: M): void {
-    const preserveState = !!this.store.state[this.connection][model.$entity]
+    const entity = model.$entity()
+    const preserveState = !!this.store.state[this.connection][entity]
 
     this.store.registerModule(
-      [this.connection, model.$entity],
+      [this.connection, entity],
       {
         namespaced: true,
         state: this.createState(),
@@ -151,6 +156,6 @@ export class Database {
    * Create schema from the given model.
    */
   private createSchema<M extends Model>(model: M): Normalizr.Entity {
-    return (this.schemas[model.$entity] = new Schema(model).one())
+    return (this.schemas[model.$entity()] = new Schema(model).one())
   }
 }

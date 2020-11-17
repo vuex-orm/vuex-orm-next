@@ -222,14 +222,14 @@ export class Model {
   /**
    * Get the constructor for this model.
    */
-  get $self(): typeof Model {
+  $self(): typeof Model {
     return this.constructor as typeof Model
   }
 
   /**
    * Get the store instance.
    */
-  get $store(): Store<any> {
+  $store(): Store<any> {
     assert(this._store !== undefined, [
       'A Vuex Store instance is not injected into the model instance.',
       'You might be trying to instantiate the model directly. Please use',
@@ -237,47 +237,6 @@ export class Model {
     ])
 
     return this._store
-  }
-
-  /**
-   * Get the entity for this model.
-   */
-  get $entity(): string {
-    return this.$self.entity
-  }
-
-  /**
-   * Get the primary key for this model.
-   */
-  get $primaryKey(): string | string[] {
-    return this.$self.primaryKey
-  }
-
-  /**
-   * Get the model fields for this model.
-   */
-  get $fields(): ModelFields {
-    return this.$self.schemas[this.$entity]
-  }
-
-  /**
-   * Create a new instance of this model. This method provides a convenient way
-   * to re-generate a fresh instance of this model. It's particularly useful
-   * during hydration through Query operations.
-   */
-  $newInstance(attributes?: Element, options?: ModelOptions): this {
-    const model = new this.$self(attributes, options) as this
-
-    model.$setStore(this.$store)
-
-    return model
-  }
-
-  /**
-   * Create a new query instance.
-   */
-  $query(): Query<this> {
-    return new Query(this.$store, this)
   }
 
   /**
@@ -290,11 +249,53 @@ export class Model {
   }
 
   /**
+   * Get the entity for this model.
+   */
+  $entity(): string {
+    return this.$self().entity
+  }
+
+  /**
+   * Get the primary key for this model.
+   */
+  $primaryKey(): string | string[] {
+    return this.$self().primaryKey
+  }
+
+  /**
+   * Get the model fields for this model.
+   */
+  $fields(): ModelFields {
+    return this.$self().schemas[this.$entity()]
+  }
+
+  /**
+   * Create a new instance of this model. This method provides a convenient way
+   * to re-generate a fresh instance of this model. It's particularly useful
+   * during hydration through Query operations.
+   */
+  $newInstance(attributes?: Element, options?: ModelOptions): this {
+    const self = this.$self()
+    const model = new self(attributes, options) as this
+
+    model.$setStore(this.$store())
+
+    return model
+  }
+
+  /**
+   * Create a new query instance.
+   */
+  $query(): Query<this> {
+    return new Query(this.$store(), this)
+  }
+
+  /**
    * Bootstrap this model.
    */
   protected $boot(): void {
-    if (!this.$self.booted[this.$entity]) {
-      this.$self.booted[this.$entity] = true
+    if (!this.$self().booted[this.$entity()]) {
+      this.$self().booted[this.$entity()] = true
 
       this.$initializeSchema()
     }
@@ -304,7 +305,7 @@ export class Model {
    * Build the schema by evaluating fields and registry.
    */
   protected $initializeSchema(): void {
-    this.$self.initializeSchema()
+    this.$self().initializeSchema()
   }
 
   /**
@@ -312,10 +313,11 @@ export class Model {
    * by the attributes default value.
    */
   $fill(attributes: Element = {}, options: ModelOptions = {}): this {
+    const fields = this.$fields()
     const fillRelation = options.relations ?? true
 
-    for (const key in this.$fields) {
-      const attr = this.$fields[key]
+    for (const key in fields) {
+      const attr = fields[key]
       const value = attributes[key]
 
       if (attr instanceof Relation && !fillRelation) {
@@ -349,7 +351,7 @@ export class Model {
    * Get the primary key field name.
    */
   $getKeyName(): string | string[] {
-    return this.$primaryKey
+    return this.$primaryKey()
   }
 
   /**
@@ -433,10 +435,10 @@ export class Model {
    * Get the relation instance for the given relation name.
    */
   $getRelation(name: string): Relation {
-    const relation = this.$fields[name]
+    const relation = this.$fields()[name]
 
     assert(relation instanceof Relation, [
-      `Relationship [${name}] on model [${this.$entity}] not found.`
+      `Relationship [${name}] on model [${this.$entity()}] not found.`
     ])
 
     return relation
@@ -495,12 +497,12 @@ export class Model {
   $toJson(model?: Model, options: ModelOptions = {}): Element {
     model = model ?? this
 
+    const fields = model.$fields()
     const withRelation = options.relations ?? true
-
     const record: Element = {}
 
-    for (const key in model.$fields) {
-      const attr = this.$fields[key]
+    for (const key in fields) {
+      const attr = fields[key]
       const value = model[key]
 
       if (!(attr instanceof Relation)) {

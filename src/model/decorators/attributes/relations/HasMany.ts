@@ -10,8 +10,10 @@ export function HasMany(
   localKey?: string
 ): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () =>
-      target.$self.hasMany(related(), foreignKey, localKey)
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () =>
+      self.hasMany(related(), foreignKey, localKey)
     )
   }
 }

@@ -90,7 +90,7 @@ export class Query<M extends Model = Model> {
     this.model = model
 
     this.interpreter = new Interpreter(store, model)
-    this.connection = new Connection(store, model.$entity)
+    this.connection = new Connection(store, model.$entity())
   }
 
   /**

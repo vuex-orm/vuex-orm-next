@@ -10,8 +10,10 @@ export function HasOne(
   localKey?: string
 ): PropertyDecorator {
   return (target, propertyKey) => {
-    target.$self.setRegistry(propertyKey, () =>
-      target.$self.hasOne(related(), foreignKey, localKey)
+    const self = target.$self()
+
+    self.setRegistry(propertyKey, () =>
+      self.hasOne(related(), foreignKey, localKey)
     )
   }
 }
