@@ -98,4 +98,12 @@ export abstract class Relation extends Attribute {
       return dictionary
     }, {})
   }
+
+  /**
+   * Make the value for the attribute.
+   */
+  /* istanbul ignore next */
+  make(_value: any): null {
+    return null
+  }
 }

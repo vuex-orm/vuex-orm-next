@@ -238,23 +238,10 @@ export class Query<M extends Model = Model> {
   /**
    * Get models by given index ids.
    */
-  protected pick(id: string): Item<M>
-  protected pick(ids: string[]): Collection<M>
-  protected pick(ids: any): any {
-    if (isArray(ids)) {
-      return this.pickIn(ids)
-    }
-
-    const record = this.connection.find(ids)
+  protected pick(id: string): Item<M> {
+    const record = this.connection.find(id)
 
     return record ? this.hydrate(record) : null
-  }
-
-  /**
-   * Get models by given index ids.
-   */
-  protected pickIn(ids: string[]): Collection<M> {
-    return this.hydrate(this.connection.findIn(ids))
   }
 
   /**

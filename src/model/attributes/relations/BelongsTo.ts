@@ -97,11 +97,4 @@ export class BelongsTo extends Relation {
         : model.$setRelation(relation, null)
     })
   }
-
-  /**
-   * Make the value for the attribute.
-   */
-  make(_value: any): null {
-    return null
-  }
 }

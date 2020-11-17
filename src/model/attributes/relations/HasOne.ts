@@ -81,11 +81,4 @@ export class HasOne extends Relation {
       return [result[this.foreignKey], result]
     })
   }
-
-  /**
-   * Make the value for the attribute.
-   */
-  make(_value: any): null {
-    return null
-  }
 }
