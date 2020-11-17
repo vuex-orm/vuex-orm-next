@@ -2,7 +2,7 @@
 
 set -e
 
-npm run docs:build:guide
+npm run docs:build
 
 cp docs/CNAME docs/.vuepress/dist/CNAME
 
