@@ -3,6 +3,11 @@ import { Type } from './Type'
 
 export class String extends Type {
   /**
+   * Hardcoded type for introspection
+   */
+  readonly type: string = 'String'
+
+  /**
    * Create a new String attribute instance.
    */
   constructor(model: Model, value: string | null) {

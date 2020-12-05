@@ -3,6 +3,11 @@ import { Type } from './Type'
 
 export class Number extends Type {
   /**
+   * Hardcoded type for introspection
+   */
+  readonly type: string = 'Number'
+
+  /**
    * Create a new Number attribute instance.
    */
   constructor(model: Model, value: number | null) {

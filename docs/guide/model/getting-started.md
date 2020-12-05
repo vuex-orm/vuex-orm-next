@@ -43,6 +43,14 @@ Attributes take a single argument – the fields **default value**. This default
 Typescript users can define attributes using decorators. To learn more about these, please take a look at the [Decorators](decorators) section.
 :::
 
+:::info Attribute type
+The **classname** of the Attribute is hardcoded in the `type` property of each definition to allow fields introspection even in uglified script :
+
+```javascript
+console.log(User.fields().name.type) // Attr (or String)
+```
+:::
+
 ### Generic Type
 
 Generic attributes can be defined using `this.attr(...)`. This type of attribute, unlike other attributes, will take any datatype as it's default value, including `String`, `Number`, `Boolean`, `Object` and `Array`.
@@ -225,7 +233,7 @@ class User extends Model {
 
 ### Missing Primary Key
 
-If a model is missing a primary key field definition, Vuex ORM will generate a primary key field automatically during database registration. The generated field will be configured using the `uid` attribute type and named `id` unless the static `primaryKey` property is defined on a model. 
+If a model is missing a primary key field definition, Vuex ORM will generate a primary key field automatically during database registration. The generated field will be configured using the `uid` attribute type and named `id` unless the static `primaryKey` property is defined on a model.
 
 The following example sets up a user model without an `id` primary key field:
 
