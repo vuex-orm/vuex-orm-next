@@ -3,6 +3,11 @@ import { Type } from './Type'
 
 export class Boolean extends Type {
   /**
+   * Hardcoded type for introspection
+   */
+  readonly type: string = 'Boolean'
+
+  /**
    * Create a new Boolean attribute instance.
    */
   constructor(model: Model, value: boolean | null) {

@@ -30,5 +30,12 @@ describe('unit/model/Model_Fields', () => {
     expect(user.str).toBe('string')
     expect(user.num).toBe(1)
     expect(user.bool).toBe(true)
+
+    const f = User.fields()
+
+    expect(f.id.type).toBe('Attr')
+    expect(f.str.type).toBe('String')
+    expect(f.num.type).toBe('Number')
+    expect(f.bool.type).toBe('Boolean')
   })
 })

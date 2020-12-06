@@ -3,6 +3,11 @@ import { Type } from './Type'
 
 export class Uid extends Type {
   /**
+   * Hardcoded type for introspection
+   */
+  readonly type: string = 'Uid'
+
+  /**
    * Make the value for the attribute.
    */
   make(value: any): string {

@@ -7,6 +7,11 @@ import { Relation } from './Relation'
 
 export class BelongsTo extends Relation {
   /**
+   * Hardcoded type for introspection
+   */
+  readonly type: string = 'BelongsTo'
+
+  /**
    * The child model instance of the relation.
    */
   protected child: Model
