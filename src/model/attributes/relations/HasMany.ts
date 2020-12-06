@@ -9,7 +9,7 @@ export class HasMany extends Relation {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'HasMany'
+  readonly className: string = 'HasMany'
 
   /**
    * The foreign key of the parent model.

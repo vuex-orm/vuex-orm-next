@@ -5,7 +5,7 @@ export class String extends Type {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'String'
+  readonly className: string = 'String'
 
   /**
    * Create a new String attribute instance.

@@ -33,9 +33,9 @@ describe('unit/model/Model_Fields', () => {
 
     const f = User.fields()
 
-    expect(f.id.type).toBe('Attr')
-    expect(f.str.type).toBe('String')
-    expect(f.num.type).toBe('Number')
-    expect(f.bool.type).toBe('Boolean')
+    expect(f.id.className).toBe('Attr')
+    expect(f.str.className).toBe('String')
+    expect(f.num.className).toBe('Number')
+    expect(f.bool.className).toBe('Boolean')
   })
 })

@@ -9,7 +9,7 @@ export class BelongsTo extends Relation {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'BelongsTo'
+  readonly className: string = 'BelongsTo'
 
   /**
    * The child model instance of the relation.

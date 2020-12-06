@@ -5,7 +5,7 @@ export class Number extends Type {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'Number'
+  readonly className: string = 'Number'
 
   /**
    * Create a new Number attribute instance.

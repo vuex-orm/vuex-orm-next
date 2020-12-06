@@ -4,7 +4,7 @@ export class Attr extends Type {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'Attr'
+  readonly className: string = 'Attr'
 
   /**
    * Make the value for the attribute.

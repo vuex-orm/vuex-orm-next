@@ -5,7 +5,7 @@ export class Uid extends Type {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'Uid'
+  readonly className: string = 'Uid'
 
   /**
    * Make the value for the attribute.

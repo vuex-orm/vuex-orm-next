@@ -5,7 +5,7 @@ export class Boolean extends Type {
   /**
    * Hardcoded type for introspection
    */
-  readonly type: string = 'Boolean'
+  readonly className: string = 'Boolean'
 
   /**
    * Create a new Boolean attribute instance.
