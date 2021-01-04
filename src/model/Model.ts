@@ -13,6 +13,7 @@ import { Relation } from './attributes/relations/Relation'
 import { HasOne } from './attributes/relations/HasOne'
 import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
+import { HasManyBy } from './attributes/relations/HasManyBy'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -217,6 +218,26 @@ export class Model {
     localKey = localKey ?? model.$getLocalKey()
 
     return new HasMany(model, related.newRawInstance(), foreignKey, localKey)
+  }
+
+  /**
+   * Create a new HasManyBy relation instance.
+   */
+  static hasManyBy(
+    related: typeof Model,
+    foreignKey: string,
+    ownerKey?: string
+  ): HasManyBy {
+    const instance = related.newRawInstance()
+
+    ownerKey = ownerKey ?? instance.$getLocalKey()
+
+    return new HasManyBy(
+      instance,
+      related.newRawInstance(),
+      foreignKey,
+      ownerKey
+    )
   }
 
   /**

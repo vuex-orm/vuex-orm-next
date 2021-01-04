@@ -88,3 +88,69 @@ class Comment extends Model {
   }
 }
 ```
+
+## One To Many By
+
+One To Many By is similar to One To Many relation but having foreign keys at parent Model as an array. For example, there could be a situation where you must parse data looks something like:
+
+```js
+{
+  nodes: {
+    1: { id: 1, name: 'Node 01' },
+    2: { id: 2, name: 'Node 02' }
+  },
+  clusters: {
+    1: {
+      id: 1,
+      name: 'Cluster 01',
+      nodeIds: [1, 2]
+    }
+  }
+}
+```
+
+As you can see, `clusters` have "Has Many" relationship with `nodes`, but `nodes` do not have foreign key set (`clusterId`). We can't use Has Many relation in this case because there is no foreign key to look for. In such cases, you may use `hasManyBy` relationship.
+
+```js
+class Node extends Model {
+  static entity = 'nodes'
+
+  static fields () {
+    return {
+      id: this.attr(null),
+      name: this.string('')
+    }
+  }
+}
+
+class Cluster extends Model {
+  static entity = 'clusters'
+
+  static fields () {
+    return {
+      id: this.attr(null),
+      nodeIds: this.attr([]),
+      name: this.string('')
+      nodes: this.hasManyBy(Node, 'nodeIds')
+    }
+  }
+}
+```
+
+Now the Cluster model is going to look for Nodes using ids at Cluster's own `nodeIds` attributes.
+
+As always, you can pass the third argument to specify which id to look for.
+
+```js
+class Cluster extends Model {
+  static entity = 'clusters'
+
+  static fields () {
+    return {
+      id: this.attr(null),
+      nodeIds: this.attr(null),
+      nodes: this.hasManyBy(Node, 'nodeIds', 'nodeId')
+    }
+  }
+}
+```

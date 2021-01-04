@@ -14,6 +14,7 @@ export * from './model/decorators/attributes/types/Uid'
 export * from './model/decorators/attributes/relations/HasOne'
 export * from './model/decorators/attributes/relations/BelongsTo'
 export * from './model/decorators/attributes/relations/HasMany'
+export * from './model/decorators/attributes/relations/HasManyBy'
 export * from './model/decorators/Contracts'
 export * from './model/decorators/NonEnumerable'
 export * from './model/attributes/Attribute'
@@ -27,6 +28,7 @@ export * from './model/attributes/relations/Relation'
 export { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
 export { BelongsTo as BelongsToAttr } from './model/attributes/relations/BelongsTo'
 export { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
+export { HasManyBy as HasManyByAttr } from './model/attributes/relations/HasManyBy'
 export * from './modules/RootModule'
 export * from './modules/RootState'
 export * from './modules/Module'
@@ -56,6 +58,7 @@ import { Uid as UidAttr } from './model/attributes/types/Uid'
 import { Relation } from './model/attributes/relations/Relation'
 import { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
+import { HasManyBy as HasManyByAttr } from './model/attributes/relations/HasManyBy'
 import { Repository } from './repository/Repository'
 import { Interpreter } from './interpreter/Interpreter'
 import { Query } from './query/Query'
@@ -78,6 +81,7 @@ export default {
   Relation,
   HasOneAttr,
   HasManyAttr,
+  HasManyByAttr,
   Repository,
   Interpreter,
   Query,

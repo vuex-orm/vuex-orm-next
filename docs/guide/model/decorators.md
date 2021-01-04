@@ -162,7 +162,7 @@ class User extends Model {
 Marks a property on the model as a [belongsTo attribute](../relationships/getting-started.md) type. For example:
 
 ```ts
-import { Model, BelongsTo } from '@vuex-orm/core'
+import { Model, Attr, BelongsTo } from '@vuex-orm/core'
 import User from '@/models/User'
 
 class Post extends Model {
@@ -172,7 +172,7 @@ class Post extends Model {
   userId!: number | null
 
   @BelongsTo(() => User, 'userId')
-  user: User | null
+  user!: User | null
 }
 ```
 
@@ -188,6 +188,25 @@ class User extends Model {
   static entity = 'users'
 
   @HasMany(() => Post, 'userId')
-  posts: Post[]
+  posts!: Post[]
+}
+```
+
+### `@HasManyBy`
+
+Marks a property on the model as a [hasManyBy attribute](../relationships/one-to-many) type. For example:
+
+```ts
+import { Model, HasManyBy } from '@vuex-orm/core'
+import Post from '@/models/Post'
+
+class Cluster extends Model {
+  static entity = 'clusters'
+
+  @Attr(null)
+  nodeIds!: number[]
+
+  @HasManyBy(() => Node, 'nodesId')
+  nodes!: Node[]
 }
 ```
