@@ -51,31 +51,31 @@
   "dependencies": {
     "@types/uuid": "^8.0.0",
     "normalizr": "^3.6.1",
-    "uuid": "^8.3.1"
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^16.0.0",
-    "@rollup/plugin-node-resolve": "^10.0.0",
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.1",
     "@rollup/plugin-replace": "^2.3.4",
-    "@types/jest": "^26.0.15",
+    "@types/jest": "^26.0.19",
     "brotli": "^1.3.2",
     "chalk": "^4.1.0",
     "codecov": "^3.8.1",
     "conventional-changelog-cli": "^2.1.1",
-    "core-js": "^3.7.0",
+    "core-js": "^3.8.2",
     "enquirer": "^2.3.6",
-    "execa": "^4.1.0",
+    "execa": "^5.0.0",
     "jest": "^26.6.3",
-    "prettier": "^2.0.5",
-    "rollup": "^2.33.2",
+    "prettier": "^2.2.1",
+    "rollup": "^2.35.1",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-typescript2": "^0.29.0",
-    "semver": "^7.3.2",
+    "semver": "^7.3.4",
     "ts-jest": "^26.4.4",
-    "typescript": "^4.0.5",
+    "typescript": "^4.1.3",
     "vue": "^2.6.12",
     "vue-server-renderer": "^2.6.12",
     "vuepress": "^1.7.1",
-    "vuex": "^3.5.1"
+    "vuex": "^3.6.0"
   }
 }
