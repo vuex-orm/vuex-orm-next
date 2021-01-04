@@ -51,12 +51,12 @@ export default {
 
 ### Map Repositories Helper
 
-In addition to use `this.$store.$repo` to retrieve repositories, Vuex ORM provides a convenience helper function called `mapRepositories` to retrieve multiple repositories at once.
+In addition to use `this.$store.$repo` to retrieve repositories, Vuex ORM provides a convenience helper function called `mapRepos` to retrieve multiple repositories at once.
 
 The `mapRepos` helper will receive a list of models with its name as a key. The repositories is going to be injected to the `this` context within Vue Component.
 
 ```js
-import { mapRepositories } from '@vuex-orm/core'
+import { mapRepos } from '@vuex-orm/core'
 import User from '@/models/User'
 import Post from '@/models/Post'
 

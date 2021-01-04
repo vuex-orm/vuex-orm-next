@@ -584,6 +584,10 @@ export class Model {
   protected serializeRelation(relation: Item): Element | null
   protected serializeRelation(relation: Collection): Element[]
   protected serializeRelation(relation: any): any {
+    if (relation === undefined) {
+      return undefined
+    }
+
     if (relation === null) {
       return null
     }

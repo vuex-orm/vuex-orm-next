@@ -329,6 +329,13 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Eager load relations on the model.
+   */
+  load(models: Collection<M>): void {
+    this.eagerLoadRelations(models)
+  }
+
+  /**
    * Eager load the relationships for the models.
    */
   protected eagerLoadRelations(models: Collection<M>): void {
