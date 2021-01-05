@@ -56,13 +56,13 @@ async function main() {
 
   console.log(tag)
 
-  const { yes } = await prompt({
+  const { yes: tagOk } = await prompt({
     type: 'confirm',
     name: 'yes',
     message: `Releasing v${targetVersion}. Confirm?`
   })
 
-  if (!yes) {
+  if (!tagOk) {
     return
   }
 
@@ -83,6 +83,16 @@ async function main() {
   // Generate the changelog.
   step('\nGenerating the changelog...')
   await run('yarn', ['changelog'])
+
+  const { yes: changelogOk } = await prompt({
+    type: 'confirm',
+    name: 'yes',
+    message: `Changelog generated. Does it look good?`
+  })
+
+  if (!changelogOk) {
+    return
+  }
 
   // Commit changes to the Git.
   step('\nCommitting changes...')
