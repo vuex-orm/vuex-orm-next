@@ -120,6 +120,59 @@ const users = store.$repo(User).with('posts', (query) => {
 }).get()
 ```
 
+### Lazy Relatinship Loading
+
+Sometimes you may need to load a relationship after the model has already been retrieved. For example, this may be useful if you need to dynamically decide whether to load related models. You may use `load` method on a repository to load relationships on the fly in such a case.
+
+```js
+const userRepo = store.$repo(User)
+
+// Retrieve models without relationships.
+const users = userRepo.get()
+
+// Load relationships on the fly.
+userRepo.with('posts').load(users)
+```
+
+You may set any additional query constraints as usual to the `with` method.
+
+```js
+userRepo.with('posts', (query) => {
+  query.orderBy('createdAt', 'desc')
+}).load(users)
+```
+
+Note that the `load` method will mutate the given models. It would be safer to use the method within a single `computed` method.
+
+```js
+import { mapRepos } from '@vuex-orm/core'
+import User from '@/models/User'
+
+export default {
+  data () {
+    return {
+      condition: false
+    }
+  },
+
+  computed: {
+    ...mapRepos({
+      userRepo: User
+    }),
+
+    users () {
+      const users = this.userRepo.get()
+
+      if (this.condition) {
+        this.userRepo.with('posts').load(users)
+      }
+
+      return users
+    }
+  }
+}
+```
+
 ## Inserting Relationships
 
 When inserting new records into the store, Vuex ORM automatically normalizes and stores data that contains any nested relationships in it's data structure. For example, let's say you have the `User` model that has a relationship to the `Post` model:
