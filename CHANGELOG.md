@@ -1,3 +1,11 @@
+# [1.0.0-draft.7](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.6...v1.0.0-draft.7) (2021-01-05)
+
+### Features
+
+* add has many by relation ([#35](https://github.com/vuex-orm/vuex-orm-next/issues/35)) ([#37](https://github.com/vuex-orm/vuex-orm-next/issues/37)) ([6c8cce5](https://github.com/vuex-orm/vuex-orm-next/commit/6c8cce5047d626f84bbcb1c4222d00740fd7b214))
+* add lazy relationship loading feature ([#44](https://github.com/vuex-orm/vuex-orm-next/issues/44)) ([6bfe237](https://github.com/vuex-orm/vuex-orm-next/commit/6bfe237a56581279c5119dcbfa2a2e576d104240))
+* add model `$delete` method ([2fce6ad](https://github.com/vuex-orm/vuex-orm-next/commit/2fce6adee74d1ff4f8fe5ea471c4124c05a9b0e7))
+
 # [1.0.0-draft.6](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.5...v1.0.0-draft.6) (2020-11-16)
 
 
