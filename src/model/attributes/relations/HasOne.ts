@@ -81,4 +81,11 @@ export class HasOne extends Relation {
       return [result[this.foreignKey], result]
     })
   }
+
+  /**
+   * Make a related model.
+   */
+  make(element?: Element): Model | null {
+    return element ? this.related.$newInstance(element) : null
+  }
 }

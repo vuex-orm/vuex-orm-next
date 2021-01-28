@@ -137,4 +137,13 @@ export class HasManyBy extends Relation {
       return items
     }, [])
   }
+
+  /**
+   * Make related models.
+   */
+  make(elements?: Element[]): Model[] {
+    return elements
+      ? elements.map((element) => this.child.$newInstance(element))
+      : []
+  }
 }

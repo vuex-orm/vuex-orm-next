@@ -81,4 +81,13 @@ export class HasMany extends Relation {
       return [result[this.foreignKey], result]
     })
   }
+
+  /**
+   * Make related models.
+   */
+  make(elements?: Element[]): Model[] {
+    return elements
+      ? elements.map((element) => this.related.$newInstance(element))
+      : []
+  }
 }

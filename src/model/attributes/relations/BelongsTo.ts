@@ -97,4 +97,11 @@ export class BelongsTo extends Relation {
         : model.$setRelation(relation, null)
     })
   }
+
+  /**
+   * Make a related model.
+   */
+  make(element?: Element): Model | null {
+    return element ? this.child.$newInstance(element) : null
+  }
 }

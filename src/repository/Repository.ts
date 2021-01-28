@@ -170,7 +170,7 @@ export class Repository<M extends Model = Model> {
    */
   make(attributes?: Element): M {
     return this.getModel().$newInstance(attributes, {
-      relations: false
+      relations: true
     })
   }
 
