@@ -1,3 +1,9 @@
+# [1.0.0-draft.8](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.7...v1.0.0-draft.8) (2021-01-28)
+
+### Features
+
+* fill relation on "make" ([9c47d46](https://github.com/vuex-orm/vuex-orm-next/commit/9c47d46d0b07d3a04a4f3d42523f026eb5d0cd66))
+
 # [1.0.0-draft.7](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.6...v1.0.0-draft.7) (2021-01-05)
 
 ### Features
