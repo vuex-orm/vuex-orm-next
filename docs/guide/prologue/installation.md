@@ -8,10 +8,10 @@ NPM or Yarn are the recommended methods of installing Vuex ORM.
 
 ``` sh
 # Install using NPM.
-npm install @vuex-orm/core --save
+npm install @vuex-orm/core@next --save
 
 # Install using Yarn.
-yarn add @vuex-orm/core
+yarn add @vuex-orm/core@next
 ```
 
 For non-Typescript users, the following Babel plugins should be installed and configured:
