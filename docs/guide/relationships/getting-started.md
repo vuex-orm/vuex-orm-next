@@ -128,7 +128,7 @@ Sometimes you may need to load a relationship after the model has already been r
 const userRepo = store.$repo(User)
 
 // Retrieve models without relationships.
-const users = userRepo.get()
+const users = userRepo.all()
 
 // Load relationships on the fly.
 userRepo.with('posts').load(users)
@@ -161,7 +161,7 @@ export default {
     }),
 
     users () {
-      const users = this.userRepo.get()
+      const users = this.userRepo.all()
 
       if (this.condition) {
         this.userRepo.with('posts').load(users)
