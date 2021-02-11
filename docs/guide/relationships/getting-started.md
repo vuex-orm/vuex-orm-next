@@ -120,7 +120,7 @@ const users = store.$repo(User).with('posts', (query) => {
 }).get()
 ```
 
-### Lazy Relatinship Loading
+### Lazy Relationship Loading
 
 Sometimes you may need to load a relationship after the model has already been retrieved. For example, this may be useful if you need to dynamically decide whether to load related models. You may use `load` method on a repository to load relationships on the fly in such a case.
 
