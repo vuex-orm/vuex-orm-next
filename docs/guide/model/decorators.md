@@ -198,7 +198,7 @@ Marks a property on the model as a [hasManyBy attribute](../relationships/one-to
 
 ```ts
 import { Model, HasManyBy } from '@vuex-orm/core'
-import Post from '@/models/Post'
+import Node from '@/models/Node'
 
 class Cluster extends Model {
   static entity = 'clusters'
