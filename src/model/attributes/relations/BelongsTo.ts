@@ -51,7 +51,7 @@ export class BelongsTo extends Relation {
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
-    return schema.one(this.child)
+    return schema.one(this.child, this.parent)
   }
 
   /**

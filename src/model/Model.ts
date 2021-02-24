@@ -232,12 +232,7 @@ export class Model {
 
     ownerKey = ownerKey ?? instance.$getLocalKey()
 
-    return new HasManyBy(
-      instance,
-      related.newRawInstance(),
-      foreignKey,
-      ownerKey
-    )
+    return new HasManyBy(this.newRawInstance(), instance, foreignKey, ownerKey)
   }
 
   /**

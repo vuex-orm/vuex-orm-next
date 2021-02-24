@@ -25,8 +25,9 @@ export class Schema {
   /**
    * Create a single schema.
    */
-  one(model?: Model): Normalizr.Entity {
+  one(model?: Model, parent?: Model): Normalizr.Entity {
     model = model || this.model
+    parent = parent || this.model
 
     const entity = model.$entity()
 
@@ -34,7 +35,7 @@ export class Schema {
       return this.schemas[entity]
     }
 
-    const schema = this.newEntity(model, this.model)
+    const schema = this.newEntity(model, parent)
 
     this.schemas[entity] = schema
 
@@ -48,8 +49,8 @@ export class Schema {
   /**
    * Create an array schema for the given model.
    */
-  many(model: Model): Normalizr.Array {
-    return new Normalizr.Array(this.one(model))
+  many(model: Model, parent?: Model): Normalizr.Array {
+    return new Normalizr.Array(this.one(model, parent))
   }
 
   /**
