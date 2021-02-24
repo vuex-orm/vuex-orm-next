@@ -1,3 +1,9 @@
+# [1.0.0-draft.9](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.8...v1.0.0-draft.9) (2021-02-24)
+
+### Bug Fixes
+
+* nested relations not getting normalized correctly ([#50](https://github.com/vuex-orm/vuex-orm-next/issues/50)) ([ea6203b](https://github.com/vuex-orm/vuex-orm-next/commit/ea6203ba0ec907b4e0a1c00fea1b961315d02de2))
+
 # [1.0.0-draft.8](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.7...v1.0.0-draft.8) (2021-01-28)
 
 ### Features
