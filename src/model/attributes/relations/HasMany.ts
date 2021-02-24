@@ -41,7 +41,7 @@ export class HasMany extends Relation {
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
-    return schema.many(this.related)
+    return schema.many(this.related, this.parent)
   }
 
   /**

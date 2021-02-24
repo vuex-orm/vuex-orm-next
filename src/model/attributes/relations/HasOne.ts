@@ -41,7 +41,7 @@ export class HasOne extends Relation {
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
-    return schema.one(this.related)
+    return schema.one(this.related, this.parent)
   }
 
   /**
