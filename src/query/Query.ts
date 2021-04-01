@@ -1,4 +1,3 @@
-import { Store } from 'vuex'
 import {
   isArray,
   isFunction,
@@ -30,6 +29,7 @@ import {
   EagerLoadConstraint,
   PersistMethod
 } from './Options'
+import { Database } from '@/database/Database'
 
 export interface CollectionPromises {
   indexes: string[]
@@ -38,9 +38,9 @@ export interface CollectionPromises {
 
 export class Query<M extends Model = Model> {
   /**
-   * The store instance.
+   * The database instance.
    */
-  protected store: Store<any>
+  database: Database
 
   /**
    * The model object.
@@ -85,26 +85,29 @@ export class Query<M extends Model = Model> {
   /**
    * Create a new query instance.
    */
-  constructor(store: Store<any>, model: M) {
-    this.store = store
+  constructor(database: Database, model: M) {
+    this.database = database
     this.model = model
 
-    this.interpreter = new Interpreter(store, model)
-    this.connection = new Connection(store, model.$entity())
+    this.interpreter = new Interpreter(database, model)
+    this.connection = new Connection(database, model.$entity())
   }
 
   /**
    * Create a new query instance for the given model.
    */
   protected newQuery(model: string): Query<Model> {
-    return new Query(this.store, this.store.$database.getModel(model))
+    return new Query(this.database, this.database.getModel(model))
   }
 
   /**
    * Create a new query instance from the given relation.
    */
   protected newQueryForRelation(relation: Relation): Query<Model> {
-    return new Query(this.store, relation.getRelated().$setStore(this.store))
+    return new Query(
+      this.database,
+      relation.getRelated().$setDatabase(this.database)
+    )
   }
 
   /**

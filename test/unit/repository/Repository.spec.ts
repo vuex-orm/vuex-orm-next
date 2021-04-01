@@ -22,7 +22,19 @@ describe('unit/repository/Repository', () => {
     const user = store.$repo(User).make()
 
     expect(user).toBeInstanceOf(User)
-    expect(user.$store()).toBe(store)
+    expect(user.$database()).toBe(store.$database)
+    assertModel(user, { id: null, name: 'John Doe' })
+  })
+
+  it('creates a new model instance in a new database', () => {
+    const store = createStore()
+
+    const connection = 'test_namespace'
+    const user = store.$repo(User, connection).make()
+
+    expect(user).toBeInstanceOf(User)
+    expect(user.$database()).toBe(store.$databases[connection])
+    expect(user.$database().started).toBe(true)
     assertModel(user, { id: null, name: 'John Doe' })
   })
 
@@ -35,7 +47,7 @@ describe('unit/repository/Repository', () => {
     })
 
     expect(user).toBeInstanceOf(User)
-    expect(user.$store()).toBe(store)
+    expect(user.$database()).toBe(store.$database)
     assertModel(user, { id: 1, name: 'Jane Doe' })
   })
 

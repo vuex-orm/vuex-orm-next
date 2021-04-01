@@ -1,5 +1,6 @@
 import { Store } from 'vuex'
 import { Element, Elements } from '../data/Data'
+import { Database } from '@/database/Database'
 
 export interface ConnectionNamespace {
   connection: string
@@ -25,9 +26,9 @@ export class Connection {
   /**
    * Create a new connection instance.
    */
-  constructor(store: Store<any>, entity: string) {
-    this.store = store
-    this.connection = store.$database.connection
+  constructor(database: Database, entity: string) {
+    this.store = database.store
+    this.connection = database.connection
     this.entity = entity
   }
 

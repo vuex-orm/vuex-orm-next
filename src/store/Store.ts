@@ -52,6 +52,8 @@ function createDatabase(
     .setConnection(options.namespace)
 
   store.$database = database
+  if (!store.$databases) store.$databases = {}
+  store.$databases[database.connection] = database
 }
 
 /**
@@ -76,13 +78,25 @@ function startDatabase(store: Store<any>): void {
  * Mixin repo function to the store.
  */
 function mixinRepoFunction(store: Store<any>): void {
-  store.$repo = function (modelOrRepository: any): any {
+  store.$repo = function (modelOrRepository: any, connection?: string): any {
+    let database: Database
+    if (connection) {
+      if (!(connection in store.$databases)) {
+        database = new Database().setStore(store).setConnection(connection)
+        store.$databases[connection] = database
+        database.start()
+      } else {
+        database = store.$databases[connection]
+      }
+    } else {
+      database = store.$database
+    }
     const repository = modelOrRepository._isRepository
       ? new modelOrRepository(this).initialize()
-      : new Repository(this).initialize(modelOrRepository)
+      : new Repository(database).initialize(modelOrRepository)
 
     try {
-      store.$database.register(repository.getModel())
+      database.register(repository.getModel())
     } catch (e) {
     } finally {
       return repository

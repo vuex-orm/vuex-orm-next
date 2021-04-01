@@ -1,4 +1,3 @@
-import { Store } from 'vuex'
 import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
 import { Query } from '../query/Query'
@@ -14,6 +13,7 @@ import { HasOne } from './attributes/relations/HasOne'
 import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
+import { Database } from '@/database/Database'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -55,10 +55,10 @@ export class Model {
   protected static booted: Record<string, boolean> = {}
 
   /**
-   * The store instance.
+   * The database instance.
    */
   @NonEnumerable
-  protected _store!: Store<any>
+  protected _database!: Database
 
   /**
    * Create a new model instance.
@@ -243,23 +243,23 @@ export class Model {
   }
 
   /**
-   * Get the store instance.
+   * Get the database instance.
    */
-  $store(): Store<any> {
-    assert(this._store !== undefined, [
+  $database(): Database {
+    assert(this._database !== undefined, [
       'A Vuex Store instance is not injected into the model instance.',
       'You might be trying to instantiate the model directly. Please use',
       '`repository.make` method to create a new model instance.'
     ])
 
-    return this._store
+    return this._database
   }
 
   /**
-   * Set the store instance.
+   * Set the database instance.
    */
-  $setStore(store: Store<any>): this {
-    this._store = store
+  $setDatabase(database: Database): this {
+    this._database = database
 
     return this
   }
@@ -294,7 +294,7 @@ export class Model {
     const self = this.$self()
     const model = new self(attributes, options) as this
 
-    model.$setStore(this.$store())
+    model.$setDatabase(this.$database())
 
     return model
   }
@@ -303,7 +303,7 @@ export class Model {
    * Create a new query instance.
    */
   $query(): Query<this> {
-    return new Query(this.$store(), this)
+    return new Query(this.$database(), this)
   }
 
   /**
