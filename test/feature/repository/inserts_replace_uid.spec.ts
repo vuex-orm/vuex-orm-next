@@ -14,7 +14,9 @@ describe('feature/uid/inserts_replace_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(User).replace([{ name: 'John Doe' }, { name: 'Jane Doe' }])
+    await store
+      .$repo(User)
+      .replace([{ name: 'John Doe' }, { name: 'Jane Doe' }])
 
     assertState(store, {
       users: {
