@@ -9,7 +9,7 @@ describe('feature/repository/inserts_replace', () => {
     @Str('') name!: string
   }
 
-  it('replaces a record in the store', async () => {
+  it('inserts a record in the store', async () => {
     const store = createStore()
 
     await store.$repo(User).replace({ id: 1, name: 'John Doe' })
@@ -21,7 +21,7 @@ describe('feature/repository/inserts_replace', () => {
     })
   })
 
-  it('replaces multiple records in the store', async () => {
+  it('inserts multiple records in the store', async () => {
     const store = createStore()
 
     await store.$repo(User).replace([
