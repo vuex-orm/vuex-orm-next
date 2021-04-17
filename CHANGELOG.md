@@ -1,3 +1,9 @@
+# [1.0.0-draft.10](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.9...v1.0.0-draft.10) (2021-04-17)
+
+### Bug Fixes
+
+* **repository:** implement missing `add` & `replace` methods ([#58](https://github.com/vuex-orm/vuex-orm-next/issues/58)) ([09496aa](https://github.com/vuex-orm/vuex-orm-next/commit/09496aa89c28506fd5d964da44bf607203bc9420))
+
 # [1.0.0-draft.9](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.8...v1.0.0-draft.9) (2021-02-24)
 
 ### Bug Fixes
