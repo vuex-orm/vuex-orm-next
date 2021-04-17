@@ -27,4 +27,16 @@ describe('feature/repository/inserts_add_composite_key', () => {
       }
     })
   })
+
+  it('throws if composite key is incomplete', async () => {
+    expect.assertions(1)
+
+    const store = createStore()
+
+    try {
+      await store.$repo(User).add({ idA: 1, name: 'John Doe' })
+    } catch (e) {
+      expect(e).toBeInstanceOf(Error)
+    }
+  })
 })
