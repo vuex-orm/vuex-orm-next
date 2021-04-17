@@ -417,12 +417,18 @@ export class Model {
   /**
    * Get the index id of this model or for a given record.
    */
-  $getIndexId(record?: Element): string | null {
+  $getIndexId(record?: Element): string {
     const target = record ?? this
 
     const id = this.$getKey(target)
 
-    return id === null ? null : this.$stringifyId(id)
+    assert(id !== null, [
+      'The record is missing the primary key. If you want to persist record',
+      'without the primary key, please define the primary key field with the',
+      '`uid` attribute.'
+    ])
+
+    return this.$stringifyId(id)
   }
 
   /**

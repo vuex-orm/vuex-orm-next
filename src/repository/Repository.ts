@@ -175,10 +175,19 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
-   * Insert the given record to the store.
+   * Insert the given records to the store.
    */
   insert(records: Element | Element[]): Promise<Collections> {
     return this.query().insert(records)
+  }
+
+  /**
+   * Insert the given records to the store without normalization.
+   */
+  add(records: Element[]): Promise<Collection<M>>
+  add(record: Element): Promise<M>
+  add(records: any): Promise<any> {
+    return this.query().add(records)
   }
 
   /**
@@ -186,6 +195,16 @@ export class Repository<M extends Model = Model> {
    */
   fresh(records: Element | Element[]): Promise<Collections> {
     return this.query().fresh(records)
+  }
+
+  /**
+   * Insert the given records to the store by replacing any existing records
+   * without normalization.
+   */
+  replace(records: Element[]): Promise<Collection<M>>
+  replace(record: Element): Promise<M>
+  replace(records: any): Promise<any> {
+    return this.query().replace(records)
   }
 
   /**

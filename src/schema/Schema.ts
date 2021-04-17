@@ -1,5 +1,5 @@
 import { schema as Normalizr, Schema as NormalizrSchema } from 'normalizr'
-import { isNullish, isArray, assert } from '../support/Utils'
+import { isNullish, isArray } from '../support/Utils'
 import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
@@ -111,20 +111,8 @@ export class Schema {
         }
       }
 
-      // Finally, we'll check if the model has a valid index id. If not, that
-      // means users have passed in the record without a primary key, and the
-      // primary key field is not defined as uid field. In this case, we'll
-      // throw an error. Otherwise, everything is fine, so let's return the
-      // index id.
-      const indexId = model.$getIndexId(record)
-
-      assert(indexId !== null, [
-        'The record is missing the primary key. If you want to persist record',
-        'without the primary key, please defined the primary key field as',
-        '`uid` field.'
-      ])
-
-      return indexId
+      // Finally, obtain the index id and return.
+      return model.$getIndexId(record)
     }
   }
 
