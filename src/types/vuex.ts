@@ -22,7 +22,8 @@ declare module 'vuex/types/index' {
       model: Constructor<M>,
       connection?: string
     ): Repository<M>
-    $repo<R extends Repository<any>>(
+
+    $repo<R extends Repository>(
       repository: Constructor<R>,
       connection?: string
     ): R

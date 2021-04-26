@@ -36,6 +36,10 @@ describe('unit/repository/Repository', () => {
     expect(user.$database()).toBe(store.$databases[connection])
     expect(user.$database().started).toBe(true)
     assertModel(user, { id: null, name: 'John Doe' })
+
+    // Fetches the same atabase on 2nd call.
+    const user2 = store.$repo(User, connection).make()
+    assertModel(user2, { id: null, name: 'John Doe' })
   })
 
   it('creates a new model instance with default values', () => {

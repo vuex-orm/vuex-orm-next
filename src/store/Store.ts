@@ -46,14 +46,20 @@ function mixin(store: Store<any>, options: FilledInstallOptions): void {
 function createDatabase(
   store: Store<any>,
   options: FilledInstallOptions
-): void {
+): Database {
   const database = new Database()
     .setStore(store)
     .setConnection(options.namespace)
 
   store.$database = database
-  if (!store.$databases) store.$databases = {}
+
+  if (!store.$databases) {
+    store.$databases = {}
+  }
+
   store.$databases[database.connection] = database
+
+  return database
 }
 
 /**
@@ -80,10 +86,10 @@ function startDatabase(store: Store<any>): void {
 function mixinRepoFunction(store: Store<any>): void {
   store.$repo = function (modelOrRepository: any, connection?: string): any {
     let database: Database
+
     if (connection) {
       if (!(connection in store.$databases)) {
-        database = new Database().setStore(store).setConnection(connection)
-        store.$databases[connection] = database
+        database = createDatabase(store, { namespace: connection })
         database.start()
       } else {
         database = store.$databases[connection]
@@ -91,6 +97,7 @@ function mixinRepoFunction(store: Store<any>): void {
     } else {
       database = store.$database
     }
+
     const repository = modelOrRepository._isRepository
       ? new modelOrRepository(this).initialize()
       : new Repository(database).initialize(modelOrRepository)
