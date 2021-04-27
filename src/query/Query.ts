@@ -10,7 +10,6 @@ import {
 import {
   Element,
   Elements,
-  NormalizedSchema,
   NormalizedData,
   Item,
   Collection,
@@ -381,20 +380,22 @@ export class Query<M extends Model = Model> {
    * Retrieves the models from the store by following the given
    * normalized schema.
    */
-  revive(schema: NormalizedSchema<string>): Item<M>
-  revive(schema: NormalizedSchema<string[]>): Collection<M>
-  revive(schema: any): any {
-    const { result, entities } = schema
-
-    return isArray(result)
-      ? this.reviveMany(result, entities)
-      : this.reviveOne(result, entities)
+  revive(schema: Element[]): Collection<M>
+  revive(schema: Element): Item<M>
+  revive(schema: Element | Element[]): Item<M> | Collection<M> {
+    return isArray(schema) ? this.reviveMany(schema) : this.reviveOne(schema)
   }
 
   /**
    * Revive single model from the given schema.
    */
-  reviveOne(id: string, entities: NormalizedData, mark: any = {}): Item<M> {
+  reviveOne(schema: Element): Item<M> {
+    const id = schema.__id
+
+    if (!id) {
+      return null
+    }
+
     const item = this.connection.find(id)
 
     if (!item) {
@@ -403,11 +404,7 @@ export class Query<M extends Model = Model> {
 
     const model = this.hydrate(item)
 
-    const entity = entities[this.model.$entity()]?.[id]
-
-    if (entity) {
-      this.reviveRelations(model, entity, entities, mark)
-    }
+    this.reviveRelations(model, schema)
 
     return model
   }
@@ -415,9 +412,9 @@ export class Query<M extends Model = Model> {
   /**
    * Revive multiple models from the given schema.
    */
-  reviveMany(ids: string[], entities: NormalizedData, mark: any = {}): Collection<M> {
-    return ids.reduce<Collection<M>>((collection, id) => {
-      const model = this.reviveOne(id, entities, mark)
+  reviveMany(schema: Element[]): Collection<M> {
+    return schema.reduce<Collection<M>>((collection, item) => {
+      const model = this.reviveOne(item)
 
       model && collection.push(model)
 
@@ -428,46 +425,40 @@ export class Query<M extends Model = Model> {
   /**
    * Revive relations for the given schema and entity.
    */
-  protected reviveRelations(model: M, entity: Element, entities: NormalizedData, mark: any = {}) {
-    if (mark[model.$entity()]) {
-      return
-    }
-
+  protected reviveRelations(model: M, schema: Element) {
     const fields = this.model.$fields()
 
-    for (const key in entity) {
+    for (const key in schema) {
       const attr = fields[key]
 
       if (!(attr instanceof Relation)) {
         continue
       }
 
-      mark[model.$entity()] = true
+      const relatedSchema = schema[key]
 
-      const id = entity[key]
-
-      model[key] = isArray(id)
-        ? this.newQueryForRelation(attr).reviveMany(id, entities, mark)
-        : this.newQueryForRelation(attr).reviveOne(id, entities, mark)
+      model[key] = isArray(relatedSchema)
+        ? this.newQueryForRelation(attr).reviveMany(relatedSchema)
+        : this.newQueryForRelation(attr).reviveOne(relatedSchema)
     }
   }
 
   /**
    * Save the given records to the store with data normalization.
    */
-  save(record: Element): NormalizedSchema<string>
-  save(records: Element[]): NormalizedSchema<string[]>
-  save(records: any): any {
-    const schema = this.interpreter.processRecord(records)
+  save(records: Element[]): Element[]
+  save(record: Element): Element
+  save(records: Element | Element[]): Element | Element[] {
+    const [data, entities] = this.interpreter.processRecord(records)
 
-    for (const entity in schema.entities) {
+    for (const entity in entities) {
       const query = this.newQuery(entity)
-      const elements = schema.entities[entity]!
+      const elements = entities[entity]
 
       query.saveElements(elements)
     }
 
-    return schema
+    return data
   }
 
   /**

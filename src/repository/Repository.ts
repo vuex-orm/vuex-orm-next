@@ -1,7 +1,7 @@
 import { Store } from 'vuex'
 import { Constructor } from '../types'
 import { assert } from '../support/Utils'
-import { Element, Item, Collection, Collections, NormalizedSchema } from '../data/Data'
+import { Element, Item, Collection, Collections } from '../data/Data'
 import { Model } from '../model/Model'
 import { ModelConstructor } from '../model/ModelConstructor'
 import { Query } from '../query/Query'
@@ -167,9 +167,9 @@ export class Repository<M extends Model = Model> {
    * Retrieves the models from the store by following the given
    * normalized schema.
    */
-  revive(schema: NormalizedSchema<string>): Item<M>
-  revive(schema: NormalizedSchema<string[]>): Collection<M>
-  revive(schema: any): any {
+  revive(schema: Element[]): Collection<M>
+  revive(schema: Element): Item<M>
+  revive(schema: Element | Element[]): Item<M> | Collection<M> {
     return this.query().revive(schema)
   }
 
@@ -187,9 +187,9 @@ export class Repository<M extends Model = Model> {
   /**
    * Save the given records to the store with data normalization.
    */
-  save(record: Element): NormalizedSchema<string>
-  save(records: Element[]): NormalizedSchema<string[]>
-  save(records: any): any {
+  save(records: Element[]): Element[]
+  save(record: Element): Element
+  save(records: Element | Element[]): Element | Element[] {
     return this.query().save(records)
   }
 

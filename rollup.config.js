@@ -21,6 +21,7 @@ function createEntries() {
 function createEntry(config) {
   const c = {
     input: config.input,
+    external: ['vue'],
     plugins: [],
     output: {
       file: config.file,

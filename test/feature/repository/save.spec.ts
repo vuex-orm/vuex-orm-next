@@ -94,12 +94,10 @@ describe('feature/repository/save', () => {
     const schema = store.$repo(User).save({ id: 1, name: 'John Doe', age: 30 })
 
     expect(schema).toEqual({
-      result: '1',
-      entities: {
-        users: {
-          1: { id: 1, name: 'John Doe', age: 30 }
-        }
-      }
+      __id: '1',
+      id: 1,
+      name: 'John Doe',
+      age: 30
     })
   })
 
@@ -111,14 +109,9 @@ describe('feature/repository/save', () => {
       { id: 2, name: 'Jane Doe', age: 20 }
     ])
 
-    expect(schema).toEqual({
-      result: ['1', '2'],
-      entities: {
-        users: {
-          1: { id: 1, name: 'John Doe', age: 30 },
-          2: { id: 2, name: 'Jane Doe', age: 20 }
-        }
-      }
-    })
+    expect(schema).toEqual([
+      { __id: '1', id: 1, name: 'John Doe', age: 30 },
+      { __id: '2', id: 2, name: 'Jane Doe', age: 20 }
+    ])
   })
 })
