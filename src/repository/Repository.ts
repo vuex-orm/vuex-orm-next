@@ -1,7 +1,7 @@
 import { Store } from 'vuex'
 import { Constructor } from '../types'
 import { assert } from '../support/Utils'
-import { Element, Item, Collection, Collections } from '../data/Data'
+import { Element, Item, Collection, Collections, NormalizedSchema } from '../data/Data'
 import { Model } from '../model/Model'
 import { ModelConstructor } from '../model/ModelConstructor'
 import { Query } from '../query/Query'
@@ -164,6 +164,16 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Retrieves the models from the store by following the given
+   * normalized schema.
+   */
+  revive(schema: NormalizedSchema<string>): Item<M>
+  revive(schema: NormalizedSchema<string[]>): Collection<M>
+  revive(schema: any): any {
+    return this.query().revive(schema)
+  }
+
+  /**
    * Create a new model instance. This method will not save the model to the
    * store. It's pretty much the alternative to `new Model()`, but it injects
    * the store instance to support model instance methods in SSR environment.
@@ -172,6 +182,15 @@ export class Repository<M extends Model = Model> {
     return this.getModel().$newInstance(attributes, {
       relations: true
     })
+  }
+
+  /**
+   * Save the given records to the store with data normalization.
+   */
+  save(record: Element): NormalizedSchema<string>
+  save(records: Element[]): NormalizedSchema<string[]>
+  save(records: any): any {
+    return this.query().save(records)
   }
 
   /**

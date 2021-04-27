@@ -24,6 +24,15 @@ export class Interpreter<M extends Model> {
   }
 
   /**
+   * Perform interpretation for the given data and return normalized schema.
+   */
+  processRecord(data: Element | Element[]) {
+    const schema = isArray(data) ? [this.getSchema()] : this.getSchema()
+
+    return normalize(data, schema)
+  }
+
+  /**
    * Perform interpretation for the given data.
    */
   process(data: Element | Element[]): NormalizedData {
