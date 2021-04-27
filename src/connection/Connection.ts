@@ -1,13 +1,15 @@
+import Vue from 'vue'
 import { Store } from 'vuex'
 import { Element, Elements } from '../data/Data'
-import { Database } from '@/database/Database'
+import { Database } from '../database/Database'
+import { Model } from '../model/Model'
 
 export interface ConnectionNamespace {
   connection: string
   entity: string
 }
 
-export class Connection {
+export class Connection<M extends Model> {
   /**
    * The store instance.
    */
@@ -21,29 +23,29 @@ export class Connection {
   /**
    * The entity name.
    */
-  entity: string
+  model: M
 
   /**
    * Create a new connection instance.
    */
-  constructor(database: Database, entity: string) {
+  constructor(database: Database, model: M) {
     this.store = database.store
     this.connection = database.connection
-    this.entity = entity
+    this.model = model
   }
 
   /**
    * Commit a namespaced store mutation.
    */
   private commit(name: string, payload?: any): void {
-    this.store.commit(`${this.connection}/${this.entity}/${name}`, payload)
+    this.store.commit(`${this.connection}/${this.model.$entity()}/${name}`, payload)
   }
 
   /**
    * Get all existing records.
    */
   get(): Elements {
-    return this.store.state[this.connection][this.entity].data
+    return this.store.state[this.connection][this.model.$entity()].data
   }
 
   /**
@@ -51,6 +53,23 @@ export class Connection {
    */
   find(id: string): Element | null {
     return this.get()[id] ?? null
+  }
+
+  /**
+   * Commit `save` mutation to the store.
+   */
+  save(records: Elements): void {
+    this.commit('save', (data: Elements) => {
+      for (const id in records) {
+        const record = records[id]
+        const existing = data[id]
+
+        // TODO: Refactor this with more efficient methods.
+        existing
+          ? Vue.set(data, id, this.model.$newInstance({ ...existing, ...record }).$getAttributes())
+          : Vue.set(data, id, this.model.$newInstance(record).$getAttributes())
+      }
+    })
   }
 
   /**

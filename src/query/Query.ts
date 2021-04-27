@@ -9,6 +9,7 @@ import {
 import {
   Element,
   Elements,
+  NormalizedSchema,
   NormalizedData,
   Item,
   Collection,
@@ -55,7 +56,7 @@ export class Query<M extends Model = Model> {
   /**
    * The connection instance.
    */
-  protected connection: Connection
+  protected connection: Connection<M>
 
   /**
    * The where constraints for the query.
@@ -90,7 +91,7 @@ export class Query<M extends Model = Model> {
     this.model = model
 
     this.interpreter = new Interpreter(database, model)
-    this.connection = new Connection(database, model.$entity())
+    this.connection = new Connection(database, model)
   }
 
   /**
@@ -379,6 +380,54 @@ export class Query<M extends Model = Model> {
     return this.model.$getRelation(name)
   }
 
+  /*
+   * Retrieves the models from the store by following the given
+   * normalized schema.
+   */
+  revive(schema: NormalizedSchema<string>): Item<M>
+  revive(schema: NormalizedSchema<string[]>): Collection<M>
+  revive(schema: any): any {
+    const { result, entities } = schema
+
+    return isArray(result)
+      ? this.reviveMany(result, entities)
+      : this.reviveOne(result, entities)
+  }
+
+  /**
+   * Revive single model from the given schema.
+   */
+  reviveOne(id: string, entities: NormalizedData, mark: any = {}): Item<M> {
+    const item = this.connection.find(id)
+
+    if (!item) {
+      return null
+    }
+
+    const model = this.hydrate(item)
+
+    const entity = entities[this.model.$entity()]?.[id]
+
+    if (entity) {
+      this.reviveRelations(model, entity, entities, mark)
+    }
+
+    return model
+  }
+
+  /**
+   * Revive multiple models from the given schema.
+   */
+  reviveMany(ids: string[], entities: NormalizedData, mark: any = {}): Collection<M> {
+    return ids.reduce<Collection<M>>((collection, id) => {
+      const model = this.reviveOne(id, entities, mark)
+
+      model && collection.push(model)
+
+      return collection
+    }, [])
+  }
+
   /**
    * Create and persist model with default values.
    */
@@ -388,6 +437,58 @@ export class Query<M extends Model = Model> {
     this.connection.insert(this.compile(model))
 
     return model
+  }
+
+  /**
+   * Revive relations for the given schema and entity.
+   */
+  protected reviveRelations(model: M, entity: Element, entities: NormalizedData, mark: any = {}) {
+    if (mark[model.$entity()]) {
+      return
+    }
+
+    const fields = this.model.$fields()
+
+    for (const key in entity) {
+      const attr = fields[key]
+
+      if (!(attr instanceof Relation)) {
+        continue
+      }
+
+      mark[model.$entity()] = true
+
+      const id = entity[key]
+
+      model[key] = isArray(id)
+        ? this.newQueryForRelation(attr).reviveMany(id, entities, mark)
+        : this.newQueryForRelation(attr).reviveOne(id, entities, mark)
+    }
+  }
+
+  /**
+   * Save the given records to the store with data normalization.
+   */
+  save(record: Element): NormalizedSchema<string>
+  save(records: Element[]): NormalizedSchema<string[]>
+  save(records: any): any {
+    const schema = this.interpreter.processRecord(records)
+
+    for (const entity in schema.entities) {
+      const query = this.newQuery(entity)
+      const elements = schema.entities[entity]!
+
+      query.saveElements(elements)
+    }
+
+    return schema
+  }
+
+  /**
+   * Save the given records to the store.
+   */
+  saveElements(records: Elements): void {
+    this.connection.save(records)
   }
 
   /**

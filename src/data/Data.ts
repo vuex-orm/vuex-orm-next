@@ -1,3 +1,4 @@
+import { NormalizedSchema as BaseNormalizedSchema } from 'normalizr'
 import { Model } from '../model/Model'
 
 export type Element = Record<string, any>
@@ -5,6 +6,8 @@ export type Element = Record<string, any>
 export interface Elements {
   [id: string]: Element
 }
+
+export type NormalizedSchema<R> = BaseNormalizedSchema<Elements, R>
 
 export interface NormalizedData {
   [entity: string]: Elements

@@ -71,4 +71,39 @@ describe('feature/relations/has_many_retrieve', () => {
       posts: []
     })
   })
+
+  it('can revive "has many" relations', () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe' }
+      },
+      posts: {
+        1: { id: 1, userId: 1, title: 'Title 01' },
+        2: { id: 2, userId: 1, title: 'Title 02' }
+      }
+    })
+
+    const schema = {
+      result: '1',
+      entities: {
+        users: {
+          1: { id: 1, posts: ['2', '1'] }
+        },
+        posts: {
+          1: { id: 1 },
+          2: { id: 2 }
+        }
+      }
+    }
+
+    const user = store.$repo(User).revive(schema)!
+
+    expect(user.posts.length).toBe(2)
+    expect(user.posts[0]).toBeInstanceOf(Post)
+    expect(user.posts[1]).toBeInstanceOf(Post)
+    expect(user.posts[0].id).toBe(2)
+    expect(user.posts[1].id).toBe(1)
+  })
 })
