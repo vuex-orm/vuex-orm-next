@@ -21,8 +21,7 @@ describe('feature/repository/retrieves_revive', () => {
     })
 
     const schema = {
-      result: '2',
-      entities: {}
+      __id: 2
     }
 
     const user = store.$repo(User).revive(schema)!
@@ -31,7 +30,7 @@ describe('feature/repository/retrieves_revive', () => {
     expect(user.id).toBe(2)
   })
 
-  it('returns null if result can not be found', () => {
+  it('returns null if result can not be found when passing object schema', () => {
     const store = createStore()
 
     fillState(store, {
@@ -42,17 +41,14 @@ describe('feature/repository/retrieves_revive', () => {
       }
     })
 
-    const schema = {
-      result: '4',
-      entities: {}
-    }
+    // Test missing id in the store.
+    expect(store.$repo(User).revive({ __id: 4 })).toBe(null)
 
-    const user = store.$repo(User).revive(schema)
-
-    expect(user).toBe(null)
+    // Test missing id in the schema.
+    expect(store.$repo(User).revive({})).toBe(null)
   })
 
-  it('retrieves models from the store by the given schema', () => {
+  it('retrieves multiple models from the store by the given schema', () => {
     const store = createStore()
 
     fillState(store, {
@@ -63,10 +59,7 @@ describe('feature/repository/retrieves_revive', () => {
       }
     })
 
-    const schema = {
-      result: ['3', '1'],
-      entities: {}
-    }
+    const schema = [{ __id: 3 }, { __id: 1 }]
 
     const users = store.$repo(User).revive(schema)
 

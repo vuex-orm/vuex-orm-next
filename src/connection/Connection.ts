@@ -38,7 +38,9 @@ export class Connection<M extends Model> {
    * Commit a namespaced store mutation.
    */
   private commit(name: string, payload?: any): void {
-    this.store.commit(`${this.connection}/${this.model.$entity()}/${name}`, payload)
+    const type = `${this.connection}/${this.model.$entity()}/${name}`
+
+    this.store.commit(type, payload)
   }
 
   /**
@@ -66,7 +68,13 @@ export class Connection<M extends Model> {
 
         // TODO: Refactor this with more efficient methods.
         existing
-          ? Vue.set(data, id, this.model.$newInstance({ ...existing, ...record }).$getAttributes())
+          ? Vue.set(
+              data,
+              id,
+              this.model
+                .$newInstance({ ...existing, ...record })
+                .$getAttributes()
+            )
           : Vue.set(data, id, this.model.$newInstance(record).$getAttributes())
       }
     })

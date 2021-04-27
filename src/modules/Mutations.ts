@@ -3,7 +3,7 @@ import { Elements } from '../data/Data'
 import { State } from './State'
 
 export interface Mutations<S extends State> extends MutationTree<S> {
-  save(state: S, records: Elements): void
+  save(state: S, callback: (data: Elements) => void): void
   insert(state: S, records: Elements): void
   update(state: S, records: Elements): void
   delete(state: S, ids: string[]): void

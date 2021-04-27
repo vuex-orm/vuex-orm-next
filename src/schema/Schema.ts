@@ -87,7 +87,7 @@ export class Schema {
    */
   private idAttribute(
     model: Model,
-    _parent: Model
+    parent: Model
   ): Normalizr.StrategyFunction<string> {
     // We'll first check if the model contains any uid attributes. If so, we
     // generate the uids during the normalization process, so we'll keep that
@@ -95,12 +95,12 @@ export class Schema {
     // record, instead of looping through the model fields each time.
     const uidFields = this.getUidPrimaryKeyPairs(model)
 
-    return (record, _parentRecord, key) => {
+    return (record, parentRecord, key) => {
       // If the `key` is not `null`, that means this record is a nested
       // relationship of the parent model. In this case, we'll attach any
       // missing foreign keys to the record first.
       if (key !== null) {
-        // ;(parent.$fields()[key] as Relation).attach(parentRecord, record)
+        ;(parent.$fields()[key] as Relation).attach(parentRecord, record)
       }
 
       // Next, we'll generate any missing primary key fields defined as
@@ -111,8 +111,15 @@ export class Schema {
         }
       }
 
-      // Finally, obtain the index id and return.
-      return model.$getIndexId(record)
+      // Finally, obtain the index id, attach it to the current record at the
+      // special `__id` key. The `__id` key is used when we try to retrieve
+      // the models via the `revive` method using the data that is currently
+      // being normalized.
+      const id = model.$getIndexId(record)
+
+      record.__id = id
+
+      return id
     }
   }
 
