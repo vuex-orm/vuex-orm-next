@@ -29,7 +29,7 @@ export class Schema {
     model = model || this.model
     parent = parent || this.model
 
-    const entity = model.$entity()
+    const entity = `${model.$entity()}${parent.$entity()}`
 
     if (this.schemas[entity]) {
       return this.schemas[entity]
