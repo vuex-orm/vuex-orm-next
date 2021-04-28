@@ -597,4 +597,36 @@ export class Model {
       ? relation.map((model) => model.$toJson())
       : relation.$toJson()
   }
+
+  /**
+   * Sanitize the given record.
+   */
+  $sanitize(record: Element): Element {
+    const attrs = this.$fields()
+    const sanitizedRecord = {} as Element
+    for (const key in record) {
+      const attr = attrs[key]
+      const value = record[key]
+      if (attr !== undefined && !(attr instanceof Relation)) {
+        sanitizedRecord[key] = attr.make(value)
+      }
+    }
+    return sanitizedRecord
+  }
+
+  /**
+   * Sanitize the given record and fill fields that were not given a value with a default value.
+   */
+  $sanitizeAndFill(record: Element): Element {
+    const attrs = this.$fields()
+    const sanitizedRecord = {} as Element
+    for (const key in attrs) {
+      const attr = attrs[key]
+      const value = record[key]
+      if (!(attr instanceof Relation)) {
+        sanitizedRecord[key] = attr.make(value)
+      }
+    }
+    return sanitizedRecord
+  }
 }
