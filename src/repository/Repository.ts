@@ -1,4 +1,3 @@
-import { Store } from 'vuex'
 import { Constructor } from '../types'
 import { assert } from '../support/Utils'
 import { Element, Item, Collection, Collections } from '../data/Data'
@@ -12,6 +11,7 @@ import {
   OrderBy,
   EagerLoadConstraint
 } from '../query/Options'
+import { Database } from '@/database/Database'
 
 export class Repository<M extends Model = Model> {
   /**
@@ -22,9 +22,9 @@ export class Repository<M extends Model = Model> {
   static _isRepository: boolean = true
 
   /**
-   * The store instance.
+   * The database instance.
    */
-  protected store: Store<any>
+  database: Database
 
   /**
    * The model instance.
@@ -39,8 +39,8 @@ export class Repository<M extends Model = Model> {
   /**
    * Create a new Repository instance.
    */
-  constructor(store: Store<any>) {
-    this.store = store
+  constructor(database: Database) {
+    this.database = database
   }
 
   /**
@@ -49,7 +49,7 @@ export class Repository<M extends Model = Model> {
   initialize(model?: ModelConstructor<M>): this {
     // If there's a model passed in, just use that and return immediately.
     if (model) {
-      this.model = model.newRawInstance().$setStore(this.store)
+      this.model = model.newRawInstance().$setDatabase(this.database)
 
       return this
     }
@@ -59,7 +59,7 @@ export class Repository<M extends Model = Model> {
     // In this case, we'll check if the user has set model to the `use`
     // property and instantiate that.
     if (this.use) {
-      this.model = (this.use.newRawInstance() as M).$setStore(this.store)
+      this.model = (this.use.newRawInstance() as M).$setDatabase(this.database)
 
       return this
     }
@@ -89,14 +89,14 @@ export class Repository<M extends Model = Model> {
   repo<M extends Model>(model: Constructor<M>): Repository<M>
   repo<R extends Repository<any>>(repository: Constructor<R>): R
   repo(modelOrRepository: any): any {
-    return this.store.$repo(modelOrRepository)
+    return this.database.store.$repo(modelOrRepository)
   }
 
   /**
    * Create a new Query instance.
    */
   query(): Query<M> {
-    return new Query(this.store, this.getModel())
+    return new Query(this.database, this.getModel())
   }
 
   /**

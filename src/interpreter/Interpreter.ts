@@ -1,14 +1,14 @@
 import { normalize, schema as Normalizr } from 'normalizr'
-import { Store } from 'vuex'
 import { isArray, isEmpty } from '../support/Utils'
 import { Element, NormalizedData } from '../data/Data'
 import { Model } from '../model/Model'
+import { Database } from '@/database/Database'
 
 export class Interpreter<M extends Model> {
   /**
-   * The store instance.
+   * The database instance.
    */
-  store: Store<any>
+  database: Database
 
   /**
    * The model object.
@@ -18,8 +18,8 @@ export class Interpreter<M extends Model> {
   /**
    * Create a new Interpreter instance.
    */
-  constructor(store: Store<any>, model: M) {
-    this.store = store
+  constructor(database: Database, model: M) {
+    this.database = database
     this.model = model
   }
 
@@ -43,6 +43,6 @@ export class Interpreter<M extends Model> {
    * Get the schema from the database.
    */
   private getSchema(): Normalizr.Entity {
-    return this.store.$database.getSchema(this.model.$entity())
+    return this.database.getSchema(this.model.$entity())
   }
 }

@@ -6,6 +6,6 @@ describe('unit/model/Model', () => {
   }
 
   it('throws when accessing the store but it is not injected', () => {
-    expect(() => new User().$store()).toThrow()
+    expect(() => new User().$database()).toThrow()
   })
 })
