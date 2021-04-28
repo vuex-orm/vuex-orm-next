@@ -17,7 +17,7 @@ import { Model, Str, Num, BelongsTo, HasMany } from '@/index'
 //
 // We've fixed this by caching the schema with `model` AND `parent` entity
 // name. So only when the model and the parent name match, we use the cache.
-describe('regression/nested_relations', () => {
+describe('regression/normalizing_nested_relations_missing_parent_model', () => {
   class Opportunity extends Model {
     static entity = 'opportunities'
 
