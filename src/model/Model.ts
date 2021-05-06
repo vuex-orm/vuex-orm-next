@@ -597,4 +597,53 @@ export class Model {
       ? relation.map((model) => model.$toJson())
       : relation.$toJson()
   }
+
+  /**
+   * Sanitize the given record. This method is similar to `$toJson` method, but
+   * the difference is that it doesn't instantiate the full model. The method
+   * is used to sanitize the record before persisting to the store.
+   *
+   * It removes fields that don't exist in the model field schema or if the
+   * field is relationship fields.
+   *
+   * Note that this method only sanitizes existing fields in the given record.
+   * It will not generate missing model fields. If you need to generate all
+   * model fields, use `$sanitizeAndFill` method instead.
+   */
+  $sanitize(record: Element): Element {
+    const sanitizedRecord = {} as Element
+    const attrs = this.$fields()
+
+    for (const key in record) {
+      const attr = attrs[key]
+      const value = record[key]
+
+      if (attr !== undefined && !(attr instanceof Relation)) {
+        sanitizedRecord[key] = attr.make(value)
+      }
+    }
+
+    return sanitizedRecord
+  }
+
+  /**
+   * Same as `$sanitize` method, but it produces missing model fields with its
+   * default value.
+   */
+  $sanitizeAndFill(record: Element): Element {
+    const sanitizedRecord = {} as Element
+
+    const attrs = this.$fields()
+
+    for (const key in attrs) {
+      const attr = attrs[key]
+      const value = record[key]
+
+      if (!(attr instanceof Relation)) {
+        sanitizedRecord[key] = attr.make(value)
+      }
+    }
+
+    return sanitizedRecord
+  }
 }

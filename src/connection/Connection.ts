@@ -66,16 +66,9 @@ export class Connection<M extends Model> {
         const record = records[id]
         const existing = data[id]
 
-        // TODO: Refactor this with more efficient methods.
         existing
-          ? Vue.set(
-              data,
-              id,
-              this.model
-                .$newInstance({ ...existing, ...record })
-                .$getAttributes()
-            )
-          : Vue.set(data, id, this.model.$newInstance(record).$getAttributes())
+          ? Object.assign(existing, this.model.$sanitize(record))
+          : Vue.set(data, id, this.model.$sanitizeAndFill(record))
       }
     })
   }
