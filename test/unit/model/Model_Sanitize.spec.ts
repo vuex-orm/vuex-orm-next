@@ -11,31 +11,36 @@ describe('unit/model/Model_Sanitize', () => {
     @Num(null, { nullable: true }) id!: number
     @Str('Unknown') name!: string
     @Num(0) age!: number
-    @HasMany(() => Post, 'postId') posts!: Post[]
+
+    @HasMany(() => Post, 'postId')
+    posts!: Post[]
   }
 
   class Post extends Model {
     static entity = 'posts'
   }
 
-  it('sanitize the given record', () => {
+  it('sanitizes the given record', () => {
     const user = createStore().$repo(User).make()
+
     const data = user.$sanitize({
       id: 1,
+      unknownField: 1,
       age: '10',
-      posts: [1, 3],
-      countryId: 1
+      posts: [1, 3]
     })
 
     const expected = {
       id: 1,
       age: 10
     }
+
     expect(data).toEqual(expected)
   })
 
-  it('sanitize the given record and fill fields that were not given a value with a default value', () => {
-    const user = new User()
+  it('sanitize the given record and fill missing fields', () => {
+    const user = createStore().$repo(User).make()
+
     const data = user.$sanitizeAndFill({ id: 1, posts: [1, 3] })
 
     const expected = {
@@ -43,6 +48,7 @@ describe('unit/model/Model_Sanitize', () => {
       name: 'Unknown',
       age: 0
     }
+
     expect(data).toEqual(expected)
   })
 })
