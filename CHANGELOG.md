@@ -1,3 +1,13 @@
+# [1.0.0-draft.11](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.10...v1.0.0-draft.11) (2021-05-06)
+
+### Bug Fixes
+
+* normalization error on nested relationship ([#61](https://github.com/vuex-orm/vuex-orm-next/issues/61)) ([239db67](https://github.com/vuex-orm/vuex-orm-next/commit/239db67c4c750aec447562a55f8eb9ebec34a5cd))
+
+### Features
+
+* add support for multiple databases ([#53](https://github.com/vuex-orm/vuex-orm-next/issues/53)) ([c319b3a](https://github.com/vuex-orm/vuex-orm-next/commit/c319b3a9a84c88c01eb8af426014b70aefe1bc35))
+
 # [1.0.0-draft.10](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.9...v1.0.0-draft.10) (2021-04-17)
 
 ### Bug Fixes
