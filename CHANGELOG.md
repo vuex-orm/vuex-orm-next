@@ -1,3 +1,10 @@
+# [1.0.0-draft.12](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.11...v1.0.0-draft.12) (2021-05-07)
+
+### Bug Fixes
+
+* database type in repository is not correct due to wrong import path ([7403ae7](https://github.com/vuex-orm/vuex-orm-next/commit/7403ae70504f8fa1cf3b66317b0e8527b991dbac))
+* store is passed to the repository instead of database ([4c8a573](https://github.com/vuex-orm/vuex-orm-next/commit/4c8a5738f7a35367a8d3c3b022bb5da657e39181))
+
 # [1.0.0-draft.11](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.10...v1.0.0-draft.11) (2021-05-06)
 
 ### Bug Fixes
