@@ -99,7 +99,7 @@ function mixinRepoFunction(store: Store<any>): void {
     }
 
     const repository = modelOrRepository._isRepository
-      ? new modelOrRepository(this).initialize()
+      ? new modelOrRepository(database).initialize()
       : new Repository(database).initialize(modelOrRepository)
 
     try {
