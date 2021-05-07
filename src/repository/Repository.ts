@@ -1,6 +1,7 @@
 import { Constructor } from '../types'
 import { assert } from '../support/Utils'
 import { Element, Item, Collection, Collections } from '../data/Data'
+import { Database } from '../database/Database'
 import { Model } from '../model/Model'
 import { ModelConstructor } from '../model/ModelConstructor'
 import { Query } from '../query/Query'
@@ -11,7 +12,6 @@ import {
   OrderBy,
   EagerLoadConstraint
 } from '../query/Options'
-import { Database } from '@/database/Database'
 
 export class Repository<M extends Model = Model> {
   /**
