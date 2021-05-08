@@ -380,6 +380,17 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Create and persist model with default values.
+   */
+  async new(): Promise<M> {
+    const model = this.model.$newInstance(undefined, { relations: false })
+
+    this.connection.insert(this.compile(model))
+
+    return model
+  }
+
+  /**
    * Insert the given record to the store.
    */
   async insert(records: Element | Element[]): Promise<Collections> {

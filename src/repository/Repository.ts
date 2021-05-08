@@ -175,6 +175,13 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Create and persist model with default values.
+   */
+  new(): Promise<M> {
+    return this.query().new()
+  }
+
+  /**
    * Insert the given records to the store.
    */
   insert(records: Element | Element[]): Promise<Collections> {
