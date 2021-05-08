@@ -29,7 +29,7 @@ describe('feature/repository/inserts_new', () => {
     class User extends Model {
       static entity = 'users'
 
-      @Attr() id!: string
+      @Attr() id!: any
       @Str('John Doe') name!: string
     }
 
