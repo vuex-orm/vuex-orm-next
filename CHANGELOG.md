@@ -1,3 +1,9 @@
+# [1.0.0-draft.13](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.12...v1.0.0-draft.13) (2021-05-10)
+
+### Features
+
+* add the `new` method to create and persist entry with default values ([#57](https://github.com/vuex-orm/vuex-orm-next/issues/57)) ([#68](https://github.com/vuex-orm/vuex-orm-next/issues/68)) ([41d4c8c](https://github.com/vuex-orm/vuex-orm-next/commit/41d4c8c52091b1c31100f95621a89529dfbcd7a8))
+
 # [1.0.0-draft.12](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.11...v1.0.0-draft.12) (2021-05-07)
 
 ### Bug Fixes
