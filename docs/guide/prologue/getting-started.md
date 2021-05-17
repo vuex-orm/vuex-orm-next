@@ -97,33 +97,11 @@ export default store
 
 Now you are ready to go. Vuex ORM creates a namespaced module called `entities` and registers all models within by their `entity` name.
 
-## Create a Repository
+## Creating Data
 
-Vuex ORM adopts the [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) pattern and uses _repositories_ to interact with the store. A repository is created using the `store.$repo()` method and passing in a model as the argument.
+Vuex ORM adopts the [Data Mapper](https://en.wikipedia.org/wiki/Data_mapper_pattern) pattern and uses _repositories_ to interact with the store. In order to create new data, you must first obtain a repository instance corresponding to the model.
 
-```js
-const postRepo = store.$repo(Post)
-
-postRepo.insert(posts)
-```
-
-When creating repositories in a Vue component, you can also use `this.$store`:
-
-```js
-import Post from '@/models/Post'
-
-export default {
-  computed: {
-    postRepo () {
-      return this.$store.$repo(Post)
-    }
-  }
-}
-```
-
-### Map Repositories
-
-However, it might be a bit cumbersome to create repositories like this, especially when you have multiple repositories that you want to use. In such cases, you can use the `mapRepos` helper:
+You may do so by using the `mapRepos` helper function.
 
 ```js
 import { mapRepos } from '@vuex-orm/core'
@@ -138,9 +116,7 @@ export default {
 
 You can learn more about repositories at [Repository: Getting Started](../repository/getting-started).
 
-## Inserting Data
-
-Vuex ORM provides an `insert` method to insert new records to a collection. In the following example, we're passing in an array with a single post:
+Now, you may use `save` on the repository to create new records. In the following example, we're passing in an array with a single post:
 
 ```js
 import { mapRepos } from '@vuex-orm/core'
@@ -166,8 +142,8 @@ export default {
       }
     ]
 
-    // Insert posts.
-    this.postRepo.insert(posts)
+    // Save posts.
+    this.postRepo.save(posts)
   }
 }
 ```
