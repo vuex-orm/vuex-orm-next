@@ -1,4 +1,4 @@
-# vuex-orm-next [![Travis CI](https://travis-ci.org/vuex-orm/vuex-orm-next.svg?branch=master)](https://travis-ci.org/vuex-orm/vuex-orm-next) [![codecov](https://codecov.io/gh/vuex-orm/vuex-orm-next/branch/master/graph/badge.svg)](https://codecov.io/gh/vuex-orm/vuex-orm-next)
+# vuex-orm-next [![Unit Test](https://github.com/vuex-orm/vuex-orm-next/workflows/Unit%20Test/badge.svg)](https://github.com/vuex-orm/vuex-orm-next/actions) [![Build](https://github.com/vuex-orm/vuex-orm-next/workflows/Build/badge.svg)](https://github.com/vuex-orm/vuex-orm-next/actions) [![codecov](https://codecov.io/gh/vuex-orm/vuex-orm-next/branch/master/graph/badge.svg)](https://codecov.io/gh/vuex-orm/vuex-orm-next)
 
 ## Status: Draft
 
