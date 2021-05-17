@@ -24,10 +24,7 @@ function createEntry(config) {
     plugins: [],
     output: {
       file: config.file,
-      format: config.format,
-      globals: {
-        vue: 'Vue'
-      }
+      format: config.format
     },
     onwarn: (msg, warn) => {
       if (!/Circular/.test(msg)) {

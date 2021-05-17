@@ -111,8 +111,15 @@ export class Schema {
         }
       }
 
-      // Finally, obtain the index id and return.
-      return model.$getIndexId(record)
+      // Finally, obtain the index id, attach it to the current record at the
+      // special `__id` key. The `__id` key is used when we try to retrieve
+      // the models via the `revive` method using the data that is currently
+      // being normalized.
+      const id = model.$getIndexId(record)
+
+      record.__id = id
+
+      return id
     }
   }
 

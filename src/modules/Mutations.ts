@@ -3,10 +3,18 @@ import { Elements } from '../data/Data'
 import { State } from './State'
 
 export interface Mutations<S extends State> extends MutationTree<S> {
+  save(state: S, records: Elements): void
   insert(state: S, records: Elements): void
   update(state: S, records: Elements): void
   delete(state: S, ids: string[]): void
   flush(state: S): void
+}
+
+/**
+ * Commit `save` change to the store.
+ */
+function save(state: State, records: Elements): void {
+  state.data = records
 }
 
 /**
@@ -53,6 +61,7 @@ function flush(state: State): void {
 }
 
 export const mutations = {
+  save,
   insert,
   fresh,
   update,

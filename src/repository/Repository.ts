@@ -164,6 +164,16 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Retrieves the models from the store by following the given
+   * normalized schema.
+   */
+  revive(schema: Element[]): Collection<M>
+  revive(schema: Element): Item<M>
+  revive(schema: Element | Element[]): Item<M> | Collection<M> {
+    return this.query().revive(schema)
+  }
+
+  /**
    * Create a new model instance. This method will not save the model to the
    * store. It's pretty much the alternative to `new Model()`, but it injects
    * the store instance to support model instance methods in SSR environment.
@@ -172,6 +182,15 @@ export class Repository<M extends Model = Model> {
     return this.getModel().$newInstance(attributes, {
       relations: true
     })
+  }
+
+  /*
+   * Save the given records to the store with data normalization.
+   */
+  save(records: Element[]): Element[]
+  save(record: Element): Element
+  save(records: Element | Element[]): Element | Element[] {
+    return this.query().save(records)
   }
 
   /**

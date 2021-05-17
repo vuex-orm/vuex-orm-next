@@ -1,13 +1,14 @@
 import { Store } from 'vuex'
 import { Element, Elements } from '../data/Data'
-import { Database } from '@/database/Database'
+import { Database } from '../database/Database'
+import { Model } from '../model/Model'
 
 export interface ConnectionNamespace {
   connection: string
   entity: string
 }
 
-export class Connection {
+export class Connection<M extends Model> {
   /**
    * The store instance.
    */
@@ -21,29 +22,31 @@ export class Connection {
   /**
    * The entity name.
    */
-  entity: string
+  model: M
 
   /**
    * Create a new connection instance.
    */
-  constructor(database: Database, entity: string) {
+  constructor(database: Database, model: M) {
     this.store = database.store
     this.connection = database.connection
-    this.entity = entity
+    this.model = model
   }
 
   /**
    * Commit a namespaced store mutation.
    */
   private commit(name: string, payload?: any): void {
-    this.store.commit(`${this.connection}/${this.entity}/${name}`, payload)
+    const type = `${this.connection}/${this.model.$entity()}/${name}`
+
+    this.store.commit(type, payload)
   }
 
   /**
    * Get all existing records.
    */
   get(): Elements {
-    return this.store.state[this.connection][this.entity].data
+    return this.store.state[this.connection][this.model.$entity()].data
   }
 
   /**
@@ -51,6 +54,26 @@ export class Connection {
    */
   find(id: string): Element | null {
     return this.get()[id] ?? null
+  }
+
+  /**
+   * Commit `save` mutation to the store.
+   */
+  save(records: Elements): void {
+    const newRecords = {} as Elements
+
+    const data = this.get()
+
+    for (const id in records) {
+      const record = records[id]
+      const existing = data[id]
+
+      newRecords[id] = existing
+        ? Object.assign({}, existing, this.model.$sanitize(record))
+        : this.model.$sanitizeAndFill(record)
+    }
+
+    this.commit('save', newRecords)
   }
 
   /**
