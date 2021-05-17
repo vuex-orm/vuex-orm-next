@@ -673,52 +673,43 @@ export class Query<M extends Model = Model> {
   /**
    * Destroy the models for the given id.
    */
-  async destroy(id: string | number): Promise<Item<M>>
-  async destroy(ids: (string | number)[]): Promise<Collection<M>>
-  async destroy(ids: any): Promise<any> {
+  destroy(id: string | number): string | null
+  destroy(ids: (string | number)[]): string[]
+  destroy(ids: any): any {
     assert(!this.model.$hasCompositeKey(), [
       "You can't use the `destroy` method on a model with a composite key.",
       'Please use `delete` method instead.'
     ])
 
-    if (isArray(ids)) {
-      return this.destroyMany(ids)
-    }
-
-    return (await this.whereId(ids).delete())[0] ?? null
-  }
-
-  /**
-   * Destroy the models for the given id.
-   */
-  async destroyMany(ids: (string | number)[]): Promise<Collection<M>> {
-    return this.whereId(ids).delete()
+    return this.connection.destroy(ids)
   }
 
   /**
    * Delete records resolved by the query chain.
    */
-  async delete(): Promise<Collection<M>> {
+  delete(): string[] {
     const models = this.get()
 
-    this.connection.delete(this.getIndexIdsFromCollection(models))
+    if (isEmpty(models)) {
+      return []
+    }
 
-    return models
+    const ids = this.getIndexIdsFromCollection(models)
+
+    this.connection.delete(ids)
+
+    return ids
   }
 
   /**
    * Delete all records in the store.
    */
-  async flush(): Promise<Collection<M>> {
-    const models = this.all()
-
-    this.connection.flush()
-
-    return models
+  flush(): string[] {
+    return this.connection.flush()
   }
 
   /**
-   * Get an array of ids from the given collection.
+   * Get an array of index ids from the given collection.
    */
   protected getIndexIdsFromCollection(models: Collection<M>): string[] {
     return models.map((model) => model.$getIndexId())

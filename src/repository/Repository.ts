@@ -252,16 +252,16 @@ export class Repository<M extends Model = Model> {
   /**
    * Destroy the models for the given id.
    */
-  destroy(id: string | number): Promise<Item<M>>
-  destroy(ids: (string | number)[]): Promise<Collection<M>>
-  destroy(ids: any): Promise<any> {
+  destroy(id: string | number): string | null
+  destroy(ids: (string | number)[]): string[]
+  destroy(ids: any):  any {
     return this.query().destroy(ids)
   }
 
   /**
    * Delete all records in the store.
    */
-  flush(): Promise<Collection<M>> {
+  flush(): string[] {
     return this.query().flush()
   }
 }

@@ -6,6 +6,7 @@ export interface Mutations<S extends State> extends MutationTree<S> {
   save(state: S, records: Elements): void
   insert(state: S, records: Elements): void
   update(state: S, records: Elements): void
+  destroy(state: S, ids: string[]): void
   delete(state: S, ids: string[]): void
   flush(state: S): void
 }
@@ -39,9 +40,24 @@ function update(state: State, records: Elements): void {
 }
 
 /**
- * Commit `delete` change to the store.
+ * Commit `destroy` change to the store.
  */
 function destroy(state: State, ids: string[]): void {
+  const data = {}
+
+  for (const id in state.data) {
+    if (!ids.includes(id)) {
+      data[id] = state.data[id]
+    }
+  }
+
+  state.data = data
+}
+
+/**
+ * Commit `delete` change to the store.
+ */
+function remove(state: State, ids: string[]): void {
   const data = {}
 
   for (const id in state.data) {
@@ -65,6 +81,7 @@ export const mutations = {
   insert,
   fresh,
   update,
-  delete: destroy,
+  destroy,
+  delete: remove,
   flush
 }

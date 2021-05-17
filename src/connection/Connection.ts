@@ -1,4 +1,5 @@
 import { Store } from 'vuex'
+import { isArray } from '../support/Utils'
 import { Element, Elements } from '../data/Data'
 import { Database } from '../database/Database'
 import { Model } from '../model/Model'
@@ -98,6 +99,53 @@ export class Connection<M extends Model> {
   }
 
   /**
+   * Commit `destroy` mutation to the store.
+   */
+  destroy(id: string | number): string | null
+  destroy(ids: (string | number)[]): string[]
+  destroy(ids: string | number | (string | number)[]): string | string[] | null {
+    return isArray(ids) ? this.destroyMany(ids) : this.destroyOne(ids)
+  }
+
+  /**
+   * Destroy a record from the store.
+   */
+  protected destroyOne(id: string | number): string | null {
+    id = String(id)
+
+    const record = this.get()[id]
+
+    if (!record) {
+      return null
+    }
+
+    this.commit('destroy', [id])
+
+    return id
+  }
+
+  /**
+   * Destroy records from the store.
+   */
+  protected destroyMany(ids: (string | number)[]): string[] {
+    const deleted = [] as string[]
+
+    const data = this.get()
+
+    ids.forEach((id) => {
+      const record = data[id]
+
+      if (record) {
+        deleted.push(String(id))
+      }
+    })
+
+    this.commit('destroy', deleted)
+
+    return deleted
+  }
+
+  /**
    * Commit `delete` mutation to the store.
    */
   delete(ids: string[]): void {
@@ -107,7 +155,17 @@ export class Connection<M extends Model> {
   /**
    * Commit `flush` mutation to the store.
    */
-  flush(): void {
+  flush(): string[] {
+    const deleted = [] as string[]
+
+    const data = this.get()
+
+    for (const id in data) {
+      deleted.push(id)
+    }
+
     this.commit('flush')
+
+    return deleted
   }
 }

@@ -9,7 +9,7 @@ describe('feature/repository/deletes_flush', () => {
     @Str('') name!: string
   }
 
-  it('deletes all records in the store', async () => {
+  it('deletes all records in the store', () => {
     const store = createStore()
 
     fillState(store, {
@@ -20,10 +20,12 @@ describe('feature/repository/deletes_flush', () => {
       }
     })
 
-    await store.$repo(User).flush()
+    const ids = store.$repo(User).flush()
 
     assertState(store, {
       users: {}
     })
+
+    expect(ids).toEqual(['1', '2', '3'])
   })
 })

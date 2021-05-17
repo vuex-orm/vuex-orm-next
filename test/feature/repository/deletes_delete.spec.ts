@@ -9,7 +9,7 @@ describe('feature/repository/deletes_delete', () => {
     @Str('') name!: string
   }
 
-  it('deletes a record specified by the where clause', async () => {
+  it('deletes a record specified by the where clause', () => {
     const store = createStore()
 
     fillState(store, {
@@ -20,7 +20,7 @@ describe('feature/repository/deletes_delete', () => {
       }
     })
 
-    await store.$repo(User).where('name', 'Jane Doe').delete()
+    store.$repo(User).where('name', 'Jane Doe').delete()
 
     assertState(store, {
       users: {

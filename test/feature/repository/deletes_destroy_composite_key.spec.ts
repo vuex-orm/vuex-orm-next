@@ -12,9 +12,7 @@ describe('feature/repository/deletes_destroy_composite_key', () => {
     @Str('') name!: string
   }
 
-  it('throws if the model has composite key', async () => {
-    expect.assertions(1)
-
+  it('throws if the model has composite key', () => {
     const store = createStore()
 
     fillState(store, {
@@ -25,10 +23,6 @@ describe('feature/repository/deletes_destroy_composite_key', () => {
       }
     })
 
-    try {
-      await store.$repo(User).destroy(2)
-    } catch (e) {
-      expect(e).toBeInstanceOf(Error)
-    }
+    expect(() => store.$repo(User).destroy(2)).toThrow()
   })
 })
