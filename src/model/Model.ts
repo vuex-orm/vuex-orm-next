@@ -1,5 +1,6 @@
 import { isNullish, isArray, assert } from '../support/Utils'
 import { Element, Item, Collection } from '../data/Data'
+import { Database } from '../database/Database'
 import { Query } from '../query/Query'
 import { NonEnumerable } from './decorators/NonEnumerable'
 import { Attribute } from './attributes/Attribute'
@@ -13,7 +14,6 @@ import { HasOne } from './attributes/relations/HasOne'
 import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
-import { Database } from '@/database/Database'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -100,7 +100,11 @@ export class Model {
   /**
    * Set the attribute to the registry.
    */
-  static setRegistry(key: string, attribute: () => Attribute): typeof Model {
+  static setRegistry<M extends typeof Model>(
+    this: M,
+    key: string,
+    attribute: () => Attribute
+  ): M {
     if (!this.registries[this.entity]) {
       this.registries[this.entity] = {}
     }
@@ -128,7 +132,7 @@ export class Model {
   /**
    * Create a new model instance without field values being populated.
    *
-   * This method is mainly fo the internal use when registering models to the
+   * This method is mainly for the internal use when registering models to the
    * database. Since all pre-registered models are for referencing its model
    * setting during the various process, but the fields are not required.
    *
