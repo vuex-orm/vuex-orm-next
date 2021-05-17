@@ -426,17 +426,6 @@ export class Query<M extends Model = Model> {
   }
 
   /**
-   * Create and persist model with default values.
-   */
-  async new(): Promise<M> {
-    const model = this.model.$newInstance(undefined, { relations: false })
-
-    this.connection.insert(this.compile(model))
-
-    return model
-  }
-
-  /**
    * Revive relations for the given schema and entity.
    */
   protected reviveRelations(model: M, schema: Element) {
@@ -455,6 +444,17 @@ export class Query<M extends Model = Model> {
         ? this.newQueryForRelation(attr).reviveMany(relatedSchema)
         : this.newQueryForRelation(attr).reviveOne(relatedSchema)
     }
+  }
+
+  /**
+   * Create and persist model with default values.
+   */
+  async new(): Promise<M> {
+    const model = this.model.$newInstance(undefined, { relations: false })
+
+    this.connection.insert(this.compile(model))
+
+    return model
   }
 
   /**
