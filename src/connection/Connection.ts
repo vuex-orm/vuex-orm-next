@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { Store } from 'vuex'
 import { Element, Elements } from '../data/Data'
 import { Database } from '../database/Database'
@@ -61,16 +60,20 @@ export class Connection<M extends Model> {
    * Commit `save` mutation to the store.
    */
   save(records: Elements): void {
-    this.commit('save', (data: Elements) => {
-      for (const id in records) {
-        const record = records[id]
-        const existing = data[id]
+    const newRecords = {} as Elements
 
-        existing
-          ? Object.assign(existing, this.model.$sanitize(record))
-          : Vue.set(data, id, this.model.$sanitizeAndFill(record))
-      }
-    })
+    const data = this.get()
+
+    for (const id in records) {
+      const record = records[id]
+      const existing = data[id]
+
+      newRecords[id] = existing
+        ? Object.assign({}, existing, this.model.$sanitize(record))
+        : this.model.$sanitizeAndFill(record)
+    }
+
+    this.commit('save', newRecords)
   }
 
   /**
