@@ -21,12 +21,12 @@ class User extends Model {
 }
 ```
 
-To retrieve repository for the User model, you may do so by calling the `store.$repo` method, and passing the User model as the argument. After retrieving the repository, you may call methods such as `insert`, or `delete` on the repository.
+To retrieve repository for the User model, you may do so by calling the `store.$repo` method, and passing the User model as the argument. After retrieving the repository, you may call methods such as `save`, or `delete` on the repository.
 
 ```js
 const userRepo = store.$repo(User)
 
-userRepo.insert(...)
+userRepo.save(...)
 ```
 
 In Vue Component, you would probably want to define a computed property to retrieve the repository.

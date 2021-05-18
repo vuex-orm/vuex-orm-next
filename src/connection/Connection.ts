@@ -1,4 +1,3 @@
-import { isArray } from '../support/Utils'
 import { Element, Elements } from '../data/Data'
 import { Database } from '../database/Database'
 import { Model } from '../model/Model'
