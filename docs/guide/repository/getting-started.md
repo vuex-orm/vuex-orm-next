@@ -43,7 +43,7 @@ export default {
 
   methods: {
     saveUser (user) {
-      this.userRepo.insert(user)
+      this.userRepo.save(user)
     }
   }
 }
