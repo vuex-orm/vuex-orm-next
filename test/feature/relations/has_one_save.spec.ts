@@ -1,7 +1,7 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str, HasOne } from '@/index'
 
-describe('feature/relations/has_one_insert', () => {
+describe('feature/relations/has_one_save', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -20,10 +20,10 @@ describe('feature/relations/has_one_insert', () => {
     @Str('') number!: string
   }
 
-  it('inserts a record to the store with "has one" relation', async () => {
+  it('inserts a record to the store with "has one" relation', () => {
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       id: 1,
       name: 'John Doe',
       phone: {
@@ -43,10 +43,10 @@ describe('feature/relations/has_one_insert', () => {
     })
   })
 
-  it('generates missing foreign key', async () => {
+  it('generates missing foreign key', () => {
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       id: 1,
       name: 'John Doe',
       phone: {
@@ -65,10 +65,10 @@ describe('feature/relations/has_one_insert', () => {
     })
   })
 
-  it('can insert a record with missing relational key', async () => {
+  it('can insert a record with missing relational key', () => {
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       id: 1,
       name: 'John Doe'
     })
@@ -81,10 +81,10 @@ describe('feature/relations/has_one_insert', () => {
     })
   })
 
-  it('can insert a record with relational key set to `null`', async () => {
+  it('can insert a record with relational key set to `null`', () => {
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       id: 1,
       name: 'John Doe',
       phone: null

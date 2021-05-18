@@ -86,8 +86,8 @@ describe('feature/relations/has_many_retrieve', () => {
     })
 
     const schema = {
-      __id: '1',
-      posts: [{ __id: 2 }, { __id: 1 }]
+      id: '1',
+      posts: [{ id: 2 }, { id: 1 }]
     }
 
     const user = store.$repo(User).revive(schema)!

@@ -31,7 +31,7 @@ describe('feature/relations/constraints/constraints', () => {
     @Str('') name!: string
   }
 
-  it('can add constraints to the relationship query', async () => {
+  it('can add constraints to the relationship query', () => {
     const store = createStore()
 
     fillState(store, {
@@ -59,7 +59,7 @@ describe('feature/relations/constraints/constraints', () => {
     expect(users[2].phone).toBe(null)
   })
 
-  it('can load nested relationships', async () => {
+  it('can load nested relationships', () => {
     const store = createStore()
 
     fillState(store, {

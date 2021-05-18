@@ -1,18 +1,16 @@
-import { createStore, assertState } from 'test/Helpers'
-import { Model, Attr, Str, HasMany } from '@/index'
+import { createStore, assertState, mockUid } from 'test/Helpers'
+import { Model, Attr, Uid, Str, HasMany } from '@/index'
 
-describe('feature/relations/has_many_insert_custom_key', () => {
+describe('feature/relations/has_many_insert_uid', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })
 
-  it('inserts "has many" relation with custom primary key', async () => {
+  it('inserts "has many" relation with parent having "uid" field as the primary key', () => {
     class User extends Model {
       static entity = 'users'
 
-      static primaryKey = 'userId'
-
-      @Attr() userId!: string
+      @Uid() id!: string
       @Str('') name!: string
 
       @HasMany(() => Post, 'userId')
@@ -27,10 +25,11 @@ describe('feature/relations/has_many_insert_custom_key', () => {
       @Str('') title!: string
     }
 
+    mockUid(['uid1'])
+
     const store = createStore()
 
-    await store.$repo(User).insert({
-      userId: 1,
+    store.$repo(User).save({
       name: 'John Doe',
       posts: [
         { id: 1, title: 'Title 01' },
@@ -40,24 +39,23 @@ describe('feature/relations/has_many_insert_custom_key', () => {
 
     assertState(store, {
       users: {
-        1: { userId: 1, name: 'John Doe' }
+        uid1: { id: 'uid1', name: 'John Doe' }
       },
       posts: {
-        1: { id: 1, userId: 1, title: 'Title 01' },
-        2: { id: 2, userId: 1, title: 'Title 02' }
+        1: { id: 1, userId: 'uid1', title: 'Title 01' },
+        2: { id: 2, userId: 'uid1', title: 'Title 02' }
       }
     })
   })
 
-  it('inserts "has many" relation with custom local key', async () => {
+  it('inserts "has many" relation with child having "uid" as the foreign key', () => {
     class User extends Model {
       static entity = 'users'
 
-      @Attr() id!: number
-      @Attr() userId!: number
+      @Uid() id!: string
       @Str('') name!: string
 
-      @HasMany(() => Post, 'userId', 'userId')
+      @HasMany(() => Post, 'userId')
       posts!: Post[]
     }
 
@@ -65,15 +63,15 @@ describe('feature/relations/has_many_insert_custom_key', () => {
       static entity = 'posts'
 
       @Attr() id!: number
-      @Attr() userId!: string
+      @Uid() userId!: string
       @Str('') title!: string
     }
 
+    mockUid(['uid1', 'uid2', 'uid3'])
+
     const store = createStore()
 
-    await store.$repo(User).insert({
-      id: 1,
-      userId: 2,
+    store.$repo(User).save({
       name: 'John Doe',
       posts: [
         { id: 1, title: 'Title 01' },
@@ -83,11 +81,11 @@ describe('feature/relations/has_many_insert_custom_key', () => {
 
     assertState(store, {
       users: {
-        1: { id: 1, userId: 2, name: 'John Doe' }
+        uid1: { id: 'uid1', name: 'John Doe' }
       },
       posts: {
-        1: { id: 1, userId: 2, title: 'Title 01' },
-        2: { id: 2, userId: 2, title: 'Title 02' }
+        1: { id: 1, userId: 'uid1', title: 'Title 01' },
+        2: { id: 2, userId: 'uid1', title: 'Title 02' }
       }
     })
   })

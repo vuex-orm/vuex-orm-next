@@ -239,15 +239,6 @@ export class Query<M extends Model = Model> {
   }
 
   /**
-   * Get models by given index ids.
-   */
-  protected pick(id: string): Item<M> {
-    const record = this.newConnection().find(id)
-
-    return record ? this.hydrate(record) : null
-  }
-
-  /**
    * Retrieve models by processing all filters set to the query chain.
    */
   select(): Collection<M> {
@@ -395,10 +386,6 @@ export class Query<M extends Model = Model> {
   reviveOne(schema: Element): Item<M> {
     const id = this.model.$getIndexId(schema)
 
-    if (!id) {
-      return null
-    }
-
     const item = this.newConnection().find(id)
 
     if (!item) {
@@ -439,6 +426,10 @@ export class Query<M extends Model = Model> {
       }
 
       const relatedSchema = schema[key]
+
+      if (!relatedSchema) {
+        return
+      }
 
       model[key] = isArray(relatedSchema)
         ? this.newQueryForRelation(attr).reviveMany(relatedSchema)

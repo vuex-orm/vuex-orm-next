@@ -1,12 +1,12 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
 import { Model, Attr, Uid, Str, BelongsTo } from '@/index'
 
-describe('feature/relations/belongs_to_insert_uid', () => {
+describe('feature/relations/belongs_to_save_uid', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })
 
-  it('inserts "belongs to" relation with parent having "uid" field as the primary key', async () => {
+  it('inserts "belongs to" relation with parent having "uid" field as the primary key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -29,7 +29,7 @@ describe('feature/relations/belongs_to_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       title: 'Title 01',
       author: { id: 1, name: 'John Doe' }
     })
@@ -44,7 +44,7 @@ describe('feature/relations/belongs_to_insert_uid', () => {
     })
   })
 
-  it('inserts "belongs to" relation with child having "uid" as the owner key', async () => {
+  it('inserts "belongs to" relation with child having "uid" as the owner key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -67,7 +67,7 @@ describe('feature/relations/belongs_to_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       title: 'Title 01',
       author: { name: 'John Doe' }
     })

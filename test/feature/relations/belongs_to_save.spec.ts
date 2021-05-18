@@ -1,7 +1,7 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str, BelongsTo } from '@/index'
 
-describe('feature/relations/belongs_to_insert', () => {
+describe('feature/relations/belongs_to_save', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -20,10 +20,10 @@ describe('feature/relations/belongs_to_insert', () => {
     author!: User | null
   }
 
-  it('inserts a record to the store with "belongs to" relation', async () => {
+  it('inserts a record to the store with "belongs to" relation', () => {
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       userId: 1,
       title: 'Title 01',
@@ -40,10 +40,10 @@ describe('feature/relations/belongs_to_insert', () => {
     })
   })
 
-  it('generates missing foreign key', async () => {
+  it('generates missing foreign key', () => {
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       title: 'Title 01',
       author: { id: 1, name: 'John Doe' }
@@ -59,10 +59,10 @@ describe('feature/relations/belongs_to_insert', () => {
     })
   })
 
-  it('can insert a record with missing relational key', async () => {
+  it('can insert a record with missing relational key', () => {
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       title: 'Title 01'
     })
@@ -75,10 +75,10 @@ describe('feature/relations/belongs_to_insert', () => {
     })
   })
 
-  it('can insert a record with relational key set to `null`', async () => {
+  it('can insert a record with relational key set to `null`', () => {
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       title: 'Title 01',
       author: null

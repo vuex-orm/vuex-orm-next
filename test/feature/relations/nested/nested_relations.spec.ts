@@ -30,10 +30,10 @@ describe('feature/relations/nested/nested_relations', () => {
     author!: User | null
   }
 
-  it('inserts a nested relations with missing foreign key', async () => {
+  it('inserts a nested relations with missing foreign key', () => {
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       userId: 1,
       title: 'Title 01',

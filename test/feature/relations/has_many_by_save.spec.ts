@@ -1,7 +1,7 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str, HasManyBy } from '@/index'
 
-describe('feature/relations/has_many_by_insert', () => {
+describe('feature/relations/has_many_by_save', () => {
   class Node extends Model {
     static entity = 'nodes'
 
@@ -20,10 +20,10 @@ describe('feature/relations/has_many_by_insert', () => {
     nodes!: Node[]
   }
 
-  it('inserts a record to the store with "has many by" relation', async () => {
+  it('inserts a record to the store with "has many by" relation', () => {
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       id: 1,
       name: 'Cluster 01',
       nodeIds: [1, 2],
@@ -44,10 +44,10 @@ describe('feature/relations/has_many_by_insert', () => {
     })
   })
 
-  it('generates missing foreign keys', async () => {
+  it('generates missing foreign keys', () => {
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       id: 1,
       name: 'Cluster 01',
       nodes: [
@@ -67,10 +67,10 @@ describe('feature/relations/has_many_by_insert', () => {
     })
   })
 
-  it('generates partially missing foreign keys', async () => {
+  it('generates partially missing foreign keys', () => {
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       id: 1,
       name: 'Cluster 01',
       nodeIds: [2],
@@ -91,10 +91,10 @@ describe('feature/relations/has_many_by_insert', () => {
     })
   })
 
-  it('can insert a record with missing relational key', async () => {
+  it('can insert a record with missing relational key', () => {
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       id: 1,
       name: 'Cluster 01',
       nodeIds: [1, 2]

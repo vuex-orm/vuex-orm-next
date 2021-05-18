@@ -2,10 +2,10 @@ import { createStore, assertState } from 'test/Helpers'
 import User from './_fixtures/circular_relations_user'
 
 describe('feature/relations/mitigations/circular_relations', () => {
-  test('models can have circular relations', async () => {
+  test('models can have circular relations', () => {
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       id: 1,
       phone: {
         id: 2,

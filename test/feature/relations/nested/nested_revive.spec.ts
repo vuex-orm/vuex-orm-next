@@ -62,26 +62,26 @@ describe('feature/relations/nested/nested_revive', () => {
 
     const schema = [
       {
-        __id: 2,
+        id: 2,
         posts: [
           {
-            __id: 4,
-            comments: [{ __id: 2 }]
+            id: 4,
+            comments: [{ id: 2 }]
           },
           {
-            __id: 3,
+            id: 3,
             comments: [
               {
-                __id: 1,
-                author: { __id: 4 }
+                id: 1,
+                author: { id: 4 }
               }
             ]
           }
         ]
       },
       {
-        __id: 1,
-        posts: [{ __id: 1 }, { __id: 2 }]
+        id: 1,
+        posts: [{ id: 1 }, { id: 2 }]
       }
     ]
 
