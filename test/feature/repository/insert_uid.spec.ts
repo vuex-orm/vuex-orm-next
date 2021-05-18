@@ -1,7 +1,7 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
 import { Model, Uid, Str } from '@/index'
 
-describe('feature/uid/inserts_replace_uid', () => {
+describe('feature/repository/insert_uid', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -9,14 +9,12 @@ describe('feature/uid/inserts_replace_uid', () => {
     @Str('') name!: string
   }
 
-  it('generates a unique id for a `uid` attribute', async () => {
+  it('generates a unique id for a `uid` attribute', () => {
     mockUid(['uid1', 'uid2'])
 
     const store = createStore()
 
-    await store
-      .$repo(User)
-      .replace([{ name: 'John Doe' }, { name: 'Jane Doe' }])
+    store.$repo(User).insert([{ name: 'John Doe' }, { name: 'Jane Doe' }])
 
     assertState(store, {
       users: {

@@ -117,8 +117,6 @@ export class Schema {
       // being normalized.
       const id = model.$getIndexId(record)
 
-      record.__id = id
-
       return id
     }
   }

@@ -6,6 +6,58 @@ In this section, it assumes you're familiar with the usage of repository. If not
 
 ## Inserting Data
 
+You may use `save` method on a repository to insert data. The save method accepts an object of field and value pairs.
+
+```js
+store.$repo(User).save({ id: 1, name: 'John Doe' })
+```
+
+You may also pass an array of objects to update multiple records at once.
+
+```js
+store.$repo(User).save([
+  { id: 1, name: 'John Doe' },
+  { id: 2, name: 'Jane Doe' }
+])
+```
+
+The `save` method will "normalize" the given data. That means if you pass an object that contains any nested relationships, those relationships are also inserted. Please see [Relationships: Getting Started](../relationships/getting-started.md#inserting-relationships) for more details about data normalization.
+
+### Return Value From The `save` method
+
+The `save` method returns the original data which was passed in, with primary key fields getting populated. You may think of this object as a "schema" of the saved data. Let's go through examples to see how it works.
+
+When passing in data with a correct primary key, it returns the exact same object you passed.
+
+```js
+const schema = store.$repo(User).save({ id: 1, name: 'John Doe' })
+
+/*
+  { id: 1, name: 'John Doe' }
+*/
+
+// If you pass an array, it returns an array.
+const schema = store.$repo(User).save([
+  { id: 1, name: 'John Doe' },
+  { id: 2, name: 'Jane Doe' }
+])
+
+/*
+  [
+    { id: 1, name: 'John Doe' },
+    { id: 2, name: 'Jane Doe' }
+  ]
+*/
+```
+
+
+
+
+
+
+
+
+
 The repository provides an `insert` method for inserting records into the store. The `insert` method accepts an object of field and value pairs.
 
 ```js

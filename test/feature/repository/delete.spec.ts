@@ -1,7 +1,7 @@
 import { createStore, fillState, assertState } from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_delete', () => {
+describe('feature/repository/delete', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -30,7 +30,7 @@ describe('feature/repository/deletes_delete', () => {
     })
   })
 
-  it('can delete multiple records specified by the where clause', async () => {
+  it('can delete multiple records specified by the where clause', () => {
     const store = createStore()
 
     fillState(store, {
@@ -41,7 +41,7 @@ describe('feature/repository/deletes_delete', () => {
       }
     })
 
-    await store
+    store
       .$repo(User)
       .where('name', 'Jane Doe')
       .orWhere('name', 'Johnny Doe')

@@ -29,5 +29,3 @@ export interface EagerLoad {
 }
 
 export type EagerLoadConstraint = (query: Query) => void
-
-export type PersistMethod = 'insert' | 'fresh' | 'update'

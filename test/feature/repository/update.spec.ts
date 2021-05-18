@@ -1,7 +1,7 @@
 import { createStore, fillState, assertState } from 'test/Helpers'
 import { Model, Attr, Str, Num } from '@/index'
 
-describe('feature/repository/updates_update_query', () => {
+describe('feature/repository/update', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -10,7 +10,7 @@ describe('feature/repository/updates_update_query', () => {
     @Num(0) age!: number
   }
 
-  it('updates a record specified by the query chain', async () => {
+  it('updates a record specified by the query chain', () => {
     const store = createStore()
 
     fillState(store, {
@@ -21,7 +21,7 @@ describe('feature/repository/updates_update_query', () => {
       }
     })
 
-    await store.$repo(User).where('name', 'Jane Doe').revise({ age: 50 })
+    store.$repo(User).where('name', 'Jane Doe').update({ age: 50 })
 
     assertState(store, {
       users: {
@@ -32,7 +32,7 @@ describe('feature/repository/updates_update_query', () => {
     })
   })
 
-  it('updates multiple records specified by the query chain', async () => {
+  it('updates multiple records specified by the query chain', () => {
     const store = createStore()
 
     fillState(store, {
@@ -43,11 +43,11 @@ describe('feature/repository/updates_update_query', () => {
       }
     })
 
-    await store
+    store
       .$repo(User)
       .where('name', 'Jane Doe')
       .orWhere('age', 20)
-      .revise({ age: 50 })
+      .update({ age: 50 })
 
     assertState(store, {
       users: {

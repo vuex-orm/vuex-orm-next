@@ -1,4 +1,3 @@
-import { Store } from 'vuex'
 import { isArray } from '../support/Utils'
 import { Element, Elements } from '../data/Data'
 import { Database } from '../database/Database'
@@ -9,45 +8,42 @@ export interface ConnectionNamespace {
   entity: string
 }
 
-export class Connection<M extends Model> {
+export class Connection {
   /**
-   * The store instance.
+   * The database instance.
    */
-  store: Store<any>
-
-  /**
-   * The connection name.
-   */
-  connection: string
+  database: Database
 
   /**
    * The entity name.
    */
-  model: M
+  model: Model
 
   /**
    * Create a new connection instance.
    */
-  constructor(database: Database, model: M) {
-    this.store = database.store
-    this.connection = database.connection
+  constructor(database: Database, model: Model) {
+    this.database = database
     this.model = model
   }
 
   /**
    * Commit a namespaced store mutation.
    */
-  private commit(name: string, payload?: any): void {
-    const type = `${this.connection}/${this.model.$entity()}/${name}`
+  protected commit(name: string, payload?: any): void {
+    const type = `${this.database.connection}/${this.model.$entity()}/${name}`
 
-    this.store.commit(type, payload)
+    this.database.store.commit(type, payload)
   }
 
   /**
    * Get all existing records.
    */
   get(): Elements {
-    return this.store.state[this.connection][this.model.$entity()].data
+    const connection = this.database.connection
+    const entity = this.model.$entity()
+
+    return this.database.store.state[connection][entity].data
   }
 
   /**
@@ -60,21 +56,8 @@ export class Connection<M extends Model> {
   /**
    * Commit `save` mutation to the store.
    */
-  save(records: Elements): void {
-    const newRecords = {} as Elements
-
-    const data = this.get()
-
-    for (const id in records) {
-      const record = records[id]
-      const existing = data[id]
-
-      newRecords[id] = existing
-        ? Object.assign({}, existing, this.model.$sanitize(record))
-        : this.model.$sanitizeAndFill(record)
-    }
-
-    this.commit('save', newRecords)
+  save(elements: Elements): void {
+    this.commit('save', elements)
   }
 
   /**
@@ -101,48 +84,8 @@ export class Connection<M extends Model> {
   /**
    * Commit `destroy` mutation to the store.
    */
-  destroy(id: string | number): string | null
-  destroy(ids: (string | number)[]): string[]
-  destroy(ids: string | number | (string | number)[]): string | string[] | null {
-    return isArray(ids) ? this.destroyMany(ids) : this.destroyOne(ids)
-  }
-
-  /**
-   * Destroy a record from the store.
-   */
-  protected destroyOne(id: string | number): string | null {
-    id = String(id)
-
-    const record = this.get()[id]
-
-    if (!record) {
-      return null
-    }
-
-    this.commit('destroy', [id])
-
-    return id
-  }
-
-  /**
-   * Destroy records from the store.
-   */
-  protected destroyMany(ids: (string | number)[]): string[] {
-    const deleted = [] as string[]
-
-    const data = this.get()
-
-    ids.forEach((id) => {
-      const record = data[id]
-
-      if (record) {
-        deleted.push(String(id))
-      }
-    })
-
-    this.commit('destroy', deleted)
-
-    return deleted
+  destroy(ids: string[]): void {
+    this.commit('destroy', ids)
   }
 
   /**

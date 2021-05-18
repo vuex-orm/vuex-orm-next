@@ -1,7 +1,12 @@
-import { createStore, fillState, assertState } from 'test/Helpers'
+import {
+  createStore,
+  fillState,
+  assertState,
+  assertInstanceOf
+} from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_flush', () => {
+describe('feature/repository/flush', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -20,12 +25,12 @@ describe('feature/repository/deletes_flush', () => {
       }
     })
 
-    const ids = store.$repo(User).flush()
+    const users = store.$repo(User).flush()
 
     assertState(store, {
       users: {}
     })
 
-    expect(ids).toEqual(['1', '2', '3'])
+    assertInstanceOf(users, User)
   })
 })

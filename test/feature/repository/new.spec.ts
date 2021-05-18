@@ -1,8 +1,8 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
 import { Model, Str, Num, Bool, Uid, Attr } from '@/index'
 
-describe('feature/repository/inserts_new', () => {
-  it('inserts with a models default values', async () => {
+describe('feature/repository/new', () => {
+  it('inserts with a models default values', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -16,7 +16,7 @@ describe('feature/repository/inserts_new', () => {
 
     const store = createStore()
 
-    await store.$repo(User).new()
+    store.$repo(User).new()
 
     assertState(store, {
       users: {
@@ -25,7 +25,7 @@ describe('feature/repository/inserts_new', () => {
     })
   })
 
-  it('throws if a primary key is not capable of being generated', async () => {
+  it('throws if a primary key is not capable of being generated', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -35,6 +35,6 @@ describe('feature/repository/inserts_new', () => {
 
     const store = createStore()
 
-    await expect(() => store.$repo(User).new()).rejects.toThrow()
+    expect(() => store.$repo(User).new()).toThrow()
   })
 })

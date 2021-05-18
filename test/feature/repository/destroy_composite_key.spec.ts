@@ -1,7 +1,7 @@
 import { createStore, fillState } from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_destroy_composite_key', () => {
+describe('feature/repository/destroy_composite_key', () => {
   class User extends Model {
     static entity = 'users'
 

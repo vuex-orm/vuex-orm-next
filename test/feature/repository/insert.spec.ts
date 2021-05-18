@@ -1,7 +1,7 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/inserts_add', () => {
+describe('feature/repository/insert', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -9,10 +9,10 @@ describe('feature/repository/inserts_add', () => {
     @Str('') name!: string
   }
 
-  it('inserts a record to the store', async () => {
+  it('inserts a record to the store', () => {
     const store = createStore()
 
-    await store.$repo(User).add({ id: 1, name: 'John Doe' })
+    store.$repo(User).insert({ id: 1, name: 'John Doe' })
 
     assertState(store, {
       users: {
@@ -21,10 +21,10 @@ describe('feature/repository/inserts_add', () => {
     })
   })
 
-  it('inserts multiple records to the store', async () => {
+  it('inserts records to the store', () => {
     const store = createStore()
 
-    await store.$repo(User).add([
+    store.$repo(User).insert([
       { id: 1, name: 'John Doe' },
       { id: 2, name: 'Jane Doe' }
     ])
@@ -35,5 +35,12 @@ describe('feature/repository/inserts_add', () => {
         2: { id: 2, name: 'Jane Doe' }
       }
     })
+  })
+
+  it('does nothing if the given data is an empty array', () => {
+    const store = createStore()
+
+    store.$repo(User).insert([])
+    assertState(store, { users: {} })
   })
 })

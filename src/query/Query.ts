@@ -6,14 +6,7 @@ import {
   groupBy,
   assert
 } from '../support/Utils'
-import {
-  Element,
-  Elements,
-  NormalizedData,
-  Item,
-  Collection,
-  Collections
-} from '../data/Data'
+import { Element, Elements, Item, Collection } from '../data/Data'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 import { Interpreter } from '../interpreter/Interpreter'
@@ -26,8 +19,7 @@ import {
   OrderBy,
   OrderDirection,
   EagerLoad,
-  EagerLoadConstraint,
-  PersistMethod
+  EagerLoadConstraint
 } from './Options'
 import { Database } from '@/database/Database'
 
@@ -46,16 +38,6 @@ export class Query<M extends Model = Model> {
    * The model object.
    */
   protected model: M
-
-  /**
-   * The interpreter instance.
-   */
-  protected interpreter: Interpreter<M>
-
-  /**
-   * The connection instance.
-   */
-  protected connection: Connection<M>
 
   /**
    * The where constraints for the query.
@@ -88,9 +70,6 @@ export class Query<M extends Model = Model> {
   constructor(database: Database, model: M) {
     this.database = database
     this.model = model
-
-    this.interpreter = new Interpreter(database, model)
-    this.connection = new Connection(database, model)
   }
 
   /**
@@ -108,6 +87,20 @@ export class Query<M extends Model = Model> {
       this.database,
       relation.getRelated().$setDatabase(this.database)
     )
+  }
+
+  /**
+   * Create a new interpreter instance.
+   */
+  protected newInterpreter(): Interpreter {
+    return new Interpreter(this.database, this.model)
+  }
+
+  /**
+   * Create a new connection instance.
+   */
+  protected newConnection(): Connection {
+    return new Connection(this.database, this.model)
   }
 
   /**
@@ -187,11 +180,18 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Get raw elements from the store.
+   */
+  protected data(): Elements {
+    return this.newConnection().get()
+  }
+
+  /**
    * Get all models from the store. The difference with the `get` is that this
    * method will not process any query chain. It'll always retrieve all models.
    */
   all(): Collection<M> {
-    const records = this.connection.get()
+    const records = this.newConnection().get()
 
     const collection = [] as Collection<M>
 
@@ -242,7 +242,7 @@ export class Query<M extends Model = Model> {
    * Get models by given index ids.
    */
   protected pick(id: string): Item<M> {
-    const record = this.connection.find(id)
+    const record = this.newConnection().find(id)
 
     return record ? this.hydrate(record) : null
   }
@@ -393,13 +393,13 @@ export class Query<M extends Model = Model> {
    * Revive single model from the given schema.
    */
   reviveOne(schema: Element): Item<M> {
-    const id = schema.__id
+    const id = this.model.$getIndexId(schema)
 
     if (!id) {
       return null
     }
 
-    const item = this.connection.find(id)
+    const item = this.newConnection().find(id)
 
     if (!item) {
       return null
@@ -449,10 +449,10 @@ export class Query<M extends Model = Model> {
   /**
    * Create and persist model with default values.
    */
-  async new(): Promise<M> {
-    const model = this.model.$newInstance(undefined, { relations: false })
+  new(): M {
+    const model = this.hydrate({})
 
-    this.connection.insert(this.compile(model))
+    this.newConnection().insert(this.compile(model))
 
     return model
   }
@@ -460,10 +460,10 @@ export class Query<M extends Model = Model> {
   /**
    * Save the given records to the store with data normalization.
    */
-  save(records: Element[]): Element[]
-  save(record: Element): Element
-  save(records: Element | Element[]): Element | Element[] {
-    const [data, entities] = this.interpreter.processRecord(records)
+  save(records: Element[]): M[]
+  save(record: Element): M
+  save(records: Element | Element[]): M | M[] {
+    const [data, entities] = this.newInterpreter().process(records)
 
     for (const entity in entities) {
       const query = this.newQuery(entity)
@@ -472,32 +472,37 @@ export class Query<M extends Model = Model> {
       query.saveElements(elements)
     }
 
-    return data
+    return this.revive(data) as M | M[]
   }
 
   /**
-   * Save the given records to the store.
+   * Save the given elements to the store.
    */
-  saveElements(records: Elements): void {
-    this.connection.save(records)
+  saveElements(elements: Elements): void {
+    const newData = {} as Elements
+    const currentData = this.data()
+
+    for (const id in elements) {
+      const record = elements[id]
+      const existing = currentData[id]
+
+      newData[id] = existing
+        ? this.hydrate({ ...existing, ...record }).$getAttributes()
+        : this.hydrate(record).$getAttributes()
+    }
+
+    this.newConnection().save(newData)
   }
 
   /**
    * Insert the given record to the store.
    */
-  async insert(records: Element | Element[]): Promise<Collections> {
-    return this.persist('insert', records)
-  }
-
-  /**
-   * Insert the given record to the store.
-   */
-  async add<E extends Element>(records: E[]): Promise<Collection<M>>
-  async add<E extends Element>(record: E): Promise<M>
-  async add(records: any): Promise<any> {
+  insert(records: Element[]): Collection<M>
+  insert(record: Element): M
+  insert(records: Element | Element[]): M | Collection<M> {
     const models = this.hydrate(records)
 
-    this.connection.insert(this.compile(models))
+    this.newConnection().insert(this.compile(models))
 
     return models
   }
@@ -505,189 +510,77 @@ export class Query<M extends Model = Model> {
   /**
    * Insert the given records to the store by replacing any existing records.
    */
-  fresh(records: Element | Element[]): Promise<Collections> {
-    return this.persist('fresh', records)
-  }
-
-  /**
-   * Insert the given records to the store by replacing any existing records.
-   */
-  async replace<E extends Element>(records: E[]): Promise<Collection<M>>
-  async replace<E extends Element>(record: E): Promise<M>
-  async replace(records: any): Promise<any> {
+  fresh(records: Element[]): Collection<M>
+  fresh(record: Element): M
+  fresh(records: Element | Element[]): M | Collection<M> {
     const models = this.hydrate(records)
 
-    this.connection.fresh(this.compile(models))
+    this.newConnection().fresh(this.compile(models))
 
     return models
   }
 
   /**
-   * Update the given record to the store.
+   * Update the reocrd matching the query chain.
    */
-  async update(records: Element | Element[]): Promise<Collections> {
-    return this.persist('update', records)
-  }
+  update(record: Element): Collection<M> {
+    const models = this.get()
 
-  /**
-   * Update records in the store by using the primary key of the given records.
-   */
-  async merge(records: Element[]): Promise<Collection<M>>
-  async merge(record: Element): Promise<Item<M>>
-  async merge(records: any): Promise<any> {
-    const models = this.getMergedModels(records)
-
-    if (models === null) {
-      return null
+    if (isEmpty(models)) {
+      return []
     }
 
-    this.connection.update(this.compile(models))
+    const newModels = models.map((model) => {
+      return this.hydrate({ ...model.$getAttributes(), ...record })
+    })
 
-    return models
-  }
+    this.newConnection().update(this.compile(newModels))
 
-  /**
-   * Get models by merging the given records. This method will use the primary
-   * key in the records to fetch models and merge it with the record.
-   */
-  protected getMergedModels(records: Element[]): Collection<M>
-  protected getMergedModels(record: Element): Item<M>
-  protected getMergedModels(records: any): any {
-    const recordsArray = isArray(records) ? records : [records]
-
-    const models = recordsArray.reduce<Collection<M>>((collection, record) => {
-      const model = this.pick(this.model.$getIndexId(record))
-
-      model && collection.push(model.$fill(record))
-
-      return collection
-    }, [])
-
-    return isArray(records) ? models : models[0] ?? null
-  }
-
-  /**
-   * Update records in the store.
-   */
-  async revise(record: Element): Promise<Collection<M>> {
-    const models = this.get().map((model) => model.$fill(record))
-
-    this.connection.update(this.compile(models))
-
-    return models
-  }
-
-  /**
-   * Persist records to the store by the given method.
-   */
-  protected persist(
-    method: PersistMethod,
-    records: Element | Element[]
-  ): Promise<Collections> {
-    const normalizedData = this.interpret(records)
-
-    const { indexes, promises } = this.createCollectionPromises(
-      method,
-      normalizedData
-    )
-
-    return this.resolveCollectionPromises(indexes, promises)
-  }
-
-  /**
-   * Persist normalized records with the given method.
-   */
-  protected persistRecords(
-    method: PersistMethod,
-    records: Elements
-  ): Promise<Collection<M>> {
-    const mappedRecords = this.mapNormalizedData(records)
-
-    switch (method) {
-      case 'insert':
-        return this.add(mappedRecords)
-      case 'fresh':
-        return this.replace(mappedRecords)
-      case 'update':
-        return this.merge(mappedRecords)
-    }
-  }
-
-  /**
-   * Convert normalized data into an array of records.
-   */
-  protected mapNormalizedData(records: Elements): Element[] {
-    const items = [] as Element[]
-
-    for (const id in records) {
-      items.push(records[id])
-    }
-
-    return items
-  }
-
-  /**
-   * Interpret the given record.
-   */
-  protected interpret(records: Element | Element[]): NormalizedData {
-    return this.interpreter.process(records)
-  }
-
-  /**
-   * Create collection promises for the given normalized data.
-   */
-  protected createCollectionPromises(
-    method: PersistMethod,
-    data: NormalizedData
-  ): CollectionPromises {
-    const indexes: string[] = []
-    const promises: Promise<Collection<any>>[] = []
-
-    for (const entity in data) {
-      const records = data[entity]
-      const query = this.newQuery(entity)
-
-      indexes.push(entity)
-      promises.push(query.persistRecords(method, records))
-    }
-
-    return { indexes, promises }
-  }
-
-  /**
-   * Resolve all collection promises and create a new collections object.
-   */
-  protected async resolveCollectionPromises(
-    indexes: string[],
-    promises: Promise<Collection<any>>[]
-  ): Promise<Collections> {
-    return (await Promise.all(promises)).reduce<Collections>(
-      (collections, collection, index) => {
-        collections[indexes[index]] = collection
-        return collections
-      },
-      {}
-    )
+    return newModels
   }
 
   /**
    * Destroy the models for the given id.
    */
-  destroy(id: string | number): string | null
-  destroy(ids: (string | number)[]): string[]
+  destroy(ids: (string | number)[]): Collection<M>
+  destroy(id: string | number): Item<M>
   destroy(ids: any): any {
     assert(!this.model.$hasCompositeKey(), [
       "You can't use the `destroy` method on a model with a composite key.",
       'Please use `delete` method instead.'
     ])
 
-    return this.connection.destroy(ids)
+    return isArray(ids) ? this.destroyMany(ids) : this.destroyOne(ids)
+  }
+
+  protected destroyOne(id: string | number): Item<M> {
+    const model = this.find(id)
+
+    if (!model) {
+      return null
+    }
+
+    this.newConnection().destroy([model.$getIndexId()])
+
+    return model
+  }
+
+  protected destroyMany(ids: (string | number)[]): Collection<M> {
+    const models = this.find(ids)
+
+    if (isEmpty(models)) {
+      return []
+    }
+
+    this.newConnection().destroy(this.getIndexIdsFromCollection(models))
+
+    return models
   }
 
   /**
    * Delete records resolved by the query chain.
    */
-  delete(): string[] {
+  delete(): M[] {
     const models = this.get()
 
     if (isEmpty(models)) {
@@ -696,16 +589,20 @@ export class Query<M extends Model = Model> {
 
     const ids = this.getIndexIdsFromCollection(models)
 
-    this.connection.delete(ids)
+    this.newConnection().delete(ids)
 
-    return ids
+    return models
   }
 
   /**
    * Delete all records in the store.
    */
-  flush(): string[] {
-    return this.connection.flush()
+  flush(): Collection<M> {
+    const models = this.get()
+
+    this.newConnection().flush()
+
+    return models
   }
 
   /**
@@ -718,9 +615,9 @@ export class Query<M extends Model = Model> {
   /**
    * Instantiate new models with the given record.
    */
-  protected hydrate(records: Element[]): Collection<M>
   protected hydrate(record: Element): M
-  protected hydrate(records: any): any {
+  protected hydrate(records: Element[]): Collection<M>
+  protected hydrate(records: Element | Element[]): M | Collection<M> {
     return isArray(records)
       ? records.map((record) => this.hydrate(record))
       : this.model.$newInstance(records, { relations: false })
@@ -731,9 +628,9 @@ export class Query<M extends Model = Model> {
    * the store.
    */
   protected compile(models: M | Collection<M>): Elements {
-    const modelArray = isArray(models) ? models : [models]
+    const collection = isArray(models) ? models : [models]
 
-    return modelArray.reduce<Elements>((records, model) => {
+    return collection.reduce<Elements>((records, model) => {
       records[model.$getIndexId()] = model.$getAttributes()
       return records
     }, {})

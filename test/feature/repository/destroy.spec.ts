@@ -1,7 +1,12 @@
-import { createStore, fillState, assertState } from 'test/Helpers'
+import {
+  createStore,
+  fillState,
+  assertState,
+  assertInstanceOf
+} from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_destroy', () => {
+describe('feature/repository/destroy', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -50,7 +55,7 @@ describe('feature/repository/deletes_destroy', () => {
     })
   })
 
-  it('returns the index id of the deleted item', () => {
+  it('returns the deleted model', () => {
     const store = createStore()
 
     fillState(store, {
@@ -61,9 +66,10 @@ describe('feature/repository/deletes_destroy', () => {
       }
     })
 
-    const id = store.$repo(User).destroy(2)
+    const user = store.$repo(User).destroy(2)
 
-    expect(id).toBe('2')
+    expect(user).toBeInstanceOf(User)
+    expect(user!.id).toBe(2)
   })
 
   it('returns `null` when no record was deleted', () => {
@@ -97,9 +103,9 @@ describe('feature/repository/deletes_destroy', () => {
       }
     })
 
-    const ids = store.$repo(User).destroy([1, 3])
+    const users = store.$repo(User).destroy([1, 3])
 
-    expect(ids).toEqual(['1', '3'])
+    assertInstanceOf(users, User)
   })
 
   it('returns empty array if no record was deleted', () => {
@@ -113,8 +119,8 @@ describe('feature/repository/deletes_destroy', () => {
       }
     })
 
-    const ids = store.$repo(User).destroy([4])
+    const users = store.$repo(User).destroy([4])
 
-    expect(ids).toEqual([])
+    expect(users).toEqual([])
   })
 })

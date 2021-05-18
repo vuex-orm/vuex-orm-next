@@ -1,6 +1,6 @@
 import { Constructor } from '../types'
 import { assert } from '../support/Utils'
-import { Element, Item, Collection, Collections } from '../data/Data'
+import { Element, Item, Collection } from '../data/Data'
 import { Database } from '../database/Database'
 import { Model } from '../model/Model'
 import { ModelConstructor } from '../model/ModelConstructor'
@@ -187,81 +187,50 @@ export class Repository<M extends Model = Model> {
   /*
    * Save the given records to the store with data normalization.
    */
-  save(records: Element[]): Element[]
-  save(record: Element): Element
-  save(records: Element | Element[]): Element | Element[] {
+  save(records: Element[]): M[]
+  save(record: Element): M
+  save(records: Element | Element[]): M | M[] {
     return this.query().save(records)
   }
 
   /**
    * Create and persist model with default values.
    */
-  new(): Promise<M> {
+  new(): M {
     return this.query().new()
   }
 
   /**
    * Insert the given records to the store.
    */
-  insert(records: Element | Element[]): Promise<Collections> {
+  insert(records: Element[]): Collection<M>
+  insert(record: Element): M
+  insert(records: Element | Element[]): M | Collection<M> {
     return this.query().insert(records)
-  }
-
-  /**
-   * Insert the given records to the store without normalization.
-   */
-  add(records: Element[]): Promise<Collection<M>>
-  add(record: Element): Promise<M>
-  add(records: any): Promise<any> {
-    return this.query().add(records)
   }
 
   /**
    * Insert the given records to the store by replacing any existing records.
    */
-  fresh(records: Element | Element[]): Promise<Collections> {
+  fresh(records: Element[]): Collection<M>
+  fresh(record: Element): M
+  fresh(records: Element | Element[]): M | Collection<M> {
     return this.query().fresh(records)
-  }
-
-  /**
-   * Insert the given records to the store by replacing any existing records
-   * without normalization.
-   */
-  replace(records: Element[]): Promise<Collection<M>>
-  replace(record: Element): Promise<M>
-  replace(records: any): Promise<any> {
-    return this.query().replace(records)
-  }
-
-  /**
-   * Update records in the store.
-   */
-  update(records: Element | Element[]): Promise<Collections> {
-    return this.query().update(records)
-  }
-
-  /**
-   * Update records in the store without normalization.
-   */
-  merge(records: Element[]): Promise<Collection<M>>
-  merge(record: Element): Promise<Item<M>>
-  merge(records: any): Promise<any> {
-    return this.query().merge(records)
   }
 
   /**
    * Destroy the models for the given id.
    */
-  destroy(id: string | number): string | null
-  destroy(ids: (string | number)[]): string[]
-  destroy(ids: any):  any {
+  destroy(ids: (string | number)[]): Collection<M>
+  destroy(id: string | number): Item<M>
+  destroy(ids: any): any {
     return this.query().destroy(ids)
   }
 
   /**
    * Delete all records in the store.
    */
-  flush(): string[] {
+  flush(): M[] {
     return this.query().flush()
   }
 }

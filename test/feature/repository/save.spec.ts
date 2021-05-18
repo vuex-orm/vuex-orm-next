@@ -1,4 +1,11 @@
-import { createStore, fillState, assertState } from 'test/Helpers'
+import {
+  createStore,
+  fillState,
+  assertState,
+  assertInstanceOf,
+  assertModel,
+  assertModels
+} from 'test/Helpers'
 import { Model, Str, Num } from '@/index'
 
 describe('feature/repository/save', () => {
@@ -48,7 +55,7 @@ describe('feature/repository/save', () => {
     })
   })
 
-  it('updates existing model if it exists when saving a model', () => {
+  it('updates existing model if it exists', () => {
     const store = createStore()
 
     fillState(store, {
@@ -88,30 +95,27 @@ describe('feature/repository/save', () => {
     })
   })
 
-  it('returns normalized schema when saving a model', () => {
+  it('returns a model', () => {
     const store = createStore()
 
-    const schema = store.$repo(User).save({ id: 1, name: 'John Doe', age: 30 })
+    const user = store.$repo(User).save({ id: 1, name: 'John Doe', age: 30 })
 
-    expect(schema).toEqual({
-      __id: '1',
-      id: 1,
-      name: 'John Doe',
-      age: 30
-    })
+    expect(user).toBeInstanceOf(User)
+    assertModel(user, { id: 1, name: 'John Doe', age: 30 })
   })
 
-  it('returns normalized schema when saving multiple models', () => {
+  it('returns multiple models when saving multiple records', () => {
     const store = createStore()
 
-    const schema = store.$repo(User).save([
+    const users = store.$repo(User).save([
       { id: 1, name: 'John Doe', age: 30 },
       { id: 2, name: 'Jane Doe', age: 20 }
     ])
 
-    expect(schema).toEqual([
-      { __id: '1', id: 1, name: 'John Doe', age: 30 },
-      { __id: '2', id: 2, name: 'Jane Doe', age: 20 }
+    assertInstanceOf(users, User)
+    assertModels(users, [
+      { id: 1, name: 'John Doe', age: 30 },
+      { id: 2, name: 'Jane Doe', age: 20 }
     ])
   })
 })

@@ -15,7 +15,7 @@ export interface Mutations<S extends State> extends MutationTree<S> {
  * Commit `save` change to the store.
  */
 function save(state: State, records: Elements): void {
-  state.data = records
+  state.data = { ...state.data, ...records }
 }
 
 /**

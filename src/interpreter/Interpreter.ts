@@ -1,10 +1,10 @@
 import { normalize, schema as Normalizr } from 'normalizr'
-import { isArray, isEmpty } from '../support/Utils'
+import { isArray } from '../support/Utils'
 import { Element, NormalizedData } from '../data/Data'
 import { Model } from '../model/Model'
 import { Database } from '@/database/Database'
 
-export class Interpreter<M extends Model> {
+export class Interpreter {
   /**
    * The database instance.
    */
@@ -13,36 +13,25 @@ export class Interpreter<M extends Model> {
   /**
    * The model object.
    */
-  model: M
+  model: Model
 
   /**
    * Create a new Interpreter instance.
    */
-  constructor(database: Database, model: M) {
+  constructor(database: Database, model: Model) {
     this.database = database
     this.model = model
   }
 
   /**
-   * Perform interpretation for the given data and return normalized schema.
-   */
-  processRecord(data: Element[]): [Element[], NormalizedData]
-  processRecord(data: Element): [Element, NormalizedData]
-  processRecord(
-    data: Element | Element[]
-  ): [Element | Element[], NormalizedData] {
-    const schema = isArray(data) ? [this.getSchema()] : this.getSchema()
-
-    const normalizedData = normalize(data, schema).entities as NormalizedData
-
-    return [data, normalizedData]
-  }
-
-  /**
    * Perform interpretation for the given data.
    */
-  process(data: Element | Element[]): NormalizedData {
-    return isEmpty(data) ? {} : this.normalize(data)
+  process(data: Element): [Element, NormalizedData]
+  process(data: Element[]): [Element[], NormalizedData]
+  process(data: Element | Element[]): [Element | Element[], NormalizedData] {
+    const normalizedData = this.normalize(data)
+
+    return [data, normalizedData]
   }
 
   /**

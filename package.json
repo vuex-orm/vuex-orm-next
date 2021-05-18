@@ -17,6 +17,7 @@
     "lint": "prettier --check --write --parser typescript \"{src,test}/**/*.ts\"",
     "lint:fail": "prettier --check --parser typescript \"{src,test}/**/*.ts\"",
     "jest": "jest --testPathIgnorePatterns test/performance",
+    "jest:perf": "jest --testPathIgnorePatterns test/{feature,regression,unit}",
     "test": "yarn lint && yarn coverage",
     "coverage": "jest --testPathIgnorePatterns test/performance --collect-coverage",
     "docs": "vuepress dev docs",
