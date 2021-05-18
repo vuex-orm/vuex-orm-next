@@ -7,6 +7,7 @@ import {
   assert
 } from '../support/Utils'
 import { Element, Elements, Item, Collection } from '../data/Data'
+import { Database } from '../database/Database'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 import { Interpreter } from '../interpreter/Interpreter'
@@ -21,7 +22,6 @@ import {
   EagerLoad,
   EagerLoadConstraint
 } from './Options'
-import { Database } from '@/database/Database'
 
 export interface CollectionPromises {
   indexes: string[]
