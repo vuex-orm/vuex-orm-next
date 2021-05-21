@@ -14,6 +14,7 @@ import { Uid } from './model/decorators/attributes/types/Uid'
 import { HasOne } from './model/decorators/attributes/relations/HasOne'
 import { BelongsTo } from './model/decorators/attributes/relations/BelongsTo'
 import { HasMany } from './model/decorators/attributes/relations/HasMany'
+import { HasManyBy } from './model/decorators/attributes/relations/HasManyBy'
 import { Attribute } from './model/attributes/Attribute'
 import { Type } from './model/attributes/types/Type'
 import { Attr as AttrAttr } from './model/attributes/types/Attr'
@@ -45,6 +46,7 @@ export default {
   HasOne,
   BelongsTo,
   HasMany,
+  HasManyBy,
   Attribute,
   Type,
   AttrAttr,
