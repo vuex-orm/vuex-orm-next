@@ -54,8 +54,6 @@ async function main() {
     choices: tags
   })
 
-  console.log(tag)
-
   const { yes: tagOk } = await prompt({
     type: 'confirm',
     name: 'yes',
@@ -70,7 +68,7 @@ async function main() {
   step('\nRunning tests...')
   await run(bin('jest'), ['--clearCache'])
   await run('yarn', ['lint:fail'])
-  await run('yarn', ['test'])
+  await run('yarn', ['coverage'])
 
   // Update the package version.
   step('\nUpdating the package version...')
