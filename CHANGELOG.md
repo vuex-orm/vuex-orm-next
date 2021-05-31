@@ -1,3 +1,22 @@
+# [1.0.0-draft.14](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.13...v1.0.0-draft.14) (2021-05-31)
+
+### Bug Fixes
+
+* **decorator:** export `HasManyBy` decorator ([#71](https://github.com/vuex-orm/vuex-orm-next/issues/71)) ([08c1b4f](https://github.com/vuex-orm/vuex-orm-next/commit/08c1b4fd4b25cac3f9ff475d64104202713b92ea))
+
+### Features
+
+* add `save` and `revive` method ([#62](https://github.com/vuex-orm/vuex-orm-next/issues/62)) ([d45825e](https://github.com/vuex-orm/vuex-orm-next/commit/d45825ea378e325c483b0167ff8260bc0de38541))
+* re-shape the persistent methods ([#70](https://github.com/vuex-orm/vuex-orm-next/issues/70)) ([fe25477](https://github.com/vuex-orm/vuex-orm-next/commit/fe25477f5a4980a01c49211089c7c2de74df0462))
+
+### Breaking Changes
+
+- All persistent methods are now synchronous. Not `async` anymore.
+- All persistent methods returns either `Model` or `Model[]`.
+- The `save` method is the only method that normalizes the given data. `insert`, `fresh`, `update` will not normalize data anymore.
+- Removing `add`, `revise`, `replace` method. Use `insert`, `update`, `fresh` instead.
+- the `update` method now only works with query constraints. `userRepo.where('name', 'John').update({ name: 'Jane' })`.
+
 # [1.0.0-draft.13](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.12...v1.0.0-draft.13) (2021-05-10)
 
 ### Features
