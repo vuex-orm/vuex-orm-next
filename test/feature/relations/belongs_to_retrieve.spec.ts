@@ -20,7 +20,7 @@ describe('feature/relations/belongs_to_retrieve', () => {
     author!: User | null
   }
 
-  it('can eager load belongs to relation', async () => {
+  it('can eager load belongs to relation', () => {
     const store = createStore()
 
     fillState(store, {
@@ -44,7 +44,7 @@ describe('feature/relations/belongs_to_retrieve', () => {
     })
   })
 
-  it('can eager load missing relation as `null`', async () => {
+  it('can eager load missing relation as `null`', () => {
     const store = createStore()
 
     fillState(store, {
@@ -65,7 +65,7 @@ describe('feature/relations/belongs_to_retrieve', () => {
     })
   })
 
-  it('ignores the relation with the empty foreign key', async () => {
+  it('ignores the relation with the empty foreign key', () => {
     const store = createStore()
 
     fillState(store, {

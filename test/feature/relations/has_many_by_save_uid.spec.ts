@@ -6,7 +6,7 @@ describe('feature/relations/has_many_by_insert_uid', () => {
     Model.clearRegistries()
   })
 
-  it('inserts "has many by" relation with parent having "uid" field as the primary key', async () => {
+  it('inserts "has many by" relation with parent having "uid" field as the primary key', () => {
     class Node extends Model {
       static entity = 'nodes'
 
@@ -29,7 +29,7 @@ describe('feature/relations/has_many_by_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       name: 'Cluster 01',
       nodes: [
         { id: 1, name: 'Node 01' },
@@ -48,7 +48,7 @@ describe('feature/relations/has_many_by_insert_uid', () => {
     })
   })
 
-  it('inserts "has many by" relation with child having "uid" as the owner key', async () => {
+  it('inserts "has many by" relation with child having "uid" as the owner key', () => {
     class Node extends Model {
       static entity = 'nodes'
 
@@ -71,7 +71,7 @@ describe('feature/relations/has_many_by_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       name: 'Cluster 01',
       nodes: [{ name: 'Node 01' }, { name: 'Node 02' }]
     })

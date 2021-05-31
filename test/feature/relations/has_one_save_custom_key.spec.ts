@@ -1,12 +1,12 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str, HasOne } from '@/index'
 
-describe('feature/relations/has_one_insert_custom_key', () => {
+describe('feature/relations/has_one_save_custom_key', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })
 
-  it('inserts "has one" relation with custom primary key', async () => {
+  it('inserts "has one" relation with custom primary key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -29,7 +29,7 @@ describe('feature/relations/has_one_insert_custom_key', () => {
 
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       userId: 1,
       name: 'John Doe',
       phone: {
@@ -48,7 +48,7 @@ describe('feature/relations/has_one_insert_custom_key', () => {
     })
   })
 
-  it('inserts "has one" relation with custom local key', async () => {
+  it('inserts "has one" relation with custom local key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -70,7 +70,7 @@ describe('feature/relations/has_one_insert_custom_key', () => {
 
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       id: 1,
       userId: 2,
       name: 'John Doe',

@@ -1,7 +1,7 @@
 import { createStore, fillState, assertState } from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/inserts_fresh', () => {
+describe('feature/repository/fresh', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -9,10 +9,10 @@ describe('feature/repository/inserts_fresh', () => {
     @Str('') name!: string
   }
 
-  it('inserts a new record to the store', async () => {
+  it('inserts a new record to the store', () => {
     const store = createStore()
 
-    await store.$repo(User).fresh({ id: 1, name: 'John Doe' })
+    store.$repo(User).fresh({ id: 1, name: 'John Doe' })
 
     assertState(store, {
       users: {
@@ -21,10 +21,10 @@ describe('feature/repository/inserts_fresh', () => {
     })
   })
 
-  it('inserts multiple records to the store', async () => {
+  it('inserts multiple records to the store', () => {
     const store = createStore()
 
-    await store.$repo(User).fresh([
+    store.$repo(User).fresh([
       { id: 1, name: 'John Doe' },
       { id: 2, name: 'Jane Doe' }
     ])
@@ -37,7 +37,7 @@ describe('feature/repository/inserts_fresh', () => {
     })
   })
 
-  it('replaces existing records', async () => {
+  it('replaces existing records', () => {
     const store = createStore()
 
     fillState(store, {
@@ -47,7 +47,7 @@ describe('feature/repository/inserts_fresh', () => {
       }
     })
 
-    await store.$repo(User).fresh([
+    store.$repo(User).fresh([
       { id: 3, name: 'Johnny Doe' },
       { id: 4, name: 'David Doe' }
     ])

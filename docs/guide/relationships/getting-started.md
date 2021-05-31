@@ -175,7 +175,7 @@ export default {
 
 ## Inserting Relationships
 
-When inserting new records into the store, Vuex ORM automatically normalizes and stores data that contains any nested relationships in it's data structure. For example, let's say you have the `User` model that has a relationship to the `Post` model:
+You may use `save` method to save a record with its nested relationships to the store. When saving new records into the store via `save` method, Vuex ORM automatically normalizes and stores data that contains any nested relationships in it's data structure. For example, let's say you have the `User` model that has a relationship to the `Post` model:
 
 ```js
 class User extends Model {
@@ -191,7 +191,7 @@ class User extends Model {
 }
 ```
 
-When you insert a user record containing post records under the posts key, Vuex ORM decouples the user and post records before saving them to the store.
+When you save a user record containing post records under the posts key, Vuex ORM decouples the user and post records before saving them to the store.
 
 ```js
 // The user reocrd.
@@ -204,8 +204,8 @@ const user = {
   ]
 }
 
-// Insert the user record.
-store.$repo(User).insert(user)
+// Save the user record.
+store.$repo(User).save(user)
 
 // The result inside the store.
 {
@@ -234,8 +234,8 @@ const user = {
   ]
 }
 
-// Insert the user record.
-store.$repo(User).insert(user)
+// Save the user record.
+store.$repo(User).save(user)
 
 // The result inside the store.
 {
@@ -255,7 +255,7 @@ Depending on the relationship types, there may be a slight difference in behavio
 
 ## Updating Relationships
 
-Similar to the `insert` or `fresh` method, the `update` method also normalizes any nested relationships within the given records. Let's reuse our `User` and `Post` example:
+The `save` method also updates models that already exist in the store, including any nested relationships within the given records. Let's reuse our `User` and `Post` example:
 
 ```js
 class User extends Model {
@@ -271,89 +271,45 @@ class User extends Model {
 }
 ```
 
-When you update the user record, relationships will be saved in a normalized form inside the store.
+When you save the user record, relationships will be saved in a normalized form inside the store.
 
 ```js
-// The user reocrd.
-const user = {
-  id: 1,
-  name: 'John Doe',
-  posts: [
-    { id: 1, userId: 1, title: '...' },
-    { id: 2, userId: 2, title: '...' }
-  ]
-}
-
-// Insert the user record.
-store.$repo(User).update(user)
-
-// The result inside the store.
+// Existing data in the store.
 {
   entities: {
     users: {
       1: { id: 1, name: 'John Doe' }
     },
     posts: {
-      1: { id: 1, userId: 1, title: '...' },
-      2: { id: 2, userId: 1, title: '...' }
+      1: { id: 1, userId: 1, title: 'Title A' },
+      2: { id: 2, userId: 1, title: 'Title B' }
     }
   }
 }
-```
 
-Again as same as when inserting data, `update` method will also automatically generates any missing foreign keys.
-
-```js
 // The user reocrd.
 const user = {
   id: 1,
-  name: 'John Doe',
+  name: 'Jane Doe',
   posts: [
-    { id: 1, title: '...' }, // <- No foregin key.
-    { id: 2, title: '...' }  // <- No foregin key.
+    { id: 1, userId: 1, title: 'Title C' },
+    { id: 2, userId: 2, title: 'Title D' }
   ]
 }
 
 // Insert the user record.
-store.$repo(User).update(user)
+store.$repo(User).save(user)
 
 // The result inside the store.
 {
   entities: {
     users: {
-      1: { id: 1, name: 'John Doe' }
+      1: { id: 1, name: 'Jane Doe' } // <- Updated.
     },
     posts: {
-      1: { id: 1, userId: 1, title: '...' }, // Foreign key generated.
-      2: { id: 2, userId: 1, title: '...' }  // Foreign key generated.
+      1: { id: 1, userId: 1, title: 'Title C' }, // <- Updated.
+      2: { id: 2, userId: 1, title: 'Title D' }  // <- Updated.
     }
   }
 }
 ```
-
-### Caveats of Update Methods
-
-Vuex Orm provides another method for updating data called `revise`, which requires you to specify a where clause to filter the record. `revise` will not normalize your data!
-
-```js
-// Update the user by `revise` method.
-store.$repo(User).where('id', 1).revise({
-  name: 'John Doe',
-  posts: [
-    { id: 1, userId: 1, title: '...' },
-    { id: 2, userId: 2, title: '...' }
-  ]
-})
-
-// The result inside the store. The relationships are ignored.
-{
-  entities: {
-    users: {
-      1: { id: 1, name: 'John Doe' }
-    },
-    posts: {}
-  }
-}
-```
-
-This is because without each record having its primary key inside the records, Vuex ORM can't determine what record to update. The rule of thumb is to always use `update` method when saving nested relationships.

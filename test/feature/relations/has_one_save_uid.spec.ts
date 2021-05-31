@@ -1,12 +1,12 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
 import { Model, Attr, Uid, Str, HasOne } from '@/index'
 
-describe('feature/relations/has_one_insert_uid', () => {
+describe('feature/relations/has_one_save_uid', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })
 
-  it('inserts "has one" relation with parent having "uid" field as the primary key', async () => {
+  it('inserts "has one" relation with parent having "uid" field as the primary key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -29,7 +29,7 @@ describe('feature/relations/has_one_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       name: 'John Doe',
       phone: {
         id: 1,
@@ -47,7 +47,7 @@ describe('feature/relations/has_one_insert_uid', () => {
     })
   })
 
-  it('inserts "has one" relation with child having "uid" as the foreign key', async () => {
+  it('inserts "has one" relation with child having "uid" as the foreign key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -70,7 +70,7 @@ describe('feature/relations/has_one_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       name: 'John Doe',
       phone: {
         number: '123-4567-8912'
@@ -87,7 +87,7 @@ describe('feature/relations/has_one_insert_uid', () => {
     })
   })
 
-  it('inserts "has one" relation with child having "uid" as foreign key being primary key', async () => {
+  it('inserts "has one" relation with child having "uid" as foreign key being primary key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -111,7 +111,7 @@ describe('feature/relations/has_one_insert_uid', () => {
 
     const store = createStore()
 
-    await store.$repo(User).insert({
+    store.$repo(User).save({
       name: 'John Doe',
       phone: {
         number: '123-4567-8912'

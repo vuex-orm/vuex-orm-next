@@ -1,7 +1,7 @@
 import { createStore, fillState, assertState } from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_destroy', () => {
+describe('feature/repository/delete', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -9,7 +9,7 @@ describe('feature/repository/deletes_destroy', () => {
     @Str('') name!: string
   }
 
-  it('deletes record by the id', async () => {
+  it('deletes a record specified by the where clause', () => {
     const store = createStore()
 
     fillState(store, {
@@ -20,7 +20,7 @@ describe('feature/repository/deletes_destroy', () => {
       }
     })
 
-    await store.$repo(User).destroy(2)
+    store.$repo(User).where('name', 'Jane Doe').delete()
 
     assertState(store, {
       users: {
@@ -30,27 +30,7 @@ describe('feature/repository/deletes_destroy', () => {
     })
   })
 
-  it('returns `null` when no record was deleted', async () => {
-    const store = createStore()
-
-    fillState(store, {
-      users: {
-        1: { id: 1, name: 'John Doe' }
-      }
-    })
-
-    const user = await store.$repo(User).destroy(2)
-
-    expect(user).toBe(null)
-
-    assertState(store, {
-      users: {
-        1: { id: 1, name: 'John Doe' }
-      }
-    })
-  })
-
-  it('deletes multiple records by an array of ids', async () => {
+  it('can delete multiple records specified by the where clause', () => {
     const store = createStore()
 
     fillState(store, {
@@ -61,11 +41,39 @@ describe('feature/repository/deletes_destroy', () => {
       }
     })
 
-    await store.$repo(User).destroy([2, 3])
+    store
+      .$repo(User)
+      .where('name', 'Jane Doe')
+      .orWhere('name', 'Johnny Doe')
+      .delete()
 
     assertState(store, {
       users: {
         1: { id: 1, name: 'John Doe' }
+      }
+    })
+  })
+
+  it('returns an empty array if there are no matching records', () => {
+    const store = createStore()
+
+    fillState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe' },
+        2: { id: 2, name: 'Jane Doe' },
+        3: { id: 3, name: 'Johnny Doe' }
+      }
+    })
+
+    const users = store.$repo(User).where('name', 'No match').delete()
+
+    expect(users).toEqual([])
+
+    assertState(store, {
+      users: {
+        1: { id: 1, name: 'John Doe' },
+        2: { id: 2, name: 'Jane Doe' },
+        3: { id: 3, name: 'Johnny Doe' }
       }
     })
   })

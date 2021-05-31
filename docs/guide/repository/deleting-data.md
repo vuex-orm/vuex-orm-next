@@ -37,14 +37,14 @@ The `destroy` method will return deleted models. When you pass a single primary 
 ```js
 const user = await store.$repo(User).destroy(2)
 
-// { id: 2, name: 'Jane Doe', age: 30 }
+// User { id: 2, name: 'Jane Doe', age: 30 }
 
 const user = await store.$repo(User).destroy([1, 2])
 
 /*
   [
-    { id: 1, name: 'John Doe', age: 40 },
-    { id: 2, name: 'Jane Doe', age: 30 }
+    User { id: 1, name: 'John Doe', age: 40 },
+    User { id: 2, name: 'Jane Doe', age: 30 }
   ]
 */
 ```
@@ -55,7 +55,7 @@ If you wish to delete the entire records, you may use the `flush` method.
 store.$repo(User).flush()
 ```
 
-## Deleting data by query
+## Deleting Data By Query
 
 You can also run a delete statement on a set of records. In this example, we will delete all flights that are marked as inactive.
 

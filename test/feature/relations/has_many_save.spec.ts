@@ -88,27 +88,4 @@ describe('feature/relations/has_many_save', () => {
       posts: {}
     })
   })
-
-  it('returns normalized schema when saving a model', () => {
-    const store = createStore()
-
-    const schema = store.$repo(User).save({
-      id: 1,
-      name: 'John Doe',
-      posts: [
-        { id: 1, userId: 1, title: 'Title 01' },
-        { id: 2, userId: 1, title: 'Title 02' }
-      ]
-    })
-
-    expect(schema).toEqual({
-      __id: '1',
-      id: 1,
-      name: 'John Doe',
-      posts: [
-        { __id: '1', id: 1, userId: 1, title: 'Title 01' },
-        { __id: '2', id: 2, userId: 1, title: 'Title 02' }
-      ]
-    })
-  })
 })

@@ -1,7 +1,12 @@
-import { createStore, fillState, assertState } from 'test/Helpers'
+import {
+  createStore,
+  fillState,
+  assertState,
+  assertInstanceOf
+} from 'test/Helpers'
 import { Model, Attr, Str } from '@/index'
 
-describe('feature/repository/deletes_flush', () => {
+describe('feature/repository/flush', () => {
   class User extends Model {
     static entity = 'users'
 
@@ -9,7 +14,7 @@ describe('feature/repository/deletes_flush', () => {
     @Str('') name!: string
   }
 
-  it('deletes all records in the store', async () => {
+  it('deletes all records in the store', () => {
     const store = createStore()
 
     fillState(store, {
@@ -20,10 +25,12 @@ describe('feature/repository/deletes_flush', () => {
       }
     })
 
-    await store.$repo(User).flush()
+    const users = store.$repo(User).flush()
 
     assertState(store, {
       users: {}
     })
+
+    assertInstanceOf(users, User)
   })
 })

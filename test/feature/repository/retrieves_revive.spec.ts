@@ -21,7 +21,7 @@ describe('feature/repository/retrieves_revive', () => {
     })
 
     const schema = {
-      __id: 2
+      id: 2
     }
 
     const user = store.$repo(User).revive(schema)!
@@ -42,10 +42,7 @@ describe('feature/repository/retrieves_revive', () => {
     })
 
     // Test missing id in the store.
-    expect(store.$repo(User).revive({ __id: 4 })).toBe(null)
-
-    // Test missing id in the schema.
-    expect(store.$repo(User).revive({})).toBe(null)
+    expect(store.$repo(User).revive({ id: 4 })).toBe(null)
   })
 
   it('retrieves multiple models from the store by the given schema', () => {
@@ -59,7 +56,7 @@ describe('feature/repository/retrieves_revive', () => {
       }
     })
 
-    const schema = [{ __id: 3 }, { __id: 1 }]
+    const schema = [{ id: 3 }, { id: 1 }]
 
     const users = store.$repo(User).revive(schema)
 

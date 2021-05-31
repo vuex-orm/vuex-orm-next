@@ -1,12 +1,12 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str, HasManyBy } from '@/index'
 
-describe('feature/relations/has_many_by_insert_custom_key', () => {
+describe('feature/relations/has_many_by_save_custom_key', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })
 
-  it('inserts "has many by" relation with custom primary key', async () => {
+  it('inserts "has many by" relation with custom primary key', () => {
     class Node extends Model {
       static entity = 'nodes'
 
@@ -29,7 +29,7 @@ describe('feature/relations/has_many_by_insert_custom_key', () => {
 
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       clusterId: 1,
       name: 'Cluster 01',
       nodes: [
@@ -49,7 +49,7 @@ describe('feature/relations/has_many_by_insert_custom_key', () => {
     })
   })
 
-  it('inserts "has many by" relation with custom owner key', async () => {
+  it('inserts "has many by" relation with custom owner key', () => {
     class Node extends Model {
       static entity = 'nodes'
 
@@ -71,7 +71,7 @@ describe('feature/relations/has_many_by_insert_custom_key', () => {
 
     const store = createStore()
 
-    await store.$repo(Cluster).insert({
+    store.$repo(Cluster).save({
       id: 1,
       name: 'Cluster 01',
       nodes: [

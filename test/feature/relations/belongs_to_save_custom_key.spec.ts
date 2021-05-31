@@ -1,12 +1,12 @@
 import { createStore, assertState } from 'test/Helpers'
 import { Model, Attr, Str, BelongsTo } from '@/index'
 
-describe('feature/relations/belongs_to_insert_custome_key', () => {
+describe('feature/relations/belongs_to_save_custome_key', () => {
   beforeEach(() => {
     Model.clearRegistries()
   })
 
-  it('inserts "belongs to" relation with custom primary key', async () => {
+  it('inserts "belongs to" relation with custom primary key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -29,7 +29,7 @@ describe('feature/relations/belongs_to_insert_custome_key', () => {
 
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       title: 'Title 01',
       author: { userId: 1, name: 'John Doe' }
@@ -45,7 +45,7 @@ describe('feature/relations/belongs_to_insert_custome_key', () => {
     })
   })
 
-  it('inserts "belongs to" relation with custom owner key', async () => {
+  it('inserts "belongs to" relation with custom owner key', () => {
     class User extends Model {
       static entity = 'users'
 
@@ -67,7 +67,7 @@ describe('feature/relations/belongs_to_insert_custome_key', () => {
 
     const store = createStore()
 
-    await store.$repo(Post).insert({
+    store.$repo(Post).save({
       id: 1,
       title: 'Title 01',
       author: { id: 1, userId: 1, name: 'John Doe' }
