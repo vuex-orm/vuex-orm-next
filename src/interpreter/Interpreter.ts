@@ -2,7 +2,7 @@ import { normalize, schema as Normalizr } from 'normalizr'
 import { isArray } from '../support/Utils'
 import { Element, NormalizedData } from '../data/Data'
 import { Model } from '../model/Model'
-import { Database } from '@/database/Database'
+import { Database } from '../database/Database'
 
 export class Interpreter {
   /**
