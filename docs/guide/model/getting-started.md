@@ -241,7 +241,7 @@ class User extends Model {
 }
 ```
 
-Vuex ORM will recognise the model is missing an `id` field and will generate one in it's absence. The model will now be configured as follows:
+Vuex ORM will recognize the model is missing an `id` field and will generate one in it's absence. The model will now be configured as follows:
 
 ```js
 class User extends Model {
@@ -274,7 +274,7 @@ class User extends Model {
 }
 ```
 
-Vuex ORM will recognise a custom `primaryKey` has been defined but is unable to locate the corresponding field definition, and will generate one in it's absence. The model will now be configured as follows:
+Vuex ORM will recognize a custom `primaryKey` has been defined but is unable to locate the corresponding field definition, and will generate one in it's absence. The model will now be configured as follows:
 
 ```js
 class User extends Model {

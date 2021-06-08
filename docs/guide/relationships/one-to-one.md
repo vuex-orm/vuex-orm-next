@@ -1,4 +1,4 @@
-# Relationhips: One To One
+# Relationships: One To One
 
 A one-to-one relationship is a very basic relation. For example, a `User` model might be associated with one `Phone`. You may define such a relationship using 2 types of relationship attributes, `hasOne` and `belongsTo`.
 

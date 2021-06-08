@@ -1,4 +1,4 @@
-# Relationhips: One To Many
+# Relationships: One To Many
 
 A one-to-many relationship is used to define relationships where a single model owns any amount of other models. For example, a blog post may have an infinite number of comments. Vuex ORM provides the relationship attribute to define such a relationship.
 

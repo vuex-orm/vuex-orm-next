@@ -2,11 +2,11 @@
 
 You may insert new data or update existing data through various repository methods. All data created through Vuex ORM gets persisted in Vuex Store.
 
-In this section, it assumes you're familiar with the usage of repository. If not, please read through the [Repository: Getting Started](./getting-started) page first.
+This section assumes you're familiar with the usage of repository. If not, please read through [Repository: Getting Started](./getting-started) first.
 
 ## Inserting Data
 
-You may use `save` method on a repository to insert data. The save method accepts an object of field and value pairs.
+You may use the `save` method on a repository to insert data. The save method accepts an object of field and value pairs.
 
 ```js
 store.$repo(User).save({ id: 1, name: 'John Doe' })
@@ -49,7 +49,7 @@ const users = store.$repo(User).save([
 */
 ```
 
-If you insert data containing relationships, all of them would be instantiated as a new model istances and gets returned. Here is an example where a user "has many" posts.
+If you insert data containing relationships, all of them would be instantiated as a new model instances and returned. Here is an example where a user "has many" posts.
 
 ```js
 const user = store.$repo(User).save({
@@ -83,7 +83,7 @@ const user = store.$repo(User).insert({ id: 1, name: 'John Doe' })
 // User { id: 1, name: 'John Doe' }
 ```
 
-You may also pass an array of records to the `insert` method. In that case, the returned value will be an array of models.
+You may also pass an array of records to the `insert` method. In that case, the returned value will be an array of model instances.
 
 ```js
 const users = store.$repo(User).insert([
@@ -110,7 +110,7 @@ const user = store.$repo(User).new()
 ```
 
 ::: warning
-Note that to be able to use `new` method, you must define the model's primary key field as `UID` type attribute, or else it will throw an error.
+To use the `new` method, you must ensure you have defined the model's primary key field as [`uid`](../model/getting-started.md#uid-type) type attribute, or else it will throw an error.
 :::
 
 ## Replacing Whole Data
@@ -144,7 +144,7 @@ store.$repo(User).fresh([
 
 ## Creating a model instance
 
-Sometimes, you may want to create a new model instance without actually storing the model to the store. In such a case, you may use `make` method to create a fresh model instance.
+Sometimes, you may want to create a new model instance without actually persisting the model data to the store. You may use the `make` method to create a fresh model instance in such a case.
 
 ```js
 const user = store.$repo(User).make()

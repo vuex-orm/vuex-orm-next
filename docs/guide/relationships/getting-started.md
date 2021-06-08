@@ -194,7 +194,7 @@ class User extends Model {
 When you save a user record containing post records under the posts key, Vuex ORM decouples the user and post records before saving them to the store.
 
 ```js
-// The user reocrd.
+// The user record.
 const user = {
   id: 1,
   name: 'John Doe',
@@ -229,8 +229,8 @@ const user = {
   id: 1,
   name: 'John Doe',
   posts: [
-    { id: 1, title: '...' }, // <- No foregin key.
-    { id: 2, title: '...' }  // <- No foregin key.
+    { id: 1, title: '...' }, // <- No foreign key.
+    { id: 2, title: '...' }  // <- No foreign key.
   ]
 }
 
@@ -287,7 +287,7 @@ When you save the user record, relationships will be saved in a normalized form 
   }
 }
 
-// The user reocrd.
+// The user record.
 const user = {
   id: 1,
   name: 'Jane Doe',

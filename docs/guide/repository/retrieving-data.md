@@ -77,7 +77,7 @@ For example, here is a query that verifies the value of the "votes" column is eq
 const users = store.$repo(User).where('votes', 100).get()
 ```
 
-You may also define the second argument as a closure to perform a different kind of cheks.
+You may also define the second argument as a closure to perform advanced checks.
 
 ```js
 const users = store.$repo(User).where('votes', (value) => {
@@ -85,7 +85,7 @@ const users = store.$repo(User).where('votes', (value) => {
 }).get()
 ```
 
-Finally, the first argument could be a closure to perform more powerful querying.
+Finally, the first argument can be a closure to perform more powerful querying.
 
 ```js
 const users = store.$repo(User).where((user) => {
