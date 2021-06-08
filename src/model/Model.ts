@@ -489,7 +489,7 @@ export class Model {
   /**
    * Delete the model from the database.
    */
-  async $delete(): Promise<boolean> {
+  $delete(): boolean {
     const key = this.$getKeyName()
 
     return isArray(key)
@@ -500,21 +500,21 @@ export class Model {
   /**
    * Delete the model from the database by ID.
    */
-  protected async $deleteByKeyName(key: string): Promise<boolean> {
-    return !!(await this.$query().destroy(this[key]))
+  protected $deleteByKeyName(key: string): boolean {
+    return !!this.$query().destroy(this[key])
   }
 
   /**
    * Delete the model from the database by composite key.
    */
-  protected async $deleteByCompositeKeyName(keys: string[]): Promise<boolean> {
+  protected $deleteByCompositeKeyName(keys: string[]): boolean {
     const query = this.$query()
 
     keys.forEach((key) => {
       query.where(key, this[key])
     })
 
-    return (await query.delete()).length > 0
+    return query.delete().length > 0
   }
 
   /**

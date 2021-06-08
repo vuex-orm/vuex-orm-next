@@ -23,7 +23,7 @@ describe('feature/model/deletes_delete_composite_key', () => {
 
     const user = store.$repo(User).where('idA', 1).where('idB', 2).first()!
 
-    const result = await user.$delete()
+    const result = user.$delete()
 
     expect(result).toBe(true)
 

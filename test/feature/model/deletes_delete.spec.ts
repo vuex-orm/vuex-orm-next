@@ -20,7 +20,7 @@ describe('feature/model/deletes_delete', () => {
 
     const user = store.$repo(User).find(1)!
 
-    const result = await user.$delete()
+    const result = user.$delete()
 
     expect(result).toBe(true)
 

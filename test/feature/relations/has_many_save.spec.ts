@@ -53,7 +53,7 @@ describe('feature/relations/has_many_save', () => {
   it('generates missing foreign key', async () => {
     const store = createStore()
 
-    await store.$repo(User).save({
+    store.$repo(User).save({
       id: 1,
       name: 'John Doe',
       posts: [
@@ -76,7 +76,7 @@ describe('feature/relations/has_many_save', () => {
   it('can insert a record with missing relational key', async () => {
     const store = createStore()
 
-    await store.$repo(User).save({
+    store.$repo(User).save({
       id: 1,
       name: 'John Doe'
     })
