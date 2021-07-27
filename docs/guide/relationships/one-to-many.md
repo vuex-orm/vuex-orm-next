@@ -64,7 +64,7 @@ class Comment extends Model {
       id: this.attr(null),
       postId: this.attr(null),
       body: this.string(''),
-      post: this.belongsTo(Post, 'userId')
+      post: this.belongsTo(Post, 'postId')
     }
   }
 }
