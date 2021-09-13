@@ -19,6 +19,17 @@ In addition, new documentation is ongoing and can be found at https://next.vuex-
 
 Join us on our [Slack Channel](https://join.slack.com/t/vuex-orm/shared_invite/enQtNDQ0NjE3NTgyOTY2LTc1YTI2N2FjMGRlNGNmMzBkMGZlMmYxOTgzYzkzZDM2OTQ3OGExZDRkN2FmMGQ1MGJlOWM1NjU0MmRiN2VhYzQ) for any questions and discussions.
 
+## Vite Integration
+
+Make sure to disable `useDefineForClassFields` in `tsconfig.json` when using `vite >= 2.5.0`. See [this issue](https://github.com/vitejs/vite/issues/4636) for more details.
+
+```json
+...
+"useDefineForClassFields": false,
+...
+```
+
+
 ## Contribution
 
 Community contributions will be applicable as soon as this repo reaches **alpha** stage.
