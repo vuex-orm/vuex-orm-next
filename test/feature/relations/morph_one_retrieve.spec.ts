@@ -71,7 +71,7 @@ describe('feature/relations/morph_one_retrieve', () => {
 
     it('can eager load morph one relation for user', () => {
       const user = store.$repo(User).with('image').first()!
-  
+
       expect(user).toBeInstanceOf(User)
       expect(user.image).toBeInstanceOf(Image)
       assertModel(user, {
@@ -88,7 +88,7 @@ describe('feature/relations/morph_one_retrieve', () => {
 
     it('can eager load morph one relation for post', () => {
       const post = store.$repo(Post).with('image').first()!
-  
+
       expect(post).toBeInstanceOf(Post)
       expect(post.image).toBeInstanceOf(Image)
       assertModel(post, {
@@ -117,7 +117,7 @@ describe('feature/relations/morph_one_retrieve', () => {
 
     it('can eager load missing relation as `null`', () => {
       const user = store.$repo(User).with('image').first()!
-  
+
       expect(user).toBeInstanceOf(User)
       assertModel(user, {
         id: 1,
