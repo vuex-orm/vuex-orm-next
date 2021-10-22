@@ -31,7 +31,6 @@ describe('feature/relations/morph_one_retrieve', () => {
 
     @Attr() id!: number
     @Str('') title!: string
-    @Attr() userId!: number
     @MorphOne(() => Image, 'imageable_id', 'imageable_type')
     image!: Image | null
   }
