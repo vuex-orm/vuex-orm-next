@@ -1,72 +1,20 @@
 import { createStore, fillState, assertModel } from 'test/Helpers'
-import { Model, Attr, Str, MorphOne } from '@/index'
+import {
+  User,
+  Post,
+  Image,
+  MORPH_ONE_ENTITIES
+} from 'test/feature/fixtures/relations/morph_one'
 
 /*
   Potential Improvements
-   - DRY data / classes
    - DRY test cases
 */
 describe('feature/relations/morph_one_retrieve', () => {
-  class Image extends Model {
-    static entity = 'images'
-
-    @Attr() id!: number
-    @Str('') url!: string
-    @Attr() imageable_id!: number
-    @Attr() imageable_type!: string
-  }
-
-  class User extends Model {
-    static entity = 'users'
-
-    @Attr() id!: number
-    @Str('') name!: string
-
-    @MorphOne(() => Image, 'imageable_id', 'imageable_type')
-    image!: Image | null
-  }
-
-  class Post extends Model {
-    static entity = 'posts'
-
-    @Attr() id!: number
-    @Str('') title!: string
-    @MorphOne(() => Image, 'imageable_id', 'imageable_type')
-    image!: Image | null
-  }
-
   describe('when there are images', () => {
     const store = createStore()
 
-    fillState(store, {
-      users: {
-        1: { id: 1, name: 'John Doe' }
-      },
-      posts: {
-        1: { id: 1, title: 'Hello, world!' },
-        2: { id: 2, title: 'Hello, world! Again!' }
-      },
-      images: {
-        1: {
-          id: 1,
-          url: '/profile.jpg',
-          imageable_id: 1,
-          imageable_type: 'users'
-        },
-        2: {
-          id: 2,
-          url: '/post.jpg',
-          imageable_id: 1,
-          imageable_type: 'posts'
-        },
-        3: {
-          id: 3,
-          url: '/post2.jpg',
-          imageable_id: 2,
-          imageable_type: 'posts'
-        }
-      }
-    })
+    fillState(store, MORPH_ONE_ENTITIES)
 
     it('can eager load morph one relation for user', () => {
       const user = store.$repo(User).with('image').first()!
