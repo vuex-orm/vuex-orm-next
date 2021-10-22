@@ -245,14 +245,15 @@ export class Model {
    */
   static morphOne(
     related: typeof Model,
-    foreignKey: string,
+    id: string,
+    type: string,
     localKey?: string
   ): MorphOne {
     const model = this.newRawInstance()
 
     localKey = localKey ?? model.$getLocalKey()
 
-    return new MorphOne(model, related.newRawInstance(), foreignKey, localKey)
+    return new MorphOne(model, related.newRawInstance(), id, type, localKey)
   }
 
   /**

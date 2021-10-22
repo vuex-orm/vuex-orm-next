@@ -6,14 +6,15 @@ import { PropertyDecorator } from '../../Contracts'
  */
 export function MorphOne(
   related: () => typeof Model,
-  foreignKey: string,
+  id: string,
+  type: string,
   localKey?: string
 ): PropertyDecorator {
   return (target, propertyKey) => {
     const self = target.$self()
 
     self.setRegistry(propertyKey, () =>
-      self.morphOne(related(), foreignKey, localKey)
+      self.morphOne(related(), id, type, localKey)
     )
   }
 }

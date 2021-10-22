@@ -7,9 +7,14 @@ import { Relation, Dictionary } from './Relation'
 
 export class MorphOne extends Relation {
   /**
-   * The foreign key of the parent model.
+   * The field name that contains id of the parent model.
    */
-  protected foreignKey: string
+  protected id: string
+
+  /**
+   * The field name that contains type of the parent model.
+   */
+  protected type: string
 
   /**
    * The local key of the parent model.
@@ -22,11 +27,13 @@ export class MorphOne extends Relation {
   constructor(
     parent: Model,
     related: Model,
-    foreignKey: string,
+    id: string,
+    type: string,
     localKey: string
   ) {
     super(parent, related)
-    this.foreignKey = foreignKey
+    this.id = id
+    this.type = type
     this.localKey = localKey
   }
 
@@ -45,17 +52,20 @@ export class MorphOne extends Relation {
   }
 
   /**
-   * Attach the relational key to the given relation.
+   * Attach the relational key to the given relation. TODO
    */
   attach(record: Element, child: Element): void {
-    child[this.foreignKey] = record[this.localKey]
+    console.log('ATTACH (MorphOne): ', record, child)
+    child[this.id] = record[this.localKey]
+    child[this.type] = this.parent.$entity()
   }
 
   /**
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.whereIn(this.foreignKey as any, this.getKeys(models, this.localKey))
+    query.where(this.type as any, this.parent.$entity())
+    query.whereIn(this.id as any, this.getKeys(models, this.localKey))
   }
 
   /**
@@ -78,7 +88,7 @@ export class MorphOne extends Relation {
    */
   protected buildDictionary(results: Collection): Dictionary {
     return this.mapToDictionary(results, (result) => {
-      return [result[this.foreignKey], result]
+      return [result[this.id], result]
     })
   }
 
