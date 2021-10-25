@@ -52,7 +52,7 @@ export class MorphOne extends Relation {
   }
 
   /**
-   * Attach the relational key to the given relation.
+   * Attach the parent entity and id to the given relation.
    */
   attach(record: Element, child: Element): void {
     child[this.id] = record[this.localKey]
