@@ -83,7 +83,7 @@ export class MorphOne extends Relation {
   }
 
   /**
-   * Build model dictionary keyed by the relation's foreign key.
+   * Build model dictionary keyed by the relation's relational key.
    */
   protected buildDictionary(results: Collection): Dictionary {
     return this.mapToDictionary(results, (result) => {
