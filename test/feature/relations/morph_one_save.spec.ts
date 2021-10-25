@@ -1,11 +1,26 @@
 import { createStore, assertState } from 'test/Helpers'
-import { User } from 'test/feature/fixtures/relations/morph_one'
+import { Model, Attr, Str, MorphOne } from '@/index'
 
-/*
-  Potential Improvements
-   - DRY test cases
-*/
 describe('feature/relations/morph_one_save', () => {
+  class Image extends Model {
+    static entity = 'images'
+  
+    @Attr() id!: number
+    @Str('') url!: string
+    @Attr() imageable_id!: number
+    @Attr() imageable_type!: string
+  }
+
+  class User extends Model {
+    static entity = 'users'
+  
+    @Attr() id!: number
+    @Str('') name!: string
+  
+    @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+    image!: Image | null
+  }
+
   it('inserts a record to the store with "morph one" relation', () => {
     const store = createStore()
 
