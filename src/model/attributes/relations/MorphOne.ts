@@ -52,10 +52,9 @@ export class MorphOne extends Relation {
   }
 
   /**
-   * Attach the relational key to the given relation. TODO
+   * Attach the relational key to the given relation.
    */
   attach(record: Element, child: Element): void {
-    console.log('ATTACH (MorphOne): ', record, child)
     child[this.id] = record[this.localKey]
     child[this.type] = this.parent.$entity()
   }
