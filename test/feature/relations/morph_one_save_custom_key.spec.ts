@@ -12,8 +12,8 @@ describe('feature/relations/morph_one_save_custom_key', () => {
     
       @Attr() id!: number
       @Str('') url!: string
-      @Attr() imageable_id!: number
-      @Attr() imageable_type!: string
+      @Attr() imageableId!: number
+      @Attr() imageableType!: string
     }
 
     class User extends Model {
@@ -24,7 +24,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
       @Attr() userId!: string
       @Str('') name!: string
     
-      @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+      @MorphOne(() => Image, 'imageableId', 'imageableType')
       image!: Image | null
     }
 
@@ -36,7 +36,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
       image: {
         id: 1,
         url: '/profile.jpg',
-        imageable_type: 'users'
+        imageableType: 'users'
       }
     })
 
@@ -48,8 +48,8 @@ describe('feature/relations/morph_one_save_custom_key', () => {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageable_id: 1,
-          imageable_type: 'users'
+          imageableId: 1,
+          imageableType: 'users'
         },
       }
     })
@@ -61,8 +61,8 @@ describe('feature/relations/morph_one_save_custom_key', () => {
     
       @Attr() id!: number
       @Str('') url!: string
-      @Attr() imageable_id!: number
-      @Attr() imageable_type!: string
+      @Attr() imageableId!: number
+      @Attr() imageableType!: string
     }
 
     class User extends Model {
@@ -72,7 +72,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
       @Attr() userId!: string
       @Str('') name!: string
 
-      @MorphOne(() => Image, 'imageable_id', 'imageable_type', 'userId')
+      @MorphOne(() => Image, 'imageableId', 'imageableType', 'userId')
       image!: Image | null
     }
 
@@ -85,7 +85,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
       image: {
         id: 1,
         url: '/profile.jpg',
-        imageable_type: 'users'
+        imageableType: 'users'
       }
     })
 
@@ -97,8 +97,8 @@ describe('feature/relations/morph_one_save_custom_key', () => {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageable_id: 2,
-          imageable_type: 'users'
+          imageableId: 2,
+          imageableType: 'users'
         },
       }
     })

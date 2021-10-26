@@ -12,8 +12,8 @@ describe('feature/relations/morph_one_save_uid', () => {
     
       @Attr() id!: number
       @Str('') url!: string
-      @Attr() imageable_id!: number
-      @Attr() imageable_type!: string
+      @Attr() imageableId!: number
+      @Attr() imageableType!: string
     }
 
     class User extends Model {
@@ -22,7 +22,7 @@ describe('feature/relations/morph_one_save_uid', () => {
       @Uid() id!: string
       @Str('') name!: string
     
-      @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+      @MorphOne(() => Image, 'imageableId', 'imageableType')
       image!: Image | null
     }
 
@@ -35,7 +35,7 @@ describe('feature/relations/morph_one_save_uid', () => {
       image: {
         id: 1,
         url: '/profile.jpg',
-        imageable_type: 'users'
+        imageableType: 'users'
       }
     })
 
@@ -47,8 +47,8 @@ describe('feature/relations/morph_one_save_uid', () => {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageable_id: 'uid1',
-          imageable_type: 'users'
+          imageableId: 'uid1',
+          imageableType: 'users'
         },
       }
     })
@@ -60,8 +60,8 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
     
       @Uid() id!: string
       @Str('') url!: string
-      @Uid() imageable_id!: string
-      @Attr() imageable_type!: string
+      @Uid() imageableId!: string
+      @Attr() imageableType!: string
     }
 
     class User extends Model {
@@ -70,7 +70,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
       @Uid() id!: string
       @Str('') name!: string
 
-      @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+      @MorphOne(() => Image, 'imageableId', 'imageableType')
       image!: Image | null
     }
 
@@ -90,7 +90,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
         uid1: { id: 'uid1', name: 'John Doe' }
       },
       images: {
-        uid2: { id: 'uid2', url: '/profile.jpg', imageable_id: 'uid1', imageable_type: 'users' }
+        uid2: { id: 'uid2', url: '/profile.jpg', imageableId: 'uid1', imageableType: 'users' }
       }
     })
   })
@@ -98,11 +98,11 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
   it('inserts "morph one" relation with child having "uid" as foreign key being primary key', () => {
     class Image extends Model {
       static entity = 'images'
-      static primaryKey = ['imageable_id', 'imageable_type']
+      static primaryKey = ['imageableId', 'imageableType']
     
       @Str('') url!: string
-      @Uid() imageable_id!: number
-      @Attr() imageable_type!: string
+      @Uid() imageableId!: number
+      @Attr() imageableType!: string
     }
 
     class User extends Model {
@@ -111,7 +111,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
       @Uid() id!: string
       @Str('') name!: string
 
-      @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+      @MorphOne(() => Image, 'imageableId', 'imageableType')
       image!: Image | null
     }
 
@@ -131,7 +131,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
         uid1: { id: 'uid1', name: 'John Doe' }
       },
       images: {
-        '[\"uid1\",\"users\"]': { url: '/profile.jpg', imageable_id: 'uid1', imageable_type: 'users' }
+        '[\"uid1\",\"users\"]': { url: '/profile.jpg', imageableId: 'uid1', imageableType: 'users' }
       }
     })
   })

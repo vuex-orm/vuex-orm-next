@@ -7,8 +7,8 @@ describe('feature/relations/morph_one_retrieve', () => {
   
     @Attr() id!: number
     @Str('') url!: string
-    @Attr() imageable_id!: number
-    @Attr() imageable_type!: string
+    @Attr() imageableId!: number
+    @Attr() imageableType!: string
   }
   
   class User extends Model {
@@ -17,7 +17,7 @@ describe('feature/relations/morph_one_retrieve', () => {
     @Attr() id!: number
     @Str('') name!: string
   
-    @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+    @MorphOne(() => Image, 'imageableId', 'imageableType')
     image!: Image | null
   }
   
@@ -26,7 +26,7 @@ describe('feature/relations/morph_one_retrieve', () => {
   
     @Attr() id!: number
     @Str('') title!: string
-    @MorphOne(() => Image, 'imageable_id', 'imageable_type')
+    @MorphOne(() => Image, 'imageableId', 'imageableType')
     image!: Image | null
   }
 
@@ -40,20 +40,20 @@ describe('feature/relations/morph_one_retrieve', () => {
       1: {
         id: 1,
         url: '/profile.jpg',
-        imageable_id: 1,
-        imageable_type: 'users'
+        imageableId: 1,
+        imageableType: 'users'
       },
       2: {
         id: 2,
         url: '/post.jpg',
-        imageable_id: 1,
-        imageable_type: 'posts'
+        imageableId: 1,
+        imageableType: 'posts'
       },
       3: {
         id: 3,
         url: '/post2.jpg',
-        imageable_id: 2,
-        imageable_type: 'posts'
+        imageableId: 2,
+        imageableType: 'posts'
       }
     }
   }
@@ -74,8 +74,8 @@ describe('feature/relations/morph_one_retrieve', () => {
         image: {
           id: 1,
           url: '/profile.jpg',
-          imageable_id: 1,
-          imageable_type: 'users'
+          imageableId: 1,
+          imageableType: 'users'
         }
       })
     })
@@ -91,8 +91,8 @@ describe('feature/relations/morph_one_retrieve', () => {
         image: {
           id: 2,
           url: '/post.jpg',
-          imageable_id: 1,
-          imageable_type: 'posts'
+          imageableId: 1,
+          imageableType: 'posts'
         }
       })
     })
