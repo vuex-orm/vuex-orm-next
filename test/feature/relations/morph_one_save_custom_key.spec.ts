@@ -9,7 +9,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
   it('inserts "morph one" relation with custom primary key', () => {
     class Image extends Model {
       static entity = 'images'
-    
+
       @Attr() id!: number
       @Str('') url!: string
       @Attr() imageableId!: number
@@ -23,7 +23,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
 
       @Attr() userId!: string
       @Str('') name!: string
-    
+
       @MorphOne(() => Image, 'imageableId', 'imageableType')
       image!: Image | null
     }
@@ -50,7 +50,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
           url: '/profile.jpg',
           imageableId: 1,
           imageableType: 'users'
-        },
+        }
       }
     })
   })
@@ -58,7 +58,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
   it('inserts "morph one" relation with custom local key', () => {
     class Image extends Model {
       static entity = 'images'
-    
+
       @Attr() id!: number
       @Str('') url!: string
       @Attr() imageableId!: number
@@ -99,7 +99,7 @@ describe('feature/relations/morph_one_save_custom_key', () => {
           url: '/profile.jpg',
           imageableId: 2,
           imageableType: 'users'
-        },
+        }
       }
     })
   })

@@ -9,7 +9,7 @@ describe('feature/relations/morph_one_save_uid', () => {
   it('inserts "morph one" relation with parent having "uid" field as the primary key', () => {
     class Image extends Model {
       static entity = 'images'
-    
+
       @Attr() id!: number
       @Str('') url!: string
       @Attr() imageableId!: number
@@ -21,7 +21,7 @@ describe('feature/relations/morph_one_save_uid', () => {
 
       @Uid() id!: string
       @Str('') name!: string
-    
+
       @MorphOne(() => Image, 'imageableId', 'imageableType')
       image!: Image | null
     }
@@ -49,15 +49,15 @@ describe('feature/relations/morph_one_save_uid', () => {
           url: '/profile.jpg',
           imageableId: 'uid1',
           imageableType: 'users'
-        },
+        }
       }
     })
   })
 
-it('inserts "morph one" relation with child having "uid" as the foreign key', () => {
+  it('inserts "morph one" relation with child having "uid" as the foreign key', () => {
     class Image extends Model {
       static entity = 'images'
-    
+
       @Uid() id!: string
       @Str('') url!: string
       @Uid() imageableId!: string
@@ -81,7 +81,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
     store.$repo(User).save({
       name: 'John Doe',
       image: {
-        url: '/profile.jpg',
+        url: '/profile.jpg'
       }
     })
 
@@ -90,7 +90,12 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
         uid1: { id: 'uid1', name: 'John Doe' }
       },
       images: {
-        uid2: { id: 'uid2', url: '/profile.jpg', imageableId: 'uid1', imageableType: 'users' }
+        uid2: {
+          id: 'uid2',
+          url: '/profile.jpg',
+          imageableId: 'uid1',
+          imageableType: 'users'
+        }
       }
     })
   })
@@ -99,7 +104,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
     class Image extends Model {
       static entity = 'images'
       static primaryKey = ['imageableId', 'imageableType']
-    
+
       @Str('') url!: string
       @Uid() imageableId!: number
       @Attr() imageableType!: string
@@ -122,7 +127,7 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
     store.$repo(User).save({
       name: 'John Doe',
       image: {
-        url: '/profile.jpg',
+        url: '/profile.jpg'
       }
     })
 
@@ -131,7 +136,11 @@ it('inserts "morph one" relation with child having "uid" as the foreign key', ()
         uid1: { id: 'uid1', name: 'John Doe' }
       },
       images: {
-        '[\"uid1\",\"users\"]': { url: '/profile.jpg', imageableId: 'uid1', imageableType: 'users' }
+        '["uid1","users"]': {
+          url: '/profile.jpg',
+          imageableId: 'uid1',
+          imageableType: 'users'
+        }
       }
     })
   })

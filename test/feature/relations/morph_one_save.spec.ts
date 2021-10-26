@@ -4,7 +4,7 @@ import { Model, Attr, Str, MorphOne } from '@/index'
 describe('feature/relations/morph_one_save', () => {
   class Image extends Model {
     static entity = 'images'
-  
+
     @Attr() id!: number
     @Str('') url!: string
     @Attr() imageableId!: number
@@ -13,10 +13,10 @@ describe('feature/relations/morph_one_save', () => {
 
   class User extends Model {
     static entity = 'users'
-  
+
     @Attr() id!: number
     @Str('') name!: string
-  
+
     @MorphOne(() => Image, 'imageableId', 'imageableType')
     image!: Image | null
   }

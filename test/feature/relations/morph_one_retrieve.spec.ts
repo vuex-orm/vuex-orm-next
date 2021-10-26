@@ -4,26 +4,26 @@ import { Model, Attr, Str, MorphOne } from '@/index'
 describe('feature/relations/morph_one_retrieve', () => {
   class Image extends Model {
     static entity = 'images'
-  
+
     @Attr() id!: number
     @Str('') url!: string
     @Attr() imageableId!: number
     @Attr() imageableType!: string
   }
-  
+
   class User extends Model {
     static entity = 'users'
-  
+
     @Attr() id!: number
     @Str('') name!: string
-  
+
     @MorphOne(() => Image, 'imageableId', 'imageableType')
     image!: Image | null
   }
-  
+
   class Post extends Model {
     static entity = 'posts'
-  
+
     @Attr() id!: number
     @Str('') title!: string
     @MorphOne(() => Image, 'imageableId', 'imageableType')
@@ -36,7 +36,7 @@ describe('feature/relations/morph_one_retrieve', () => {
       1: { id: 1, title: 'Hello, world!' },
       2: { id: 2, title: 'Hello, world! Again!' }
     },
-    images:{
+    images: {
       1: {
         id: 1,
         url: '/profile.jpg',
