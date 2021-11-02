@@ -63,8 +63,8 @@ export class MorphOne extends Relation {
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.where(this.type as any, this.parent.$entity())
-    query.whereIn(this.id as any, this.getKeys(models, this.localKey))
+    query.where(this.type, this.parent.$entity())
+    query.whereIn(this.id, this.getKeys(models, this.localKey))
   }
 
   /**
