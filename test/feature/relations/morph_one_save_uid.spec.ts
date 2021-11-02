@@ -54,7 +54,7 @@ describe('feature/relations/morph_one_save_uid', () => {
     })
   })
 
-  it('inserts "morph one" relation with child having "uid" as the foreign key', () => {
+  it('inserts "morph one" relation with child having "uid" as the primary key', () => {
     class Image extends Model {
       static entity = 'images'
 
@@ -100,7 +100,7 @@ describe('feature/relations/morph_one_save_uid', () => {
     })
   })
 
-  it('inserts "morph one" relation with child having "uid" as foreign key being primary key', () => {
+  it('inserts "morph one" relation with child having a composite primary key', () => {
     class Image extends Model {
       static entity = 'images'
       static primaryKey = ['imageableId', 'imageableType']
