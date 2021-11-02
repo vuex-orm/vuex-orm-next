@@ -1,5 +1,5 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
-import { Model, Attr, Uid, Str, MorphOne } from '@/index'
+import { Model, Uid, Str, Num, MorphOne } from '@/index'
 
 describe('feature/relations/morph_one_save_uid', () => {
   beforeEach(() => {
@@ -10,10 +10,10 @@ describe('feature/relations/morph_one_save_uid', () => {
     class Image extends Model {
       static entity = 'images'
 
-      @Attr() id!: number
+      @Num(0) id!: number
       @Str('') url!: string
-      @Attr() imageableId!: number
-      @Attr() imageableType!: string
+      @Uid() imageableId!: string
+      @Str('') imageableType!: string
     }
 
     class User extends Model {
@@ -61,7 +61,7 @@ describe('feature/relations/morph_one_save_uid', () => {
       @Uid() id!: string
       @Str('') url!: string
       @Uid() imageableId!: string
-      @Attr() imageableType!: string
+      @Str('') imageableType!: string
     }
 
     class User extends Model {
@@ -107,7 +107,7 @@ describe('feature/relations/morph_one_save_uid', () => {
 
       @Str('') url!: string
       @Uid() imageableId!: number
-      @Attr() imageableType!: string
+      @Str('') imageableType!: string
     }
 
     class User extends Model {

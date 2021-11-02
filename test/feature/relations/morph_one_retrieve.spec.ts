@@ -1,20 +1,20 @@
 import { createStore, fillState, assertModel } from 'test/Helpers'
-import { Model, Attr, Str, MorphOne } from '@/index'
+import { Model, Str, Num, MorphOne } from '@/index'
 
 describe('feature/relations/morph_one_retrieve', () => {
   class Image extends Model {
     static entity = 'images'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') url!: string
-    @Attr() imageableId!: number
-    @Attr() imageableType!: string
+    @Num(0) imageableId!: number
+    @Str('') imageableType!: string
   }
 
   class User extends Model {
     static entity = 'users'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') name!: string
 
     @MorphOne(() => Image, 'imageableId', 'imageableType')
@@ -24,7 +24,7 @@ describe('feature/relations/morph_one_retrieve', () => {
   class Post extends Model {
     static entity = 'posts'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') title!: string
     @MorphOne(() => Image, 'imageableId', 'imageableType')
     image!: Image | null
