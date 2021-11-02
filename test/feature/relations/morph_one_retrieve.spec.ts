@@ -30,7 +30,7 @@ describe('feature/relations/morph_one_retrieve', () => {
     image!: Image | null
   }
 
-  const MORPH_ONE_ENTITIES = {
+  const ENTITIES = {
     users: { 1: { id: 1, name: 'John Doe' } },
     posts: {
       1: { id: 1, title: 'Hello, world!' },
@@ -61,7 +61,7 @@ describe('feature/relations/morph_one_retrieve', () => {
   describe('when there are images', () => {
     const store = createStore()
 
-    fillState(store, MORPH_ONE_ENTITIES)
+    fillState(store, ENTITIES)
 
     it('can eager load morph one relation for user', () => {
       const user = store.$repo(User).with('image').first()!
