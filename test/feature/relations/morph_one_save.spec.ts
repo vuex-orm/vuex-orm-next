@@ -78,7 +78,7 @@ describe('feature/relations/morph_one_save', () => {
     })
   })
 
-  it('can insert a record with missing relational key', () => {
+  it('can insert a record with missing relation', () => {
     const store = createStore()
 
     store.$repo(User).save({
@@ -94,7 +94,7 @@ describe('feature/relations/morph_one_save', () => {
     })
   })
 
-  it('can insert a record with relational key set to `null`', () => {
+  it('can insert a record with relation set to `null`', () => {
     const store = createStore()
 
     store.$repo(User).save({
