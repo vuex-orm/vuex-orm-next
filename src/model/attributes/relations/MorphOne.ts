@@ -17,7 +17,7 @@ export class MorphOne extends Relation {
   protected type: string
 
   /**
-   * The local key of the parent model.
+   * The local key of the model.
    */
   protected localKey: string
 

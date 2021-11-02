@@ -50,7 +50,7 @@ describe('feature/relations/morph_one_save', () => {
     })
   })
 
-  it('generates missing foreign key', () => {
+  it('generates missing parent id', () => {
     const store = createStore()
 
     store.$repo(User).save({
