@@ -26,7 +26,7 @@ const sidebars = {
         ['/guide/relationships/getting-started', 'Getting Started'],
         ['/guide/relationships/one-to-one', 'One To One'],
         ['/guide/relationships/one-to-many', 'One To Many'],
-        ['/guide/relationships/one-to-one-poly', 'One To One Polymorphic']
+        ['/guide/relationships/one-to-one-poly', 'One To One (Polymorphic)']
       ]
     },
     {
