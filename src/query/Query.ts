@@ -180,6 +180,33 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Set to eager load all top-level relationships. Constraint is set for all relationships.
+   */
+  withAll(callback: EagerLoadConstraint = () => {}): Query<M> {
+    const fields = this.model.$fields();
+    for (let record in fields) {
+      const relation = fields[record]
+      if (relation instanceof Relation) {
+        this.eagerLoad[record] = callback
+      }
+    }
+
+    return this
+  }
+
+  /**
+   * Set to eager load all relationships recursively.
+   */
+  withAllRecursive(depth = 3): Query<M> {
+    this.withAll((query) => {
+      // Reduce depth through recursion.
+      depth > 0 && query.withAllRecursive(depth - 1)
+    })
+
+    return this
+  }
+
+  /**
    * Get raw elements from the store.
    */
   protected data(): Elements {
