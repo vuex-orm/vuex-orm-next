@@ -1,10 +1,14 @@
-# Polymorphic Relationships: One To One
+# Relationships: Polymorphic
+
+A polymorphic relationship is where a model can belong to more than one type of model on a single association.
+
+## One To One
 
 A one-to-one polymorphic relation is similar to a simple one-to-one relation; however, the target model can belong to
 more than one type of model on a single association. For example, an `Image` might be associated with a `User` or `Post`
 model. You may define such a relationship using 2 types of relationship attributes, `MorphOne` and `MorphTo`.
 
-## Defining A One To One Polymorphic Relationship
+### Defining A One To One Polymorphic Relationship
 
 To define this relationship, for example, a `User` or `Post` model might be associated with one `Image`, we define a
 `morphOne` field to the `User` and `Post` models.
@@ -71,28 +75,3 @@ class User extends Model {
   }
 }
 ```
-
-## Defining The Inverse Of The Relationship
-
-So, we can access the `Image` model from our `User` or `Post`. Now, let's define a relationship on the `Image` model
-that will let us access the model which owns the image. We can define the inverse of a `morphOne` relationship using the
-`morphTo` attribute:
-
-```js
-class Image extends Model {
-  static entity = 'images'
-
-  static fields () {
-    return {
-      id: this.number(0),
-      url: this.string(''),
-      imageableId: this.number(0),
-      imageableType: this.string(''),
-      imageable: this.morphTo('imageableId', 'imageableType'),
-    }
-  }
-}
-```
-
-In the example above, Vuex ORM will use `imageableType` from the `Image` model to determine the model to query and then
-match the `id`.
