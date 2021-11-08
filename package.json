@@ -19,6 +19,7 @@
     "jest": "jest --testPathIgnorePatterns test/performance",
     "jest:perf": "jest --testPathIgnorePatterns test/{feature,regression,unit}",
     "test": "yarn lint && yarn coverage",
+    "test:fail": "yarn lint:fail && yarn coverage",
     "coverage": "jest --testPathIgnorePatterns test/performance --collect-coverage",
     "docs": "vuepress dev docs",
     "docs:build": "vuepress build docs",
