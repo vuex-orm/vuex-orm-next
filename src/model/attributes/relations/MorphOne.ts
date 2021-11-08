@@ -9,12 +9,12 @@ export class MorphOne extends Relation {
   /**
    * The field name that contains id of the parent model.
    */
-  protected id: string
+  protected morphId: string
 
   /**
    * The field name that contains type of the parent model.
    */
-  protected type: string
+  protected morphType: string
 
   /**
    * The local key of the model.
@@ -27,13 +27,13 @@ export class MorphOne extends Relation {
   constructor(
     parent: Model,
     related: Model,
-    id: string,
-    type: string,
+    morphId: string,
+    morphType: string,
     localKey: string
   ) {
     super(parent, related)
-    this.id = id
-    this.type = type
+    this.morphId = morphId
+    this.morphType = morphType
     this.localKey = localKey
   }
 
@@ -55,16 +55,16 @@ export class MorphOne extends Relation {
    * Attach the parent type and id to the given relation.
    */
   attach(record: Element, child: Element): void {
-    child[this.id] = record[this.localKey]
-    child[this.type] = this.parent.$entity()
+    child[this.morphId] = record[this.localKey]
+    child[this.morphType] = this.parent.$entity()
   }
 
   /**
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.where(this.type, this.parent.$entity())
-    query.whereIn(this.id, this.getKeys(models, this.localKey))
+    query.where(this.morphType, this.parent.$entity())
+    query.whereIn(this.morphId, this.getKeys(models, this.localKey))
   }
 
   /**
@@ -87,7 +87,7 @@ export class MorphOne extends Relation {
    */
   protected buildDictionary(results: Collection): Dictionary {
     return this.mapToDictionary(results, (result) => {
-      return [result[this.id], result]
+      return [result[this.morphId], result]
     })
   }
 
