@@ -64,14 +64,13 @@ describe('feature/relations/eager_loads', () => {
     expect(post).toBeInstanceOf(Post)
     expect(post.author).toBeInstanceOf(User)
     expect(post.image).toBeInstanceOf(Image)
-    expect(post.image!.artist).toBe(null)
     assertModel(post, {
       id: 1,
       userId: 1,
       imageId: 1,
       title: 'Title 01',
       author: { id: 1, name: 'John Doe' },
-      image: { id: 1, artistId: 1, content: 'I am Base64', artist: null },
+      image: { id: 1, artistId: 1, content: 'I am Base64'},
     })
   })
 
