@@ -210,3 +210,22 @@ class Cluster extends Model {
   nodes!: Node[]
 }
 ```
+
+### `@MorphOne`
+
+Marks a property on the model as a [morphOne attribute](../relationships/polymorphic) type. For example:
+
+```ts
+import { Model, MorphOne } from '@vuex-orm/core'
+import Node from '@/models/Node'
+
+class Cluster extends Model {
+  static entity = 'clusters'
+
+  @Attr(null)
+  nodeIds!: number[]
+
+  @HasManyBy(() => Image, 'imageableId', 'imageableType')
+  image!: Image | null
+}
+```

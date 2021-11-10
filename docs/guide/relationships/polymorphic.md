@@ -6,7 +6,7 @@ A polymorphic relationship is where a model can belong to more than one type of 
 
 A one-to-one polymorphic relation is similar to a simple one-to-one relation; however, the target model can belong to
 more than one type of model on a single association. For example, an `Image` might be associated with a `User` or `Post`
-model. You may define such a relationship using 2 types of relationship attributes, `MorphOne` and `MorphTo`.
+model.
 
 ### Defining A One To One Polymorphic Relationship
 
