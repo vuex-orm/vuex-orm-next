@@ -14,6 +14,7 @@ import { HasOne } from './attributes/relations/HasOne'
 import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
+import { MorphOne } from './attributes/relations/MorphOne'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -237,6 +238,22 @@ export class Model {
     ownerKey = ownerKey ?? instance.$getLocalKey()
 
     return new HasManyBy(this.newRawInstance(), instance, foreignKey, ownerKey)
+  }
+
+  /**
+   * Create a new MorphOne relation instance.
+   */
+  static morphOne(
+    related: typeof Model,
+    id: string,
+    type: string,
+    localKey?: string
+  ): MorphOne {
+    const model = this.newRawInstance()
+
+    localKey = localKey ?? model.$getLocalKey()
+
+    return new MorphOne(model, related.newRawInstance(), id, type, localKey)
   }
 
   /**
