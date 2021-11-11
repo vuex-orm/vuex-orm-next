@@ -55,7 +55,7 @@ export class HasOne extends Relation {
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.whereIn(this.foreignKey as any, this.getKeys(models, this.localKey))
+    query.whereIn(this.foreignKey, this.getKeys(models, this.localKey))
   }
 
   /**
