@@ -151,14 +151,14 @@ export class Repository<M extends Model = Model> {
    * Set to eager load all top-level relationships. Constraint is set for all relationships.
    */
   withAll(callback?: EagerLoadConstraint): Query<M> {
-    return this.query().withAll(callback);
+    return this.query().withAll(callback)
   }
 
   /**
    * Set to eager load all top-level relationships. Constraint is set for all relationships.
    */
   withAllRecursive(depth?: number): Query<M> {
-    return this.query().withAllRecursive(depth);
+    return this.query().withAllRecursive(depth)
   }
 
   /**
