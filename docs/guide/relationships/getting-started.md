@@ -122,7 +122,7 @@ const users = store.$repo(User).with('posts', (query) => {
 
 ### Lazy Relationship Loading
 
-Sometimes you may need to load a relationship after the model has already been retrieved. For example, this may be useful if you need to dynamically decide whether to load related models. You may use `load` method on a repository to load relationships on the fly in such a case.
+Sometimes you may need to load a relationship after the model has already been retrieved. For example, this may be useful if you need to decide whether to load related models dynamically. You may use the `load` method on a repository to load relationships on the fly in such a case.
 
 ```js
 const userRepo = store.$repo(User)
@@ -142,7 +142,7 @@ userRepo.with('posts', (query) => {
 }).load(users)
 ```
 
-Note that the `load` method will mutate the given models. It would be safer to use the method within a single `computed` method.
+Note that the `load` method will mutate the given models, therefore, it is advised to use the method within a single `computed` property.
 
 ```js
 import { mapRepos } from '@vuex-orm/core'
@@ -171,6 +171,32 @@ export default {
     }
   }
 }
+```
+
+### Loading All Relationships
+
+To load all relationships, you may use the `withAll` and `withAllRecursive` methods.
+
+The `withAll` method will load all model level relationships. Note that any constraints will be applied to all top-level relationships.
+
+```js
+// Fetch models with all top-level relationships.
+store.$repo(User).withAll().get()
+
+// As above, with a constraint.
+store.$repo(User).withAll((query) => {
+  query.has('posts')
+}).get()
+```
+
+The `withAllRecursive` method will load all model level relationships and sub relationships recursively. By default, the maximum recursion depth is 3 when an argument is omitted.
+
+```js
+// Fetch models with relationships recursively.
+store.$repo(User).withAllRecursive().get()
+
+// As above, limiting to 2 levels deep.
+store.$repo(User).withAllRecursive(2).get()
 ```
 
 ## Inserting Relationships
