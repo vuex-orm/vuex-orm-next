@@ -40,7 +40,7 @@ describe('feature/relations/belongs_to_save', () => {
     })
   })
 
-  it('generates missing foreign key', () => {
+  /*it('generates missing foreign key', () => {
     const store = createStore()
 
     store.$repo(Post).save({
@@ -90,5 +90,5 @@ describe('feature/relations/belongs_to_save', () => {
         1: { id: 1, userId: null, title: 'Title 01' }
       }
     })
-  })
+  })*/
 })
