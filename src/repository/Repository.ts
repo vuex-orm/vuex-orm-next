@@ -12,6 +12,7 @@ import {
   OrderBy,
   EagerLoadConstraint
 } from '../query/Options'
+import { MorphTo } from '@/model/attributes/relations/MorphTo'
 
 export class Repository<M extends Model = Model> {
   /**
@@ -51,6 +52,13 @@ export class Repository<M extends Model = Model> {
     if (model) {
       this.model = model.newRawInstance()
 
+      const fields = this.model.$fields()
+      Object.keys(fields).forEach((key) => {
+        if (fields[key] instanceof MorphTo) {
+          ;(fields.imageable as MorphTo).$setDatabase(this.database)
+        }
+      })
+
       return this
     }
 
@@ -60,6 +68,13 @@ export class Repository<M extends Model = Model> {
     // property and instantiate that.
     if (this.use) {
       this.model = this.use.newRawInstance() as M
+
+      const fields = this.model.$fields()
+      Object.keys(fields).forEach((key) => {
+        if (fields[key] instanceof MorphTo) {
+          ;(fields.imageable as MorphTo).$setDatabase(this.database)
+        }
+      })
 
       return this
     }

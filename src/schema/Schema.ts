@@ -54,6 +54,16 @@ export class Schema {
   }
 
   /**
+   * Create an union schema for the given model.
+   */
+  union(
+    schemas: Record<string, Normalizr.Entity>,
+    callback: Normalizr.SchemaFunction
+  ): Normalizr.Union {
+    return new Normalizr.Union(schemas, callback)
+  }
+
+  /**
    * Create a new normalizr entity.
    */
   private newEntity(model: Model, parent: Model): Normalizr.Entity {
@@ -100,7 +110,8 @@ export class Schema {
       // relationship of the parent model. In this case, we'll attach any
       // missing foreign keys to the record first.
       if (key !== null) {
-        ;(parent.$fields()[key] as Relation).attach(parentRecord, record)
+        // Using optional chaining in the event of an inverse polymorphic relation that won't have a defined relation
+        ;(parent.$fields()[key] as Relation)?.attach(parentRecord, record)
       }
 
       // Next, we'll generate any missing primary key fields defined as

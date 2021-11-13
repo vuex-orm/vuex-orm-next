@@ -12,6 +12,7 @@ import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
 import { MorphOne } from './attributes/relations/MorphOne'
+import { MorphTo } from './attributes/relations/MorphTo'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -245,6 +246,26 @@ export class Model {
     localKey = localKey ?? model.$getLocalKey()
 
     return new MorphOne(model, related.newRawInstance(), id, type, localKey)
+  }
+
+  /**
+   * Create a new MorphTo relation instance.
+   */
+  static morphTo(
+    //related: typeof Model,
+    id: string,
+    type: string,
+    localKey?: string
+  ): MorphTo {
+    // TODO figure out how to determin the model using the provided type
+    // We can't know the related model(s) ahead of time.
+    // We use the type field (entity) to determine the model
+    //const related = '';
+    const instance = this.newRawInstance()
+
+    localKey = localKey ?? instance.$getLocalKey()
+
+    return new MorphTo(instance, id, type, localKey)
   }
 
   /**
