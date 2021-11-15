@@ -185,7 +185,9 @@ store.$repo(User).withAll().get()
 
 // As above, with a constraint.
 store.$repo(User).withAll((query) => {
-  query.has('posts')
+  // This constraint will apply to all of the relationship User has. For this
+  // example, all relationship will be sorted by `createdAt` field.
+  query.orderBy('createdAt')
 }).get()
 ```
 
