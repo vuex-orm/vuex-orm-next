@@ -13,7 +13,7 @@ export class MorphTo extends Relation {
    * The database instance.
    */
   @NonEnumerable
-  _database!: Database
+  protected _database!: Database
 
   /**
    * The field name that contains id of the parent model.
@@ -23,7 +23,7 @@ export class MorphTo extends Relation {
   /**
    * The field name that contains type of the parent model.
    */
-  type: string
+  protected type: string
 
   /**
    * The local key of the parent model. TODO update
@@ -162,11 +162,9 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Set the database instance.
+   * Get the type.
    */
-  $setRelated(related: Model): this {
-    this.related = related
-
-    return this
+  $getType(): string {
+    return this.type
   }
 }
