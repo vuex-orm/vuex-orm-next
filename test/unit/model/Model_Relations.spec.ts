@@ -59,7 +59,7 @@ describe('unit/model/Model_Relations', () => {
 
     @Attr() id!: number
   }
-  
+
   class Image extends Model {
     static entity = 'images'
 

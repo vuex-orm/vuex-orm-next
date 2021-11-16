@@ -87,10 +87,16 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * HACK: Using the following method to query other entities for related data. The data is joined on a temporary key
-   * `morphToRelated`.
+   * Since we do not know the child model ahead of time, we cannot add any eager constraints.
    */
-  addEagerConstraints(_query: Query, models: Collection): void {
+  addEagerConstraints(_query: Query, _models: Collection): void {
+    return
+  }
+
+  /**
+   * Match the eagerly loaded results to their respective parents.
+   */
+  match(relation: string, models: Collection, _results: Collection): void {
     // Gather relations
     models.forEach((model) => {
       this.$addNewRelatedType(model[this.morphType])
@@ -104,23 +110,16 @@ export class MorphTo extends Relation {
 
     // Find & attach related data
     models.forEach((model) => {
+      let related
       const type = model[this.morphType]
       const id = model[this.morphId]
 
       if (type && id) {
-        model['morphToRelated'] = relations[type].find(id)
+        related = relations[type].find(id)
       }
-    })
-  }
 
-  /**
-   * Match the eagerly loaded results to their respective parents.
-   */
-  match(relation: string, models: Collection, _results: Collection): void {
-    models.forEach((model) => {
-      model['morphToRelated']
-        ? model.$setRelation(relation, model['morphToRelated']) &&
-          delete model['morphToRelated']
+      related
+        ? model.$setRelation(relation, related)
         : model.$setRelation(relation, null)
     })
   }
