@@ -18,12 +18,12 @@ export class MorphTo extends Relation {
   /**
    * The field name that contains id of the parent model.
    */
-  protected id: string
+  protected morphId: string
 
   /**
    * The field name that contains type of the parent model.
    */
-  protected type: string
+  protected morphType: string
 
   /**
    * The associated key on the child model. TODO: potentially refactor
@@ -38,10 +38,15 @@ export class MorphTo extends Relation {
   /**
    * Create a new morph-to relation instance.
    */
-  constructor(parent: Model, id: string, type: string, ownerKey: string) {
+  constructor(
+    parent: Model,
+    morphId: string,
+    morphType: string,
+    ownerKey: string
+  ) {
     super(parent, parent)
-    this.id = id
-    this.type = type
+    this.morphId = morphId
+    this.morphType = morphType
     this.ownerKey = ownerKey
     this.relatedTypes = []
   }
@@ -61,10 +66,10 @@ export class MorphTo extends Relation {
       this.$database().schemas,
       (_value, parentValue, _key) => {
         // HACK: Assign missing parent id since the child model is not related back and `attach` will not be called
-        const type: string = parentValue[this.type]
+        const type: string = parentValue[this.morphType]
         const model: Model = this.$getRelatedModel(type)
         const key: string = this.ownerKey || (model.$getKeyName() as string)
-        parentValue[this.id] = _value[key as string]
+        parentValue[this.morphId] = _value[key as string]
 
         this.$addNewRelatedType(type)
 
@@ -88,7 +93,7 @@ export class MorphTo extends Relation {
   addEagerConstraints(_query: Query, models: Collection): void {
     // Gather relations
     models.forEach((model) => {
-      this.$addNewRelatedType(model[this.type])
+      this.$addNewRelatedType(model[this.morphType])
     })
 
     // Set relation queries
@@ -99,8 +104,8 @@ export class MorphTo extends Relation {
 
     // Find & attach related data
     models.forEach((model) => {
-      const type = model[this.type]
-      const id = model[this.id]
+      const type = model[this.morphType]
+      const id = model[this.morphId]
 
       if (type && id) {
         model['morphToRelated'] = relations[type].find(id)
@@ -125,7 +130,7 @@ export class MorphTo extends Relation {
    */
   protected buildDictionary(results: Collection): Dictionary {
     return this.mapToDictionary(results, (result) => {
-      return [result[this.id], result]
+      return [result[this.morphId], result]
     })
   }
 
@@ -164,7 +169,7 @@ export class MorphTo extends Relation {
    * Get the type field name.
    */
   $getType(): string {
-    return this.type
+    return this.morphType
   }
 
   /**
