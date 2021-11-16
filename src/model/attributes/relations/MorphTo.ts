@@ -31,6 +31,11 @@ export class MorphTo extends Relation {
   protected ownerKey: string
 
   /**
+   * The field contains all related types
+   */
+  protected relatedTypes: string[]
+
+  /**
    * Create a new morph-to relation instance.
    */
   constructor(parent: Model, id: string, type: string, ownerKey: string) {
@@ -38,13 +43,14 @@ export class MorphTo extends Relation {
     this.id = id
     this.type = type
     this.ownerKey = ownerKey
+    this.relatedTypes = []
   }
 
   /**
-   * Get all related models for the relationship. TODO
+   * Get all related models for the relationship.
    */
   getRelateds(): Model[] {
-    return [this.parent]
+    return this.relatedTypes.map((type) => this.$getRelatedModel(type))
   }
 
   /**
@@ -55,11 +61,14 @@ export class MorphTo extends Relation {
       this.$database().schemas,
       (_value, parentValue, _key) => {
         // HACK: Assign missing parent id since the child model is not related back and `attach` will not be called
-        const model = this.$database().getModel(parentValue[this.type])
-        const key = this.ownerKey || (model.$getKeyName() as string)
+        const type: string = parentValue[this.type]
+        const model: Model = this.$getRelatedModel(type)
+        const key: string = this.ownerKey || (model.$getKeyName() as string)
         parentValue[this.id] = _value[key as string]
 
-        return parentValue[this.type]
+        this.$addNewRelatedType(type)
+
+        return type
       }
     )
   }
@@ -76,28 +85,19 @@ export class MorphTo extends Relation {
    * HACK: Using the following method to query other entities for related data. The data is joined on a temporary key
    * `morphToRelated`.
    */
-  addEagerConstraints(query: Query, models: Collection): void {
-    const database = query.database
-
+  addEagerConstraints(_query: Query, models: Collection): void {
     // Gather relations
-    const relatedTypes = {}
     models.forEach((model) => {
-      const type = model[this.type]
-      const key = model[this.ownerKey]
-
-      if (!relatedTypes[type]) {
-        relatedTypes[type] = [key]
-      } else if (!relatedTypes[type].includes(key)) {
-        relatedTypes[type].push(key)
-      }
+      this.$addNewRelatedType(model[this.type])
     })
 
-    // Set relations
-    const relations = {}
-    Object.keys(relatedTypes).forEach((type) => {
-      relations[type] = new Query(database, database.getModel(type))
+    // Set relation queries
+    const relations = {} as Record<string, Query>
+    this.relatedTypes.forEach((type) => {
+      relations[type] = new Query(this.$database(), this.$getRelatedModel(type))
     })
 
+    // Find & attach related data
     models.forEach((model) => {
       const type = model[this.type]
       const id = model[this.id]
@@ -137,8 +137,7 @@ export class MorphTo extends Relation {
       return null
     }
 
-    const model = this.$database().getModel(type)
-    return model.$newInstance(element)
+    return this.$getRelatedModel(type).$newInstance(element)
   }
 
   /**
@@ -162,9 +161,25 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Get the type.
+   * Get the type field name.
    */
   $getType(): string {
     return this.type
+  }
+
+  /**
+   * Get related model using a provided type.
+   */
+  protected $getRelatedModel(type: string): Model {
+    return this.$database().getModel(type)
+  }
+
+  /**
+   * Push related type if new.
+   */
+  protected $addNewRelatedType(type: string): void {
+    if (type && !this.relatedTypes.includes(type)) {
+      this.relatedTypes.push(type)
+    }
   }
 }
