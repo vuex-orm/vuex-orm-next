@@ -6,7 +6,7 @@ import { Query } from '../../../query/Query'
 import { Database } from '../../../database/Database'
 import { Model } from '../../Model'
 import { NonEnumerable } from '../../decorators/NonEnumerable'
-import { Relation, Dictionary } from './Relation'
+import { Relation } from './Relation'
 
 export class MorphTo extends Relation {
   /**
@@ -14,6 +14,11 @@ export class MorphTo extends Relation {
    */
   @NonEnumerable
   protected _database!: Database
+
+  /**
+   * The field contains all related types
+   */
+  protected relatedTypes: string[]
 
   /**
    * The field name that contains id of the parent model.
@@ -26,14 +31,9 @@ export class MorphTo extends Relation {
   protected morphType: string
 
   /**
-   * The associated key on the child model. TODO: potentially refactor
+   * The associated key of the child model.
    */
   protected ownerKey: string
-
-  /**
-   * The field contains all related types
-   */
-  protected relatedTypes: string[]
 
   /**
    * Create a new morph-to relation instance.
@@ -122,15 +122,6 @@ export class MorphTo extends Relation {
         ? model.$setRelation(relation, model['morphToRelated']) &&
           delete model['morphToRelated']
         : model.$setRelation(relation, null)
-    })
-  }
-
-  /**
-   * Build model dictionary keyed by the relation's foreign key.
-   */
-  protected buildDictionary(results: Collection): Dictionary {
-    return this.mapToDictionary(results, (result) => {
-      return [result[this.morphId], result]
     })
   }
 
