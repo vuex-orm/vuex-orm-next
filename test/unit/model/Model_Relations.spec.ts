@@ -1,5 +1,13 @@
 import { createStore } from 'test/Helpers'
-import { Model, Attr, HasOne, BelongsTo, HasMany, HasManyBy } from '@/index'
+import {
+  Model,
+  Attr,
+  HasOne,
+  BelongsTo,
+  HasMany,
+  HasManyBy,
+  MorphTo
+} from '@/index'
 
 describe('unit/model/Model_Relations', () => {
   class User extends Model {
@@ -40,6 +48,17 @@ describe('unit/model/Model_Relations', () => {
 
     @Attr() id!: number
     @Attr() userId!: number
+  }
+
+  class Image extends Model {
+    static entity = 'images'
+
+    @Attr() id!: number
+    @Attr() imageableId!: number
+    @Attr() imageableType!: string
+
+    @MorphTo('imageableId', 'imageableType')
+    imageable!: User | null
   }
 
   class Name extends Model {
@@ -102,5 +121,25 @@ describe('unit/model/Model_Relations', () => {
     expect(user.names[1]).toBeInstanceOf(Name)
     expect(user.names[0].id).toBe(2)
     expect(user.names[1].id).toBe(3)
+  })
+
+  it('fills "morph to" relation', () => {
+    const store = createStore()
+
+    // TODO: move this logic to helper
+    store.$repo(Image)
+    store.$repo(User)
+
+    const image = store.$repo(Image).make({
+      id: 1,
+      imageableId: 2,
+      imageableType: 'users',
+      imageable: {
+        id: 2
+      }
+    })
+
+    expect(image.imageable!).toBeInstanceOf(User)
+    expect(image.imageable!.id).toBe(2)
   })
 })
