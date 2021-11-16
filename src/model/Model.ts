@@ -251,11 +251,7 @@ export class Model {
   /**
    * Create a new MorphTo relation instance.
    */
-  static morphTo(
-    id: string,
-    type: string,
-    ownerKey: string = ''
-  ): MorphTo {
+  static morphTo(id: string, type: string, ownerKey: string = ''): MorphTo {
     const instance = this.newRawInstance()
 
     return new MorphTo(instance, id, type, ownerKey)
