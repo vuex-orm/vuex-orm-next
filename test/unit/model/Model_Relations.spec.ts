@@ -53,12 +53,13 @@ describe('unit/model/Model_Relations', () => {
     @Attr() id!: number
     @Attr() userId!: number
   }
+
   class Name extends Model {
     static entity = 'names'
 
     @Attr() id!: number
   }
-
+  
   class Image extends Model {
     static entity = 'images'
 
