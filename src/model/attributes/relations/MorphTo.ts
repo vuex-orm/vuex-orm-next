@@ -13,7 +13,7 @@ export class MorphTo extends Relation {
    * The database instance.
    */
   @NonEnumerable
-  protected _database!: Database
+  _database!: Database
 
   /**
    * The field name that contains id of the parent model.
@@ -23,21 +23,21 @@ export class MorphTo extends Relation {
   /**
    * The field name that contains type of the parent model.
    */
-  protected type: string
+  type: string
 
   /**
-   * The local key of the parent model.
+   * The local key of the parent model. TODO update
    */
-  protected localKey: string
+  protected ownerKey: string
 
   /**
    * Create a new morph-to relation instance.
    */
-  constructor(parent: Model, id: string, type: string, localKey: string) {
+  constructor(parent: Model, id: string, type: string, ownerKey: string) {
     super(parent, parent)
     this.id = id
     this.type = type
-    this.localKey = localKey
+    this.ownerKey = ownerKey
   }
 
   /**
@@ -51,36 +51,25 @@ export class MorphTo extends Relation {
    * Define the normalizr schema for the relation. TODO
    */
   define(schema: Schema): NormalizrSchema {
-    //console.log('define, database', this._database);
-    //console.log('type', this.type)
-    //console.log('define, schema', schema)
-    const s = schema.union(
-      this._database.schemas,
+    return schema.union(
+      this.$database().schemas,
       (_value, parentValue, _key) => {
-        console.log('_value', _value)
-        console.log('parentValue', parentValue)
-        console.log('_key', _key)
-        console.log('parentValue[this.type]', parentValue[this.type])
         // HACK: Assign missing parent id since the child model is not related back and `attach` will not be called
-        parentValue[this.id] = _value[this.localKey]
+        const model = this.$database().getModel(parentValue[this.type])
+        const key = this.ownerKey || (model.$getKeyName() as string)
+        parentValue[this.id] = _value[key as string]
+
         return parentValue[this.type]
       }
     )
-
-    //console.log('define returned schema', s)
-    return s
-
-    //return schema.union((_value, parentValue) => parentValue[this.type])
   }
 
   /**
    * Attach the relational key to the given record. Since morph to
    * relationship doesn't have any foreign key, it would do nothing.
    */
-  attach(record: Element, child: Element): void {
-    console.log('record', record)
-    console.log('child', child)
-    child[this.id] = record[this.localKey]
+  attach(_record: Element, _child: Element): void {
+    return
   }
 
   /**
@@ -88,16 +77,13 @@ export class MorphTo extends Relation {
    * `morphToRelated`.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    //console.log('addEagerConstraints query', query)
-    //console.log('addEagerConstraints models', models)
     const database = query.database
-    //console.log('types', types)
 
     // Gather relations
     const relatedTypes = {}
     models.forEach((model) => {
       const type = model[this.type]
-      const key = model[this.localKey]
+      const key = model[this.ownerKey]
 
       if (!relatedTypes[type]) {
         relatedTypes[type] = [key]
@@ -105,14 +91,12 @@ export class MorphTo extends Relation {
         relatedTypes[type].push(key)
       }
     })
-    // console.log('relatedTypes', relatedTypes)
 
     // Set relations
     const relations = {}
     Object.keys(relatedTypes).forEach((type) => {
       relations[type] = new Query(database, database.getModel(type))
     })
-    // console.log('relations', relations)
 
     models.forEach((model) => {
       const type = model[this.type]
@@ -127,17 +111,13 @@ export class MorphTo extends Relation {
   /**
    * Match the eagerly loaded results to their respective parents.
    */
-  match(relation: string, models: Collection /*, results: Collection*/): void {
-    /*const dictionary = this.buildDictionary(results)
-    console.log('match dictionary', dictionary)*/
-
+  match(relation: string, models: Collection, _results: Collection): void {
     models.forEach((model) => {
       model['morphToRelated']
         ? model.$setRelation(relation, model['morphToRelated']) &&
           delete model['morphToRelated']
         : model.$setRelation(relation, null)
     })
-    // console.log('match models updated', models)
   }
 
   /**
@@ -150,12 +130,15 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Make a related model. TODO
+   * Make a related model.
    */
-  make(element?: Element): Model | null {
-    console.log('element', element)
-    //return element ? this.child.$newInstance(element) : null
-    return null
+  make(element?: Element, type?: string): Model | null {
+    if (!element || !type) {
+      return null
+    }
+
+    const model = this.$database().getModel(type)
+    return model.$newInstance(element)
   }
 
   /**
@@ -163,9 +146,7 @@ export class MorphTo extends Relation {
    */
   $database(): Database {
     assert(this._database !== undefined, [
-      'A Vuex Store instance is not injected into the inverse polymorphic model instance.',
-      'You might be trying to instantiate the model directly. Please use',
-      '`repository.make` method to create a new inverse polymorphic model instance.'
+      'A Vuex Store instance is not injected into the inverse polymorphic relation instance.'
     ])
 
     return this._database
@@ -176,6 +157,15 @@ export class MorphTo extends Relation {
    */
   $setDatabase(database: Database): this {
     this._database = database
+
+    return this
+  }
+
+  /**
+   * Set the database instance.
+   */
+  $setRelated(related: Model): this {
+    this.related = related
 
     return this
   }

@@ -22,6 +22,8 @@ import {
   EagerLoad,
   EagerLoadConstraint
 } from './Options'
+import { MorphTo } from '@/model/attributes/relations/MorphTo'
+//import { MorphTo } from '@/model/attributes/relations/MorphTo'
 
 export interface CollectionPromises {
   indexes: string[]
@@ -452,9 +454,19 @@ export class Query<M extends Model = Model> {
         return
       }
 
-      model[key] = isArray(relatedSchema)
-        ? this.newQueryForRelation(attr).reviveMany(relatedSchema)
-        : this.newQueryForRelation(attr).reviveOne(relatedSchema)
+      // Inverse polymorphic relations have the same parent and child model so we need to query using the type stored
+      // in the parent model
+      if (attr instanceof MorphTo) {
+        const relatedType = model[attr.type as string]
+
+        model[key] = isArray(relatedSchema)
+          ? this.newQuery(relatedType).reviveMany(relatedSchema)
+          : this.newQuery(relatedType).reviveOne(relatedSchema)
+      } else {
+        model[key] = isArray(relatedSchema)
+          ? this.newQueryForRelation(attr).reviveMany(relatedSchema)
+          : this.newQueryForRelation(attr).reviveOne(relatedSchema)
+      }
     }
   }
 

@@ -6,11 +6,11 @@ import { PropertyDecorator } from '../../Contracts'
 export function MorphTo(
   id: string,
   type: string,
-  localKey?: string
+  ownerKey?: string
 ): PropertyDecorator {
   return (target, propertyKey) => {
     const self = target.$self()
 
-    self.setRegistry(propertyKey, () => self.morphTo(id, type, localKey))
+    self.setRegistry(propertyKey, () => self.morphTo(id, type, ownerKey))
   }
 }

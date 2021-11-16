@@ -6,7 +6,8 @@ import {
   BelongsTo,
   HasMany,
   HasManyBy,
-  MorphOne
+  MorphOne,
+  MorphTo
 } from '@/index'
 
 describe('unit/model/Model_Relations', () => {
@@ -52,7 +53,6 @@ describe('unit/model/Model_Relations', () => {
     @Attr() id!: number
     @Attr() userId!: number
   }
-
   class Name extends Model {
     static entity = 'names'
 
@@ -65,7 +65,11 @@ describe('unit/model/Model_Relations', () => {
     @Attr() id!: number
     @Attr() imageableId!: number
     @Attr() imageableType!: string
+
+    @MorphTo('imageableId', 'imageableType')
+    imageable!: User | null
   }
+
 
   it('fills "has one" relation', () => {
     const store = createStore()
@@ -137,5 +141,25 @@ describe('unit/model/Model_Relations', () => {
 
     expect(user.image!).toBeInstanceOf(Image)
     expect(user.image!.id).toBe(2)
+  })
+
+  it('fills "morph to" relation', () => {
+    const store = createStore()
+
+    // TODO: move this logic to helper
+    store.$repo(Image)
+    store.$repo(User)
+
+    const image = store.$repo(Image).make({
+      id: 1,
+      imageableId: 2,
+      imageableType: 'users',
+      imageable: {
+        id: 2
+      }
+    })
+
+    expect(image.imageable!).toBeInstanceOf(User)
+    expect(image.imageable!.id).toBe(2)
   })
 })

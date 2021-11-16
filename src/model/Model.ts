@@ -255,7 +255,7 @@ export class Model {
     //related: typeof Model,
     id: string,
     type: string,
-    localKey?: string
+    ownerKey?: string
   ): MorphTo {
     // TODO figure out how to determin the model using the provided type
     // We can't know the related model(s) ahead of time.
@@ -263,9 +263,9 @@ export class Model {
     //const related = '';
     const instance = this.newRawInstance()
 
-    localKey = localKey ?? instance.$getLocalKey()
-
-    return new MorphTo(instance, id, type, localKey)
+    // TODO: This is broken and will not work, refactor to ownerKey
+    ownerKey = ownerKey ?? ''
+    return new MorphTo(instance, id, type, ownerKey)
   }
 
   /**
@@ -353,7 +353,12 @@ export class Model {
    */
   protected $fillField(key: string, attr: Attribute, value: any): void {
     if (value !== undefined) {
-      this[key] = attr.make(value)
+      if (attr instanceof MorphTo) {
+        this[key] = attr.make(value, this[attr.type])
+      } else {
+        this[key] = attr.make(value)
+      }
+
       return
     }
 
