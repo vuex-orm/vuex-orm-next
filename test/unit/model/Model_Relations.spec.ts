@@ -54,6 +54,12 @@ describe('unit/model/Model_Relations', () => {
     @Attr() userId!: number
   }
 
+  class Name extends Model {
+    static entity = 'names'
+
+    @Attr() id!: number
+  }
+  
   class Image extends Model {
     static entity = 'images'
 
@@ -63,20 +69,6 @@ describe('unit/model/Model_Relations', () => {
 
     @MorphTo('imageableId', 'imageableType')
     imageable!: User | null
-  }
-
-  class Name extends Model {
-    static entity = 'names'
-
-    @Attr() id!: number
-  }
-
-  class Image extends Model {
-    static entity = 'images'
-
-    @Attr() id!: number
-    @Attr() imageableId!: number
-    @Attr() imageableType!: string
   }
 
   it('fills "has one" relation', () => {
