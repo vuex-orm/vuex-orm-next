@@ -5,28 +5,35 @@ import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
 import { Relation, Dictionary } from './Relation'
 
-export class HasOne extends Relation {
+export class MorphOne extends Relation {
   /**
-   * The foreign key of the parent model.
+   * The field name that contains id of the parent model.
    */
-  protected foreignKey: string
+  protected morphId: string
 
   /**
-   * The local key of the parent model.
+   * The field name that contains type of the parent model.
+   */
+  protected morphType: string
+
+  /**
+   * The local key of the model.
    */
   protected localKey: string
 
   /**
-   * Create a new has-one relation instance.
+   * Create a new morph-one relation instance.
    */
   constructor(
     parent: Model,
     related: Model,
-    foreignKey: string,
+    morphId: string,
+    morphType: string,
     localKey: string
   ) {
     super(parent, related)
-    this.foreignKey = foreignKey
+    this.morphId = morphId
+    this.morphType = morphType
     this.localKey = localKey
   }
 
@@ -45,17 +52,19 @@ export class HasOne extends Relation {
   }
 
   /**
-   * Attach the relational key to the given relation.
+   * Attach the parent type and id to the given relation.
    */
   attach(record: Element, child: Element): void {
-    child[this.foreignKey] = record[this.localKey]
+    child[this.morphId] = record[this.localKey]
+    child[this.morphType] = this.parent.$entity()
   }
 
   /**
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.whereIn(this.foreignKey, this.getKeys(models, this.localKey))
+    query.where(this.morphType, this.parent.$entity())
+    query.whereIn(this.morphId, this.getKeys(models, this.localKey))
   }
 
   /**
@@ -78,7 +87,7 @@ export class HasOne extends Relation {
    */
   protected buildDictionary(results: Collection): Dictionary {
     return this.mapToDictionary(results, (result) => {
-      return [result[this.foreignKey], result]
+      return [result[this.morphId], result]
     })
   }
 
