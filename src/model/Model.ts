@@ -235,19 +235,12 @@ export class Model {
    * Create a new MorphTo relation instance.
    */
   static morphTo(
-    //related: typeof Model,
     id: string,
     type: string,
-    ownerKey?: string
+    ownerKey: string = ''
   ): MorphTo {
-    // TODO figure out how to determin the model using the provided type
-    // We can't know the related model(s) ahead of time.
-    // We use the type field (entity) to determine the model
-    //const related = '';
     const instance = this.newRawInstance()
 
-    // TODO: This is broken and will not work, refactor to ownerKey
-    ownerKey = ownerKey ?? ''
     return new MorphTo(instance, id, type, ownerKey)
   }
 

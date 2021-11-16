@@ -26,7 +26,7 @@ export class MorphTo extends Relation {
   protected type: string
 
   /**
-   * The local key of the parent model. TODO update
+   * The associated key on the child model. TODO: potentially refactor
    */
   protected ownerKey: string
 
@@ -48,7 +48,7 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Define the normalizr schema for the relation. TODO
+   * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
     return schema.union(
