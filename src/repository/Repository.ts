@@ -52,12 +52,7 @@ export class Repository<M extends Model = Model> {
     if (model) {
       this.model = model.newRawInstance()
 
-      const fields = this.model.$fields()
-      Object.keys(fields).forEach((key) => {
-        if (fields[key] instanceof MorphTo) {
-          ;(fields.imageable as MorphTo).$setDatabase(this.database)
-        }
-      })
+      this.$setInversePolymorphicDatabase(this.model)
 
       return this
     }
@@ -69,12 +64,7 @@ export class Repository<M extends Model = Model> {
     if (this.use) {
       this.model = this.use.newRawInstance() as M
 
-      const fields = this.model.$fields()
-      Object.keys(fields).forEach((key) => {
-        if (fields[key] instanceof MorphTo) {
-          ;(fields.imageable as MorphTo).$setDatabase(this.database)
-        }
-      })
+      this.$setInversePolymorphicDatabase(this.model)
 
       return this
     }
@@ -261,5 +251,14 @@ export class Repository<M extends Model = Model> {
    */
   flush(): M[] {
     return this.query().flush()
+  }
+
+  protected $setInversePolymorphicDatabase(model: Model): void {
+    const fields = model.$fields()
+    Object.keys(fields).forEach((key) => {
+      if (fields[key] instanceof MorphTo) {
+        ;(fields[key] as MorphTo).$setDatabase(this.database)
+      }
+    })
   }
 }
