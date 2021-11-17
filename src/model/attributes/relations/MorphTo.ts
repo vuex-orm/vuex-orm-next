@@ -16,7 +16,7 @@ export class MorphTo extends Relation {
   protected _database!: Database
 
   /**
-   * The field contains all related types
+   * The field contains all related types.
    */
   protected relatedTypes: string[]
 
