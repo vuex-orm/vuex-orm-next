@@ -16,9 +16,19 @@ export class MorphTo extends Relation {
   protected _database!: Database
 
   /**
+   * The field contains all related models.
+   */
+  protected relatedModels: Model[]
+
+  /**
    * The field contains all related types.
    */
-  protected relatedTypes: string[]
+  protected relatedTypes: Record<string, Model>
+
+  /**
+   * The field contains all related types.
+   */
+  protected relatedQueries: Record<string, Query>
 
   /**
    * The field name that contains id of the parent model.
@@ -40,22 +50,25 @@ export class MorphTo extends Relation {
    */
   constructor(
     parent: Model,
+    relatedModels: Model[],
     morphId: string,
     morphType: string,
     ownerKey: string
   ) {
     super(parent, parent)
+    this.relatedModels = relatedModels
     this.morphId = morphId
     this.morphType = morphType
     this.ownerKey = ownerKey
-    this.relatedTypes = []
+    this.relatedTypes = {}
+    this.relatedQueries = {}
   }
 
   /**
    * Get all related models for the relationship.
    */
   getRelateds(): Model[] {
-    return this.relatedTypes.map((type) => this.$getRelatedModel(type))
+    return this.relatedModels
   }
 
   /**
@@ -71,7 +84,10 @@ export class MorphTo extends Relation {
         const key: string = this.ownerKey || (model.$getKeyName() as string)
         parentValue[this.morphId] = _value[key as string]
 
-        this.$addNewRelatedType(type)
+        // Add new related model
+        if (this.$isNewRelated(type)) {
+          this.$addNewRelated(model)
+        }
 
         return type
       }
@@ -97,25 +113,18 @@ export class MorphTo extends Relation {
    * Find and attach related children to their respective parents.
    */
   match(relation: string, models: Collection, _results: Collection): void {
-    // Gather relations
-    models.forEach((model) => {
-      this.$addNewRelatedType(model[this.morphType])
-    })
-
-    // Set relation queries
-    const relations = {} as Record<string, Query>
-    this.relatedTypes.forEach((type) => {
-      relations[type] = new Query(this.$database(), this.$getRelatedModel(type))
-    })
-
-    // Find & attach related data
     models.forEach((model) => {
       let related
       const type = model[this.morphType]
       const id = model[this.morphId]
 
+      // Add new related model
+      if (this.$isNewRelated(type)) {
+        this.$addNewRelated(this.$getRelatedModel(type))
+      }
+
       if (type && id) {
-        related = relations[type].find(id)
+        related = this.relatedQueries[type].find(id)
       }
 
       related
@@ -132,7 +141,7 @@ export class MorphTo extends Relation {
       return null
     }
 
-    return this.$getRelatedModel(type).$newInstance(element)
+    return this.relatedTypes[type].$newInstance(element)
   }
 
   /**
@@ -152,6 +161,11 @@ export class MorphTo extends Relation {
   $setDatabase(database: Database): this {
     this._database = database
 
+    // Init related models
+    if (Object.keys(this.relatedTypes).length < 1) {
+      this.$initRelated()
+    }
+
     return this
   }
 
@@ -163,18 +177,46 @@ export class MorphTo extends Relation {
   }
 
   /**
+   * Init new related model.
+   */
+  protected $initNewRelated(model: Model): void {
+    if (model) {
+      const type = model.$entity()
+      this.relatedTypes[type] = model
+      this.relatedQueries[type] = new Query(this.$database(), model)
+    }
+  }
+
+  /**
+   * Check if related model is new
+   */
+  protected $isNewRelated(type: string): boolean {
+    return !Object.keys(this.relatedTypes).includes(type)
+  }
+
+  /**
+   * Add related model if new.
+   */
+  protected $addNewRelated(model: Model): void {
+    if (model) {
+      this.relatedModels.push(model)
+      this.$initNewRelated(model)
+    }
+  }
+
+  /**
+   * Initialize related models.
+   */
+  protected $initRelated(): void {
+    this.relatedModels.forEach((model) => {
+      this.$initNewRelated(model)
+    })
+  }
+
+  /**
    * Get related model using a provided type.
    */
   protected $getRelatedModel(type: string): Model {
     return this.$database().getModel(type)
-  }
-
-  /**
-   * Push related type if new.
-   */
-  protected $addNewRelatedType(type: string): void {
-    if (type && !this.relatedTypes.includes(type)) {
-      this.relatedTypes.push(type)
-    }
   }
 }

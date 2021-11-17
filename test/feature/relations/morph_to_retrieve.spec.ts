@@ -9,7 +9,7 @@ describe('feature/relations/morph_to_retrieve', () => {
     @Str('') url!: string
     @Attr() imageableId!: number
     @Attr() imageableType!: string
-    @MorphTo('imageableId', 'imageableType')
+    @MorphTo(() => [User, Post], 'imageableId', 'imageableType')
     imageable!: User | Post | null
   }
 
@@ -60,11 +60,6 @@ describe('feature/relations/morph_to_retrieve', () => {
 
     fillState(store, MORPH_TO_ENTITIES)
 
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
-    store.$repo(Post)
-
     const userImage = store.$repo(Image).with('imageable').first()!
     const postImage = store
       .$repo(Image)
@@ -109,10 +104,6 @@ describe('feature/relations/morph_to_retrieve', () => {
       }
     })
 
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
-
     const image = store.$repo(Image).with('imageable').first()!
     expect(image).toBeInstanceOf(Image)
     assertModel(image, {
@@ -139,10 +130,6 @@ describe('feature/relations/morph_to_retrieve', () => {
         }
       }
     })
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     const image = store.$repo(Image).with('imageable').first()!
     expect(image).toBeInstanceOf(Image)

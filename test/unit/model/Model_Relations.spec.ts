@@ -67,7 +67,7 @@ describe('unit/model/Model_Relations', () => {
     @Attr() imageableId!: number
     @Attr() imageableType!: string
 
-    @MorphTo('imageableId', 'imageableType')
+    @MorphTo(() => [User], 'imageableId', 'imageableType')
     imageable!: User | null
   }
 
@@ -146,10 +146,6 @@ describe('unit/model/Model_Relations', () => {
 
   it('fills "morph to" relation', () => {
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     const image = store.$repo(Image).make({
       id: 1,

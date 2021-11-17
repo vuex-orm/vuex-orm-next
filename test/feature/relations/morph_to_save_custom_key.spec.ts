@@ -6,8 +6,6 @@ describe('feature/relations/morph_to_save_custom_key', () => {
     Model.clearRegistries()
   })
 
-  // TODO: Fix this broken test, for some reason the record and model are being confused
-
   it('inserts "morph to" relation with custom primary key', () => {
     class Image extends Model {
       static entity = 'images'
@@ -16,7 +14,7 @@ describe('feature/relations/morph_to_save_custom_key', () => {
       @Str('') url!: string
       @Attr() imageableId!: number
       @Attr() imageableType!: string
-      @MorphTo('imageableId', 'imageableType')
+      @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
     }
 
@@ -30,10 +28,6 @@ describe('feature/relations/morph_to_save_custom_key', () => {
     }
 
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       id: 1,
@@ -63,7 +57,7 @@ describe('feature/relations/morph_to_save_custom_key', () => {
       @Str('') url!: string
       @Attr() imageableId!: number
       @Attr() imageableType!: string
-      @MorphTo('imageableId', 'imageableType', 'imageableId')
+      @MorphTo(() => [User], 'imageableId', 'imageableType', 'imageableId')
       imageable!: User | null
     }
 
@@ -76,10 +70,6 @@ describe('feature/relations/morph_to_save_custom_key', () => {
     }
 
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       id: 1,

@@ -14,7 +14,7 @@ describe('feature/relations/morph_to_save_uid', () => {
       @Str('') url!: string
       @Attr() imageableId!: number
       @Attr() imageableType!: string
-      @MorphTo('imageableId', 'imageableType')
+      @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
     }
 
@@ -28,10 +28,6 @@ describe('feature/relations/morph_to_save_uid', () => {
     mockUid(['uid1'])
 
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       url: '/profile.jpg',
@@ -61,7 +57,7 @@ describe('feature/relations/morph_to_save_uid', () => {
       @Str('') url!: string
       @Attr() imageableId!: string
       @Attr() imageableType!: string
-      @MorphTo('imageableId', 'imageableType')
+      @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
     }
 
@@ -75,10 +71,6 @@ describe('feature/relations/morph_to_save_uid', () => {
     mockUid(['uid1', 'uid2'])
 
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       url: '/profile.jpg',
