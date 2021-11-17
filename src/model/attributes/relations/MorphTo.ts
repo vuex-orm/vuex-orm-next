@@ -79,7 +79,7 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Attach the relational key to the given record. Since morph to
+   * Attach the relational key to the given record. Since morph-to
    * relationship doesn't have any foreign key, it would do nothing.
    */
   attach(_record: Element, _child: Element): void {
