@@ -23,7 +23,6 @@ import {
   EagerLoadConstraint
 } from './Options'
 import { MorphTo } from '@/model/attributes/relations/MorphTo'
-//import { MorphTo } from '@/model/attributes/relations/MorphTo'
 
 export interface CollectionPromises {
   indexes: string[]
