@@ -94,7 +94,7 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Match the eagerly loaded results to their respective parents.
+   * Find and attach related children to their respective parents.
    */
   match(relation: string, models: Collection, _results: Collection): void {
     // Gather relations
