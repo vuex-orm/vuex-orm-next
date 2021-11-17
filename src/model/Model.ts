@@ -251,10 +251,16 @@ export class Model {
   /**
    * Create a new MorphTo relation instance.
    */
-  static morphTo(id: string, type: string, ownerKey: string = ''): MorphTo {
+  static morphTo(
+    related: typeof Model[],
+    id: string,
+    type: string,
+    ownerKey: string = ''
+  ): MorphTo {
     const instance = this.newRawInstance()
+    const relatedModels = related.map((model) => model.newRawInstance())
 
-    return new MorphTo(instance, id, type, ownerKey)
+    return new MorphTo(instance, relatedModels, id, type, ownerKey)
   }
 
   /**

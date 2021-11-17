@@ -9,7 +9,7 @@ describe('feature/relations/morph_to_save', () => {
     @Str('') url!: string
     @Attr() imageableId!: number
     @Attr() imageableType!: string
-    @MorphTo('imageableId', 'imageableType')
+    @MorphTo(() => [User], 'imageableId', 'imageableType')
     imageable!: User | Post | null
   }
 
@@ -29,10 +29,6 @@ describe('feature/relations/morph_to_save', () => {
 
   it('inserts a record to the store with "morph to" relation', () => {
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       id: 1,
@@ -57,10 +53,6 @@ describe('feature/relations/morph_to_save', () => {
 
   it('generates missing foreign key', () => {
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       id: 1,
@@ -107,10 +99,6 @@ describe('feature/relations/morph_to_save', () => {
 
   it('can insert a record with relational key set to `null`', () => {
     const store = createStore()
-
-    // TODO: move this logic to helper
-    store.$repo(Image)
-    store.$repo(User)
 
     store.$repo(Image).save({
       id: 1,
