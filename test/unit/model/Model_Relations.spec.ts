@@ -71,7 +71,6 @@ describe('unit/model/Model_Relations', () => {
     imageable!: User | null
   }
 
-
   it('fills "has one" relation', () => {
     const store = createStore()
 

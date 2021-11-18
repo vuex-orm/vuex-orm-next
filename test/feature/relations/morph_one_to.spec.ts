@@ -38,15 +38,33 @@ describe('feature/relations/morph_one_to', () => {
       }
     })
 
+    store.$repo(Image).save({
+      id: 2,
+      url: '/profile2.jpg',
+      imageableId: 2,
+      imageableType: 'users',
+      imageable: {
+        id: 2,
+        name: 'John Doe 2'
+      }
+    })
+
     assertState(store, {
       users: {
-        1: { id: 1, name: 'John Doe' }
+        1: { id: 1, name: 'John Doe' },
+        2: { id: 2, name: 'John Doe 2' }
       },
       images: {
         1: {
           id: 1,
           url: '/profile.jpg',
           imageableId: 1,
+          imageableType: 'users'
+        },
+        2: {
+          id: 2,
+          url: '/profile2.jpg',
+          imageableId: 2,
           imageableType: 'users'
         }
       }

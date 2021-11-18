@@ -7,28 +7,34 @@ import { Database } from '../../../database/Database'
 import { Model } from '../../Model'
 import { NonEnumerable } from '../../decorators/NonEnumerable'
 import { Relation } from './Relation'
+import { schema as Normalizr } from 'normalizr'
 
 export class MorphTo extends Relation {
   /**
    * The database instance.
    */
   @NonEnumerable
-  protected _database!: Database
+  private _database!: Database
 
   /**
    * The field contains all related models.
    */
-  protected relatedModels: Model[]
+  private _relatedModels: Model[]
+
+  /**
+   * The field contains all the related models.
+   */
+  private _relatedSchemas: Record<string, Normalizr.Entity> = {}
 
   /**
    * The field contains all related types.
    */
-  protected relatedTypes: Record<string, Model>
+  private _relatedTypes: Record<string, Model> = {}
 
   /**
    * The field contains all related types.
    */
-  protected relatedQueries: Record<string, Query>
+  private _relatedQueries: Record<string, Query> = {}
 
   /**
    * The field name that contains id of the parent model.
@@ -50,48 +56,43 @@ export class MorphTo extends Relation {
    */
   constructor(
     parent: Model,
-    relatedModels: Model[],
+    _relatedModels: Model[],
     morphId: string,
     morphType: string,
     ownerKey: string
   ) {
     super(parent, parent)
-    this.relatedModels = relatedModels
+    this._relatedModels = _relatedModels
     this.morphId = morphId
     this.morphType = morphType
     this.ownerKey = ownerKey
-    this.relatedTypes = {}
-    this.relatedQueries = {}
   }
 
   /**
    * Get all related models for the relationship.
    */
   getRelateds(): Model[] {
-    return this.relatedModels
+    return this._relatedModels
   }
 
   /**
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
-    return schema.union(
-      this.$database().schemas,
-      (_value, parentValue, _key) => {
-        // HACK: Assign missing parent id since the child model is not related back and `attach` will not be called
-        const type: string = parentValue[this.morphType]
-        const model: Model = this.$getRelatedModel(type)
-        const key: string = this.ownerKey || (model.$getKeyName() as string)
-        parentValue[this.morphId] = _value[key as string]
+    return schema.union(this._relatedSchemas, (_value, parentValue, _key) => {
+      // HACK: Assign missing parent id since the child model is not related back and `attach` will not be called
+      const type: string = parentValue[this.morphType]
+      const model: Model = this.$getRelatedModel(type)
+      const key: string = this.ownerKey || (model.$getKeyName() as string)
+      parentValue[this.morphId] = _value[key as string]
 
-        // Add new related model
-        if (this.$isNewRelated(type)) {
-          this.$addNewRelated(model)
-        }
-
-        return type
+      // Add new related model
+      if (this.$isNewRelated(type)) {
+        this.$addNewRelated(model)
       }
-    )
+
+      return type
+    })
   }
 
   /**
@@ -124,7 +125,7 @@ export class MorphTo extends Relation {
       }
 
       if (type && id) {
-        related = this.relatedQueries[type].find(id)
+        related = this._relatedQueries[type].find(id)
       }
 
       related
@@ -141,7 +142,7 @@ export class MorphTo extends Relation {
       return null
     }
 
-    return this.relatedTypes[type].$newInstance(element)
+    return this._relatedTypes[type].$newInstance(element)
   }
 
   /**
@@ -162,7 +163,7 @@ export class MorphTo extends Relation {
     this._database = database
 
     // Init related models
-    if (Object.keys(this.relatedTypes).length < 1) {
+    if (Object.keys(this._relatedSchemas).length < 1) {
       this.$initRelated()
     }
 
@@ -182,8 +183,13 @@ export class MorphTo extends Relation {
   protected $initNewRelated(model: Model): void {
     if (model) {
       const type = model.$entity()
-      this.relatedTypes[type] = model
-      this.relatedQueries[type] = new Query(this.$database(), model)
+      const schema = this.$database().schemas[type]
+
+      this._relatedTypes[type] = model
+      this._relatedQueries[type] = new Query(this.$database(), model)
+      if (schema) {
+        this._relatedSchemas[type] = schema
+      }
     }
   }
 
@@ -191,7 +197,7 @@ export class MorphTo extends Relation {
    * Check if related model is new
    */
   protected $isNewRelated(type: string): boolean {
-    return !Object.keys(this.relatedTypes).includes(type)
+    return !Object.keys(this._relatedSchemas).includes(type)
   }
 
   /**
@@ -199,7 +205,7 @@ export class MorphTo extends Relation {
    */
   protected $addNewRelated(model: Model): void {
     if (model) {
-      this.relatedModels.push(model)
+      this._relatedModels.push(model)
       this.$initNewRelated(model)
     }
   }
@@ -208,7 +214,7 @@ export class MorphTo extends Relation {
    * Initialize related models.
    */
   protected $initRelated(): void {
-    this.relatedModels.forEach((model) => {
+    this._relatedModels.forEach((model) => {
       this.$initNewRelated(model)
     })
   }
