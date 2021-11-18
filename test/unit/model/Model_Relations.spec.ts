@@ -6,8 +6,8 @@ import {
   BelongsTo,
   HasMany,
   HasManyBy,
-  MorphOne,
-  MorphTo
+  MorphTo,
+  MorphOne
 } from '@/index'
 
 describe('unit/model/Model_Relations', () => {
@@ -126,6 +126,22 @@ describe('unit/model/Model_Relations', () => {
     expect(user.names[1]).toBeInstanceOf(Name)
     expect(user.names[0].id).toBe(2)
     expect(user.names[1].id).toBe(3)
+  })
+
+  it('fills "morph to" relation', () => {
+    const store = createStore()
+
+    const image = store.$repo(Image).make({
+      id: 1,
+      imageableId: 2,
+      imageableType: 'users',
+      imageable: {
+        id: 2
+      }
+    })
+
+    expect(image.imageable!).toBeInstanceOf(User)
+    expect(image.imageable!.id).toBe(2)
   })
 
   it('fills "morph one" relation', () => {
