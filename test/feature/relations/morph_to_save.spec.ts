@@ -77,8 +77,6 @@ describe('feature/relations/morph_to_save', () => {
   it('can insert a record with missing relational key', () => {
     const store = createStore()
 
-    store.$database.register(User.newRawInstance())
-
     store.$repo(Image).save({
       id: 1,
       url: '/profile.jpg'
