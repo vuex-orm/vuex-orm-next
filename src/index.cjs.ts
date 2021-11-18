@@ -24,8 +24,10 @@ import { Boolean as BooleanAttr } from './model/attributes/types/Boolean'
 import { Uid as UidAttr } from './model/attributes/types/Uid'
 import { Relation } from './model/attributes/relations/Relation'
 import { HasOne as HasOneAttr } from './model/attributes/relations/HasOne'
+import { BelongsTo as BelongsToAttr } from './model/attributes/relations/BelongsTo'
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
 import { HasManyBy as HasManyByAttr } from './model/attributes/relations/HasManyBy'
+import { MorphOne as MorphOneAttr } from './model/attributes/relations/MorphOne'
 import { Repository } from './repository/Repository'
 import { Interpreter } from './interpreter/Interpreter'
 import { Query } from './query/Query'
@@ -56,8 +58,10 @@ export default {
   UidAttr,
   Relation,
   HasOneAttr,
+  BelongsToAttr,
   HasManyAttr,
   HasManyByAttr,
+  MorphOneAttr,
   Repository,
   Interpreter,
   Query,
