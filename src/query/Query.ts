@@ -456,7 +456,7 @@ export class Query<M extends Model = Model> {
       // Inverse polymorphic relations have the same parent and child model so we need to query using the type stored
       // in the parent model
       if (attr instanceof MorphTo) {
-        const relatedType = model[attr.$getType() as string]
+        const relatedType = model[attr.getType() as string]
 
         model[key] = isArray(relatedSchema)
           ? this.newQuery(relatedType).reviveMany(relatedSchema)

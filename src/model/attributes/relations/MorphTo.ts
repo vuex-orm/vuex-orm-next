@@ -146,20 +146,9 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Get the database instance.
-   */
-  $database(): Database {
-    assert(this._database !== undefined, [
-      'A Vuex Store instance is not injected into the inverse polymorphic relation instance.'
-    ])
-
-    return this._database
-  }
-
-  /**
    * Set the database instance.
    */
-  $setDatabase(database: Database): this {
+  setDatabase(database: Database): this {
     this._database = database
 
     // Init related models
@@ -173,14 +162,25 @@ export class MorphTo extends Relation {
   /**
    * Get the type field name.
    */
-  $getType(): string {
+  getType(): string {
     return this.morphType
+  }
+
+  /**
+   * Get the database instance.
+   */
+  private $database(): Database {
+    assert(this._database !== undefined, [
+      'A Vuex Store instance is not injected into the inverse polymorphic relation instance.'
+    ])
+
+    return this._database
   }
 
   /**
    * Init new related model.
    */
-  protected $initNewRelated(model: Model): void {
+  private $initNewRelated(model: Model): void {
     if (model) {
       const type = model.$entity()
       const schema = this.$database().schemas[type]
@@ -196,16 +196,18 @@ export class MorphTo extends Relation {
   /**
    * Check if related model is new
    */
-  protected $isNewRelated(type: string): boolean {
+   private $isNewRelated(type: string): boolean {
     return !Object.keys(this._relatedSchemas).includes(type)
   }
 
   /**
    * Add related model if new.
    */
-  protected $addNewRelated(model: Model): void {
+   private $addNewRelated(model: Model): void {
     if (model) {
-      this._relatedModels.push(model)
+      if (!this._relatedModels.includes(model)) {
+        this._relatedModels.push(model)
+      }
       this.$initNewRelated(model)
     }
   }
@@ -213,7 +215,7 @@ export class MorphTo extends Relation {
   /**
    * Initialize related models.
    */
-  protected $initRelated(): void {
+   private $initRelated(): void {
     this._relatedModels.forEach((model) => {
       this.$initNewRelated(model)
     })
@@ -222,7 +224,7 @@ export class MorphTo extends Relation {
   /**
    * Get related model using a provided type.
    */
-  protected $getRelatedModel(type: string): Model {
+   private $getRelatedModel(type: string): Model {
     return this.$database().getModel(type)
   }
 }

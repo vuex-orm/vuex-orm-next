@@ -257,7 +257,7 @@ export class Repository<M extends Model = Model> {
     const fields = model.$fields()
     Object.keys(fields).forEach((key) => {
       if (fields[key] instanceof MorphTo) {
-        ;(fields[key] as MorphTo).$setDatabase(this.database)
+        ;(fields[key] as MorphTo).setDatabase(this.database)
       }
     })
   }
