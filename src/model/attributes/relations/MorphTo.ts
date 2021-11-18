@@ -56,13 +56,13 @@ export class MorphTo extends Relation {
    */
   constructor(
     parent: Model,
-    _relatedModels: Model[],
+    relatedModels: Model[],
     morphId: string,
     morphType: string,
     ownerKey: string
   ) {
     super(parent, parent)
-    this._relatedModels = _relatedModels
+    this._relatedModels = relatedModels
     this.morphId = morphId
     this.morphType = morphType
     this.ownerKey = ownerKey
@@ -196,14 +196,14 @@ export class MorphTo extends Relation {
   /**
    * Check if related model is new
    */
-   private $isNewRelated(type: string): boolean {
+  private $isNewRelated(type: string): boolean {
     return !Object.keys(this._relatedSchemas).includes(type)
   }
 
   /**
    * Add related model if new.
    */
-   private $addNewRelated(model: Model): void {
+  private $addNewRelated(model: Model): void {
     if (model) {
       if (!this._relatedModels.includes(model)) {
         this._relatedModels.push(model)
@@ -215,7 +215,7 @@ export class MorphTo extends Relation {
   /**
    * Initialize related models.
    */
-   private $initRelated(): void {
+  private $initRelated(): void {
     this._relatedModels.forEach((model) => {
       this.$initNewRelated(model)
     })
@@ -224,7 +224,7 @@ export class MorphTo extends Relation {
   /**
    * Get related model using a provided type.
    */
-   private $getRelatedModel(type: string): Model {
+  private $getRelatedModel(type: string): Model {
     return this.$database().getModel(type)
   }
 }
