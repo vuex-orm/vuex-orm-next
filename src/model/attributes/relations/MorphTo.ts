@@ -22,7 +22,7 @@ export class MorphTo extends Relation {
   private _relatedModels: Model[]
 
   /**
-   * The field contains all the related models.
+   * The field contains all the related schemas.
    */
   private _relatedSchemas: Record<string, Normalizr.Entity> = {}
 
@@ -32,7 +32,7 @@ export class MorphTo extends Relation {
   private _relatedTypes: Record<string, Model> = {}
 
   /**
-   * The field contains all related types.
+   * The field contains all related queries.
    */
   private _relatedQueries: Record<string, Query> = {}
 
