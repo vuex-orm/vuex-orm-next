@@ -10,7 +10,10 @@ import { Boolean } from '../model/attributes/types/Boolean'
 import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { HasOne } from '../model/attributes/relations/HasOne'
+import { BelongsTo } from '../model/attributes/relations/BelongsTo'
 import { HasMany } from '../model/attributes/relations/HasMany'
+import { HasManyBy } from '../model/attributes/relations/HasManyBy'
+import { MorphOne } from '../model/attributes/relations/MorphOne'
 import { Repository } from '../repository/Repository'
 import { Interpreter } from '../interpreter/Interpreter'
 import { Query } from '../query/Query'
@@ -42,7 +45,10 @@ export interface VuexORMPluginComponents {
   Uid: typeof Uid
   Relation: typeof Relation
   HasOne: typeof HasOne
+  BelongsTo: typeof BelongsTo
   HasMany: typeof HasMany
+  HasManyBy: typeof HasManyBy
+  MorphOne: typeof MorphOne
   Repository: typeof Repository
   Interpreter: typeof Interpreter
   Query: typeof Query
@@ -72,7 +78,10 @@ export const components: VuexORMPluginComponents = {
   Uid,
   Relation,
   HasOne,
+  BelongsTo,
   HasMany,
+  HasManyBy,
+  MorphOne,
   Repository,
   Interpreter,
   Query,
