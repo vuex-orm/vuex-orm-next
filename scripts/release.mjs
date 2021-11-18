@@ -20,7 +20,7 @@ const tags = [
 ]
 
 const inc = (i) => semver.inc(currentVersion, i, 'draft')
-const bin = (name) => path.resolve(__dirname, `../node_modules/.bin/${name}`)
+const bin = (name) => `node_modules/.bin/${name}`
 const run = (bin, args, opts = {}) => execa(bin, args, { stdio: 'inherit', ...opts })
 const step = (msg) => console.log(chalk.cyan(msg))
 
@@ -114,12 +114,11 @@ async function main() {
 }
 
 function updatePackage(version) {
-  const pkgPath = path.resolve(path.resolve(__dirname, '..'), 'package.json')
-  const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'))
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
 
   pkg.version = version
 
-  fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + '\n')
+  fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n')
 }
 
 main().catch((err) => console.error(err))

@@ -1,3 +1,15 @@
+# [1.0.0-draft.15](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.14...v1.0.0-draft.15) (2021-11-18)
+
+### Bug Fixes
+
+* **model:** delete method should be synchronous ([#76](https://github.com/vuex-orm/vuex-orm-next/issues/76)) ([#77](https://github.com/vuex-orm/vuex-orm-next/issues/77)) ([4fb4673](https://github.com/vuex-orm/vuex-orm-next/commit/4fb4673f728fae63054acbdacb5cf21935dd5b51))
+* **interpreter:** import database correctly ([#74](https://github.com/vuex-orm/vuex-orm-next/issues/74)) ([#75](https://github.com/vuex-orm/vuex-orm-next/issues/75)) ([e115503](https://github.com/vuex-orm/vuex-orm-next/commit/e11550304e7a945c419982c3b158793a70531ac9))
+
+### Features
+
+* add `withAll` and `withAllRecursive` methods ([#94](https://github.com/vuex-orm/vuex-orm-next/issues/94)) ([cf18192](https://github.com/vuex-orm/vuex-orm-next/commit/cf181920a726fb1dd704d2c99dbc764e2d65b744))
+* add MorphOne relation ([#90](https://github.com/vuex-orm/vuex-orm-next/issues/90)) ([#91](https://github.com/vuex-orm/vuex-orm-next/issues/91)) ([ba0496a](https://github.com/vuex-orm/vuex-orm-next/commit/ba0496ae297e7e91c8b9cdb84cd9d3f96b225ba7))
+
 # [1.0.0-draft.14](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.13...v1.0.0-draft.14) (2021-05-31)
 
 ### Bug Fixes
