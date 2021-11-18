@@ -1,10 +1,12 @@
-const fs = require('fs')
-const path = require('path')
-const chalk = require('chalk')
-const semver = require('semver')
-const { prompt } = require('enquirer')
-const execa = require('execa')
-const currentVersion = require('../package.json').version
+import fs from 'fs'
+import path from 'path'
+import chalk from 'chalk'
+import semver from 'semver'
+import enquirer from 'enquirer'
+import { execa } from 'execa'
+import pkg from '../package.json'
+
+const currentVersion = pkg.version
 
 const versionIncrements = [
   'patch',
@@ -25,7 +27,7 @@ const step = (msg) => console.log(chalk.cyan(msg))
 async function main() {
   let targetVersion
 
-  const { release } = await prompt({
+  const { release } = await enquirer.prompt({
     type: 'select',
     name: 'release',
     message: 'Select release type',
@@ -33,7 +35,7 @@ async function main() {
   })
 
   if (release === 'custom') {
-    targetVersion = (await prompt({
+    targetVersion = (await enquirer.prompt({
       type: 'input',
       name: 'version',
       message: 'Input custom version',
@@ -47,14 +49,14 @@ async function main() {
     throw new Error(`Invalid target version: ${targetVersion}`)
   }
 
-  const { tag } = await prompt({
+  const { tag } = await enquirer.prompt({
     type: 'select',
     name: 'tag',
     message: 'Select tag type',
     choices: tags
   })
 
-  const { yes: tagOk } = await prompt({
+  const { yes: tagOk } = await enquirer.prompt({
     type: 'confirm',
     name: 'yes',
     message: `Releasing v${targetVersion}. Confirm?`
@@ -82,7 +84,7 @@ async function main() {
   step('\nGenerating the changelog...')
   await run('yarn', ['changelog'])
 
-  const { yes: changelogOk } = await prompt({
+  const { yes: changelogOk } = await enquirer.prompt({
     type: 'confirm',
     name: 'yes',
     message: `Changelog generated. Does it look good?`

@@ -1,8 +1,8 @@
-const fs = require('fs-extra')
-const chalk = require('chalk')
-const execa = require('execa')
-const { gzipSync } = require('zlib')
-const { compress } = require('brotli')
+import fs from 'fs-extra'
+import chalk from 'chalk'
+import { execa } from 'execa'
+import { gzipSync } from 'zlib'
+import { compress } from 'brotli'
 
 const files = [
   'dist/vuex-orm.esm-browser.js',
