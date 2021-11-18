@@ -62,13 +62,3 @@ You can also run a delete statement on a set of records. In this example, we wil
 ```js
 store.$repo(User).where('active', false).delete()
 ```
-
-## Deleting data by model instance method
-
-You may delete a specific record with the model `$delete` instance method.
-
-```js
-const user = store.$repo(User).find(1)
-
-user.$delete()
-```

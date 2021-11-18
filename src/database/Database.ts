@@ -89,7 +89,7 @@ export class Database {
 
       if (attr instanceof Relation) {
         attr.getRelateds().forEach((m) => {
-          this.register(m.$setDatabase(this))
+          this.register(m)
         })
       }
     }
