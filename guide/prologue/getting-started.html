@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Getting Started | Vuex ORM Next</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="The Vuex plugin to enable Object-Relational Mapping (ORM) access to the Vuex Store.">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4d8b86b.css" as="style"><link rel="preload" href="/assets/js/app.272c2e9d.js" as="script"><link rel="preload" href="/assets/js/2.761f6eea.js" as="script"><link rel="preload" href="/assets/js/12.a061a9e0.js" as="script"><link rel="prefetch" href="/assets/js/10.48a2427b.js"><link rel="prefetch" href="/assets/js/11.1ecce21b.js"><link rel="prefetch" href="/assets/js/13.532e5fe8.js"><link rel="prefetch" href="/assets/js/14.64752c4e.js"><link rel="prefetch" href="/assets/js/15.a2824bc5.js"><link rel="prefetch" href="/assets/js/16.4e53a4cb.js"><link rel="prefetch" href="/assets/js/17.8116d4ac.js"><link rel="prefetch" href="/assets/js/18.40a09796.js"><link rel="prefetch" href="/assets/js/19.3dabda2a.js"><link rel="prefetch" href="/assets/js/20.5fd6ce60.js"><link rel="prefetch" href="/assets/js/21.a09ff616.js"><link rel="prefetch" href="/assets/js/22.8e19f56d.js"><link rel="prefetch" href="/assets/js/23.9e9f3a34.js"><link rel="prefetch" href="/assets/js/24.b2a2e001.js"><link rel="prefetch" href="/assets/js/3.3690d859.js"><link rel="prefetch" href="/assets/js/4.9c0d3927.js"><link rel="prefetch" href="/assets/js/5.8fb2962b.js"><link rel="prefetch" href="/assets/js/6.7a505dc8.js"><link rel="prefetch" href="/assets/js/7.3af9d7e6.js"><link rel="prefetch" href="/assets/js/8.f3a77bc0.js"><link rel="prefetch" href="/assets/js/9.5480b901.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4d8b86b.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"><!----> <span class="site-name">Vuex ORM Next</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/guide/prologue/what-is-vuex-orm.html" class="nav-link">
+  Guide
+</a></div><div class="nav-item"><a href="https://github.com/vuex-orm/vuex-orm-next/releases" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Release Notes
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/vuex-orm/vuex-orm-next" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/guide/prologue/what-is-vuex-orm.html" class="nav-link">
+  Guide
+</a></div><div class="nav-item"><a href="https://github.com/vuex-orm/vuex-orm-next/releases" target="_blank" rel="noopener noreferrer" class="nav-link external">
+  Release Notes
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></div> <a href="https://github.com/vuex-orm/vuex-orm-next" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Prologue</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/prologue/what-is-vuex-orm.html" class="sidebar-link">What is Vuex ORM?</a></li><li><a href="/guide/prologue/sponsors.html" class="sidebar-link">Sponsors</a></li><li><a href="/guide/prologue/installation.html" class="sidebar-link">Installation</a></li><li><a href="/guide/prologue/getting-started.html" aria-current="page" class="active sidebar-link">Getting Started</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/guide/prologue/getting-started.html#setup" class="sidebar-link">Setup</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/guide/prologue/getting-started.html#defining-models" class="sidebar-link">Defining Models</a></li><li class="sidebar-sub-header"><a href="/guide/prologue/getting-started.html#installing-vuex-orm-with-vuex" class="sidebar-link">Installing Vuex ORM with Vuex</a></li></ul></li><li class="sidebar-sub-header"><a href="/guide/prologue/getting-started.html#creating-data" class="sidebar-link">Creating Data</a></li><li class="sidebar-sub-header"><a href="/guide/prologue/getting-started.html#retrieving-data" class="sidebar-link">Retrieving Data</a></li><li class="sidebar-sub-header"><a href="/guide/prologue/getting-started.html#what-s-next" class="sidebar-link">What's Next?</a></li></ul></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Model</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/model/getting-started.html" class="sidebar-link">Getting Started</a></li><li><a href="/guide/model/accessors.html" class="sidebar-link">Accessors</a></li><li><a href="/guide/model/decorators.html" class="sidebar-link">Decorators</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Relationships</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/relationships/getting-started.html" class="sidebar-link">Getting Started</a></li><li><a href="/guide/relationships/one-to-one.html" class="sidebar-link">One To One</a></li><li><a href="/guide/relationships/one-to-many.html" class="sidebar-link">One To Many</a></li><li><a href="/guide/relationships/polymorphic.html" class="sidebar-link">Polymorphic</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Repository</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/repository/getting-started.html" class="sidebar-link">Getting Started</a></li><li><a href="/guide/repository/retrieving-data.html" class="sidebar-link">Retrieving Data</a></li><li><a href="/guide/repository/inserting-data.html" class="sidebar-link">Inserting Data</a></li><li><a href="/guide/repository/updating-data.html" class="sidebar-link">Updating Data</a></li><li><a href="/guide/repository/deleting-data.html" class="sidebar-link">Deleting Data</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Digging Deeper</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/guide/digging-deeper/plugins.html" class="sidebar-link">Plugins</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="getting-started"><a href="#getting-started" class="header-anchor">#</a> Getting Started</h1> <p>This is a quick starting guide to begin using Vuex ORM. It assumes you have a basic understanding of Vuex. If you are not familiar with Vuex, please visit the <a href="https://vuex.vuejs.org" target="_blank" rel="noopener noreferrer">Vuex Documentation<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> to learn more.</p> <div class="custom-block tip"><p class="custom-block-title">NOTE</p> <p>We use ES2015 syntax in our code examples for the rest of the docs. We also use class field declarations (e.g. <code>static</code> properties) in our classes which requires compiler plugins such as <a href="https://babeljs.io/docs/en/babel-plugin-proposal-class-properties" target="_blank" rel="noopener noreferrer">@babel/plugin-proposal-class-properties<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>.</p></div> <h2 id="setup"><a href="#setup" class="header-anchor">#</a> Setup</h2> <p>To setup Vuex ORM, you must:</p> <ul><li>Define Models.</li> <li>Install Vuex ORM to Vuex.</li></ul> <p>Don't worry. It's much easier than you think.</p> <h3 id="defining-models"><a href="#defining-models" class="header-anchor">#</a> Defining Models</h3> <p>Models represent a schema of data that will be stored in Vuex. The schema often follows a servers API response, but it could also be whatever you like it to be.</p> <p>Models may have relationships with other models. For example, a post could <em>belong to</em> a user, or a post <em>has many</em> comments.</p> <p>The following examples will demonstrate what these models may look like:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// User Model</span>
+
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Model <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token keyword">extends</span> <span class="token class-name">Model</span> <span class="token punctuation">{</span>
+  <span class="token comment">// entity is a required property for all models.</span>
+  <span class="token keyword">static</span> entity <span class="token operator">=</span> <span class="token string">'users'</span>
+
+  <span class="token comment">// List of all fields (schema) of the post model. `this.attr()` declares</span>
+  <span class="token comment">// a generic field type with a default value as the first argument.</span>
+  <span class="token keyword">static</span> <span class="token function">fields</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      id<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      name<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      email<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// Post Model</span>
+
+<span class="token keyword">import</span> <span class="token punctuation">{</span> Model <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+<span class="token keyword">import</span> User <span class="token keyword">from</span> <span class="token string">'./User'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">class</span> <span class="token class-name">Post</span> <span class="token keyword">extends</span> <span class="token class-name">Model</span> <span class="token punctuation">{</span>
+  <span class="token keyword">static</span> entity <span class="token operator">=</span> <span class="token string">'posts'</span>
+
+  <span class="token comment">// `this.belongsTo(...)` declares this post belongs to a user. The first</span>
+  <span class="token comment">// argument is the `User` model class. The second is the field name for</span>
+  <span class="token comment">// the foreign key `userId`.</span>
+  <span class="token keyword">static</span> <span class="token function">fields</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      id<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      userId<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      title<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      body<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      published<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">attr</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+      author<span class="token operator">:</span> <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">belongsTo</span><span class="token punctuation">(</span>User<span class="token punctuation">,</span> <span class="token string">'userId'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>All models are declared by extending the Vuex ORM base <code>Model</code> class.</p> <p>These examples create a <code>User</code> model and a <code>Post</code> model. The <code>Post</code> model has a <code>belongsTo</code> relationship to <code>User</code> defined by the <code>author</code> key. It's now possible to create posts that are associated with users.</p> <p>You can learn more about models at <a href="../model/getting-started">Model: Getting Started</a>.</p> <h3 id="installing-vuex-orm-with-vuex"><a href="#installing-vuex-orm-with-vuex" class="header-anchor">#</a> Installing Vuex ORM with Vuex</h3> <p>Now it's time to register Vuex ORM with Vuex simply by adding <code>VuexORM.install()</code> as a Vuex plugin.</p> <p>The following is an example of what a Vuex Store creation file might look like:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
+<span class="token keyword">import</span> Vuex <span class="token keyword">from</span> <span class="token string">'vuex'</span>
+<span class="token keyword">import</span> VuexORM <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+
+Vue<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>Vuex<span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  plugins<span class="token operator">:</span> <span class="token punctuation">[</span>VuexORM<span class="token punctuation">.</span><span class="token function">install</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> store
+</code></pre></div><p>Now you are ready to go. Vuex ORM creates a namespaced module called <code>entities</code> and registers all models within by their <code>entity</code> name.</p> <h2 id="creating-data"><a href="#creating-data" class="header-anchor">#</a> Creating Data</h2> <p>Vuex ORM adopts the <a href="https://en.wikipedia.org/wiki/Data_mapper_pattern" target="_blank" rel="noopener noreferrer">Data Mapper<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a> pattern and uses <em>repositories</em> to interact with the store. In order to create new data, you must first obtain a repository instance corresponding to the model.</p> <p>You may do so by using the <code>mapRepos</code> helper function.</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> mapRepos <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+<span class="token keyword">import</span> Post <span class="token keyword">from</span> <span class="token string">'@/models/Post'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  computed<span class="token operator">:</span> <span class="token function">mapRepos</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    postRepo<span class="token operator">:</span> Post
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>You can learn more about repositories at <a href="../repository/getting-started">Repository: Getting Started</a>.</p> <p>Now, you may use <code>save</code> on the repository to create new records. In the following example, we're passing in an array with a single post:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">import</span> <span class="token punctuation">{</span> mapRepos <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+<span class="token keyword">import</span> Post <span class="token keyword">from</span> <span class="token string">'@/models/Post'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  computed<span class="token operator">:</span> <span class="token function">mapRepos</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    postRepo<span class="token operator">:</span> Post
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  
+  <span class="token function">mounted</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Assuming this data is the response from the API backend.</span>
+    <span class="token keyword">const</span> posts <span class="token operator">=</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span>
+        id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+        title<span class="token operator">:</span> <span class="token string">'Hello, world!'</span><span class="token punctuation">,</span>
+        body<span class="token operator">:</span> <span class="token string">'Some awesome body...'</span><span class="token punctuation">,</span>
+        author<span class="token operator">:</span> <span class="token punctuation">{</span>
+          id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+          name<span class="token operator">:</span> <span class="token string">'John Doe'</span><span class="token punctuation">,</span>
+          email<span class="token operator">:</span> <span class="token string">'john@example.com'</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span>
+
+    <span class="token comment">// Save posts.</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>postRepo<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>posts<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>This creates the following schema in the store:</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// Inside `store.state.entities`.</span>
+<span class="token punctuation">{</span>
+  posts<span class="token operator">:</span> <span class="token punctuation">{</span>
+    data<span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token number">1</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+        userId<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+        title<span class="token operator">:</span> <span class="token string">'Hello, world!'</span><span class="token punctuation">,</span>
+        body<span class="token operator">:</span> <span class="token string">'Some awesome body...'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  users<span class="token operator">:</span> <span class="token punctuation">{</span>
+    data<span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token number">1</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        id<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+        name<span class="token operator">:</span> <span class="token string">'John Doe'</span><span class="token punctuation">,</span>
+        email<span class="token operator">:</span> <span class="token string">'john@example.com'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>Notice how <code>posts</code> and <code>users</code> are decoupled from each other by using relationships. This is what is meant by <em>normalizing</em> data.</p> <h2 id="retrieving-data"><a href="#retrieving-data" class="header-anchor">#</a> Retrieving Data</h2> <p>Vuex ORM provides a fluent query builder for retrieving data. You may think of it as using Vuex Getters, with additional features added to quickly specify the data you want.</p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>article</span> <span class="token attr-name">:key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>post.id<span class="token punctuation">&quot;</span></span> <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>post in posts<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>{{ post.title }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>{{ post.body }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>article</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">import</span> <span class="token punctuation">{</span> mapRepos <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+<span class="token keyword">import</span> Post <span class="token keyword">from</span> <span class="token string">'@/models/Post'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapRepos</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      postRepo<span class="token operator">:</span> Post
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+    <span class="token function">posts</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Fetch all post records.</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>postRepo<span class="token punctuation">.</span><span class="token function">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>Similar to Vuex Getters, place your queries in computed properties. Note in the example above, we do not retrieve any users with our posts! We load relationships by adding <code>with</code> to our query chain:</p> <div class="language-html extra-class"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>article</span> <span class="token attr-name">:key</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>post.id<span class="token punctuation">&quot;</span></span> <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>post in posts<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>{{ post.title }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>{{ post.body }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Author: {{ post.author.name }}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>article</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">import</span> <span class="token punctuation">{</span> mapRepos <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@vuex-orm/core'</span>
+<span class="token keyword">import</span> Post <span class="token keyword">from</span> <span class="token string">'@/models/Post'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  computed<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token function">mapRepos</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      postRepo<span class="token operator">:</span> Post
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+
+    <span class="token function">posts</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// Fetch all post records with author.</span>
+      <span class="token keyword">return</span> <span class="token keyword">this</span><span class="token punctuation">.</span>postRepo<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token string">'author'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><h2 id="what-s-next"><a href="#what-s-next" class="header-anchor">#</a> What's Next?</h2> <p>Vuex ORM offers many more features that help you deal with common tasks. Please continue to read through the documentation to find out more.</p></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/guide/prologue/installation.html" class="prev">
+        Installation
+      </a></span> <span class="next"><a href="/guide/model/getting-started.html">
+        Getting Started
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.272c2e9d.js" defer></script><script src="/assets/js/2.761f6eea.js" defer></script><script src="/assets/js/12.a061a9e0.js" defer></script>
+  </body>
+</html>
