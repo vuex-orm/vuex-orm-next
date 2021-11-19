@@ -113,13 +113,15 @@ export class MorphTo extends Relation {
    */
   match(relation: string, models: Collection, query: Query): void {
     models.forEach((model) => {
+      let related
       const type = model[this.morphType]
       const id = model[this.morphId]
 
-      const related =
-        type !== null && id !== null
-          ? query.newQueryWithConstraints(type).find(id)
-          : null
+      try {
+        related = query.newQueryWithConstraints(type).find(id)
+      } catch (e) {
+        related = null
+      }
 
       model.$setRelation(relation, related)
     })

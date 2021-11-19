@@ -1,5 +1,5 @@
 import { createStore, assertState } from 'test/Helpers'
-import { Model, Attr, Str, MorphTo } from '@/index'
+import { Model, Num, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_save_custom_key', () => {
   beforeEach(() => {
@@ -10,10 +10,10 @@ describe('feature/relations/morph_to_save_custom_key', () => {
     class Image extends Model {
       static entity = 'images'
 
-      @Attr() id!: number
+      @Num(0) id!: number
       @Str('') url!: string
-      @Attr() imageableId!: number
-      @Attr() imageableType!: string
+      @Num(0) imageableId!: number
+      @Str('') imageableType!: string
       @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
     }
@@ -23,7 +23,7 @@ describe('feature/relations/morph_to_save_custom_key', () => {
 
       static primaryKey = 'userId'
 
-      @Attr() userId!: number
+      @Num(0) userId!: number
       @Str('') name!: string
     }
 
@@ -53,10 +53,10 @@ describe('feature/relations/morph_to_save_custom_key', () => {
     class Image extends Model {
       static entity = 'images'
 
-      @Attr() id!: number
+      @Num(0) id!: number
       @Str('') url!: string
-      @Attr() imageableId!: number
-      @Attr() imageableType!: string
+      @Num(0) imageableId!: number
+      @Str('') imageableType!: string
       @MorphTo(() => [User], 'imageableId', 'imageableType', 'imageableId')
       imageable!: User | null
     }
@@ -64,8 +64,8 @@ describe('feature/relations/morph_to_save_custom_key', () => {
     class User extends Model {
       static entity = 'users'
 
-      @Attr() id!: number
-      @Attr() imageableId!: number
+      @Num(0) id!: number
+      @Num(0) imageableId!: number
       @Str('') name!: string
     }
 
