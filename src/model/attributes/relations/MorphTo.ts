@@ -101,7 +101,7 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Since we do not know the child model ahead of time, we cannot add any
+   * Add eager constraints. Since we do not know the related model ahead of time, we cannot add any
    * eager constraints.
    */
   addEagerConstraints(_query: Query, _models: Collection): void {
