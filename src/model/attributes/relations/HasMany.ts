@@ -61,7 +61,8 @@ export class HasMany extends Relation {
   /**
    * Match the eagerly loaded results to their parents.
    */
-  match(relation: string, models: Collection, results: Collection): void {
+  match(relation: string, models: Collection, query: Query): void {
+    const results = query.get()
     const dictionary = this.buildDictionary(results)
 
     models.forEach((model) => {

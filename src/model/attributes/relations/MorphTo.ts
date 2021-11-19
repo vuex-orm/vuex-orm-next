@@ -109,27 +109,17 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Execute the eager loading query.
-   */
-  getEager(_query: Query): Collection {
-    return []
-  }
-
-  /**
    * Find and attach related children to their respective parents.
    */
-  match(
-    relation: string,
-    models: Collection,
-    _results: Collection,
-    query: Query
-  ): void {
+  match(relation: string, models: Collection, query: Query): void {
     models.forEach((model) => {
       const type = model[this.morphType]
       const id = model[this.morphId]
 
       const related =
-        type !== null && id !== null ? query.newQueryWithConstraints(type).find(id) : null
+        type !== null && id !== null
+          ? query.newQueryWithConstraints(type).find(id)
+          : null
 
       model.$setRelation(relation, related)
     })
