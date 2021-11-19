@@ -1,3 +1,15 @@
+# [1.0.0-draft.16](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.15...v1.0.0-draft.16) (2021-11-19)
+
+### Bug Fixes
+
+* add missing relations to plugin scope ([#103](https://github.com/vuex-orm/vuex-orm-next/issues/103)) ([cfa08ce](https://github.com/vuex-orm/vuex-orm-next/commit/cfa08ceffd2ad0497322cf1d4c4b00d4e377640d))
+* export missing decorator ([#104](https://github.com/vuex-orm/vuex-orm-next/issues/104)) ([a2c2677](https://github.com/vuex-orm/vuex-orm-next/commit/a2c26778874afe8c7d3a5d363d67be786505fdb1))
+* missing attribute exports ([8d5245a](https://github.com/vuex-orm/vuex-orm-next/commit/8d5245a1c5e1783580d90ef9a011b4a240b12944))
+
+### Features
+
+* remove database from model ([#98](https://github.com/vuex-orm/vuex-orm-next/issues/98)) ([a779ac3](https://github.com/vuex-orm/vuex-orm-next/commit/a779ac3356583026d15830eeb4ef70cd4df411c3))
+
 # [1.0.0-draft.15](https://github.com/vuex-orm/vuex-orm-next/compare/v1.0.0-draft.14...v1.0.0-draft.15) (2021-11-18)
 
 ### Bug Fixes
