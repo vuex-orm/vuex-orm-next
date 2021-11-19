@@ -124,14 +124,12 @@ export class MorphTo extends Relation {
     _results: Collection,
     query: Query
   ): void {
-    const queries = this.createRelatedQueries(query)
-
     models.forEach((model) => {
       const type = model[this.morphType]
       const id = model[this.morphId]
 
       const related =
-        type !== null && id !== null ? queries[type].find(id) : null
+        type !== null && id !== null ? query.newQueryWithConstraints(type).find(id) : null
 
       model.$setRelation(relation, related)
     })
@@ -146,17 +144,5 @@ export class MorphTo extends Relation {
     }
 
     return this.relatedTypes[type].$newInstance(element)
-  }
-
-  // TODO: Need to find a way to copy user defined query constraints here.
-  protected createRelatedQueries(query: Query): Record<string, Query> {
-    const queries = {} as Record<string, Query>
-
-    for (const entity in this.relatedTypes) {
-      // TODO: Copy query's constraints to the new query.
-      queries[entity] = query.newQuery(entity)
-    }
-
-    return queries
   }
 }
