@@ -90,6 +90,35 @@ describe('feature/relations/morph_to_retrieve', () => {
     })
   })
 
+  it('can eager load morph to relation with constraints', () => {
+    const store = createStore()
+
+    fillState(store, MORPH_TO_ENTITIES)
+
+    const limitOrderedImages = store
+      .$repo(Image)
+      .limit(2)
+      .orderBy('id', 'desc')
+      .with('imageable')
+      .get()!
+
+    expect(limitOrderedImages.length).toBe(2)
+    assertModel(limitOrderedImages[0], {
+      id: 3,
+      url: '/post2.jpg',
+      imageableId: 2,
+      imageableType: 'posts',
+      imageable: { id: 2, title: 'Hello, world! Again!' }
+    })
+    assertModel(limitOrderedImages[1], {
+      id: 2,
+      url: '/post.jpg',
+      imageableId: 1,
+      imageableType: 'posts',
+      imageable: { id: 1, title: 'Hello, world!' }
+    })
+  })
+
   it('can eager load missing relation as `null`', () => {
     const store = createStore()
     fillState(store, {
