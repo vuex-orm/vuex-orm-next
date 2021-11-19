@@ -116,7 +116,7 @@ export class Schema {
       // missing foreign keys to the record first.
       if (key !== null) {
         // Using optional chaining in the event of an inverse polymorphic
-        // relation that won't have a defined relation.
+        // relation which won't have a defined relation.
         ;(parent.$fields()[key] as Relation)?.attach(parentRecord, record)
       }
 
