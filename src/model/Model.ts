@@ -348,21 +348,17 @@ export class Model {
    */
   protected $fillField(key: string, attr: Attribute, value: any): void {
     if (value !== undefined) {
-      if (attr instanceof MorphTo) {
-        this[key] = attr.make(value, this[attr.getType()])
-      } else {
-        this[key] = attr.make(value)
-      }
+      this[key] =
+        attr instanceof MorphTo
+          ? attr.make(value, this[attr.getType()])
+          : attr.make(value)
 
       return
     }
 
-    if (this[key] !== undefined) {
-      this[key] = this[key]
-      return
+    if (this[key] === undefined) {
+      this[key] = attr.make()
     }
-
-    this[key] = attr.make()
   }
 
   /**

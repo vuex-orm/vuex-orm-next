@@ -69,7 +69,8 @@ export abstract class Relation extends Attribute {
   abstract match(
     relation: string,
     models: Collection,
-    results: Collection
+    results: Collection,
+    query: Query
   ): void
 
   /**

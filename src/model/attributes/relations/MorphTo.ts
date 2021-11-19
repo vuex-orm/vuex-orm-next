@@ -1,40 +1,20 @@
 import { Schema as NormalizrSchema } from 'normalizr'
-import { assert } from '../../../support/Utils'
 import { Schema } from '../../../schema/Schema'
 import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
-import { Database } from '../../../database/Database'
 import { Model } from '../../Model'
-import { NonEnumerable } from '../../decorators/NonEnumerable'
 import { Relation } from './Relation'
-import { schema as Normalizr } from 'normalizr'
 
 export class MorphTo extends Relation {
   /**
-   * The database instance.
+   * The related models.
    */
-  @NonEnumerable
-  private _database!: Database
+  protected relatedModels: Model[]
 
   /**
-   * The field contains all related models.
+   * The related model dictionary.
    */
-  private _relatedModels: Model[]
-
-  /**
-   * The field contains all the related schemas.
-   */
-  private _relatedSchemas: Record<string, Normalizr.Entity> = {}
-
-  /**
-   * The field contains all related types.
-   */
-  private _relatedTypes: Record<string, Model> = {}
-
-  /**
-   * The field contains all related queries.
-   */
-  private _relatedQueries: Record<string, Query> = {}
+  protected relatedTypes: Record<string, Model>
 
   /**
    * The field name that contains id of the parent model.
@@ -62,75 +42,98 @@ export class MorphTo extends Relation {
     ownerKey: string
   ) {
     super(parent, parent)
-    this._relatedModels = relatedModels
+
+    this.relatedModels = relatedModels
+    this.relatedTypes = this.createRelatedTypes(relatedModels)
+
     this.morphId = morphId
     this.morphType = morphType
     this.ownerKey = ownerKey
+  }
+
+  protected createRelatedTypes(models: Model[]): Record<string, Model> {
+    const types = {} as Record<string, Model>
+
+    models.forEach((model) => {
+      types[model.$entity()] = model
+    })
+
+    return types
+  }
+
+  /**
+   * Get the type field name.
+   */
+  getType(): string {
+    return this.morphType
   }
 
   /**
    * Get all related models for the relationship.
    */
   getRelateds(): Model[] {
-    return this._relatedModels
+    return this.relatedModels
   }
 
   /**
    * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
-    return schema.union(this._relatedSchemas, (_value, parentValue, _key) => {
-      // HACK: Assign missing parent id since the child model is not related back and `attach` will not be called
-      const type: string = parentValue[this.morphType]
-      const model: Model = this.$getRelatedModel(type)
-      const key: string = this.ownerKey || (model.$getKeyName() as string)
-      parentValue[this.morphId] = _value[key as string]
+    return schema.union(this.relatedModels, (value, parent, _key) => {
+      // Assign missing parent id since the child model is not related back
+      // and `attach` will not be called.
+      const type = parent[this.morphType]
+      const model = this.relatedTypes[type]
+      const key = this.ownerKey || (model.$getKeyName() as string)
 
-      // Add new related model
-      if (this.$isNewRelated(type)) {
-        this.$addNewRelated(model)
-      }
+      parent[this.morphId] = value[key]
 
       return type
     })
   }
 
   /**
-   * Attach the relational key to the given record. Since morph-to
-   * relationship doesn't have any foreign key, it would do nothing.
+   * Attach the relational key to the given record. Since morph-to relationship
+   * doesn't have any foreign key, it would do nothing.
    */
   attach(_record: Element, _child: Element): void {
     return
   }
 
   /**
-   * Since we do not know the child model ahead of time, we cannot add any eager constraints.
+   * Since we do not know the child model ahead of time, we cannot add any
+   * eager constraints.
    */
   addEagerConstraints(_query: Query, _models: Collection): void {
     return
   }
 
   /**
+   * Execute the eager loading query.
+   */
+  getEager(_query: Query): Collection {
+    return []
+  }
+
+  /**
    * Find and attach related children to their respective parents.
    */
-  match(relation: string, models: Collection, _results: Collection): void {
+  match(
+    relation: string,
+    models: Collection,
+    _results: Collection,
+    query: Query
+  ): void {
+    const queries = this.createRelatedQueries(query)
+
     models.forEach((model) => {
-      let related
       const type = model[this.morphType]
       const id = model[this.morphId]
 
-      // Add new related model
-      if (this.$isNewRelated(type)) {
-        this.$addNewRelated(this.$getRelatedModel(type))
-      }
+      const related =
+        type !== null && id !== null ? queries[type].find(id) : null
 
-      if (type && id) {
-        related = this._relatedQueries[type].find(id)
-      }
-
-      related
-        ? model.$setRelation(relation, related)
-        : model.$setRelation(relation, null)
+      model.$setRelation(relation, related)
     })
   }
 
@@ -142,89 +145,18 @@ export class MorphTo extends Relation {
       return null
     }
 
-    return this._relatedTypes[type].$newInstance(element)
+    return this.relatedTypes[type].$newInstance(element)
   }
 
-  /**
-   * Set the database instance.
-   */
-  setDatabase(database: Database): this {
-    this._database = database
+  // TODO: Need to find a way to copy user defined query constraints here.
+  protected createRelatedQueries(query: Query): Record<string, Query> {
+    const queries = {} as Record<string, Query>
 
-    // Init related models
-    if (Object.keys(this._relatedSchemas).length < 1) {
-      this.$initRelated()
+    for (const entity in this.relatedTypes) {
+      // TODO: Copy query's constraints to the new query.
+      queries[entity] = query.newQuery(entity)
     }
 
-    return this
-  }
-
-  /**
-   * Get the type field name.
-   */
-  getType(): string {
-    return this.morphType
-  }
-
-  /**
-   * Get the database instance.
-   */
-  private $database(): Database {
-    assert(this._database !== undefined, [
-      'A Vuex Store instance is not injected into the inverse polymorphic relation instance.'
-    ])
-
-    return this._database
-  }
-
-  /**
-   * Init new related model.
-   */
-  private $initNewRelated(model: Model): void {
-    if (model) {
-      const type = model.$entity()
-      const schema = this.$database().schemas[type]
-
-      this._relatedTypes[type] = model
-      this._relatedQueries[type] = new Query(this.$database(), model)
-      if (schema) {
-        this._relatedSchemas[type] = schema
-      }
-    }
-  }
-
-  /**
-   * Check if related model is new
-   */
-  private $isNewRelated(type: string): boolean {
-    return !Object.keys(this._relatedSchemas).includes(type)
-  }
-
-  /**
-   * Add related model if new.
-   */
-  private $addNewRelated(model: Model): void {
-    if (model) {
-      if (!this._relatedModels.includes(model)) {
-        this._relatedModels.push(model)
-      }
-      this.$initNewRelated(model)
-    }
-  }
-
-  /**
-   * Initialize related models.
-   */
-  private $initRelated(): void {
-    this._relatedModels.forEach((model) => {
-      this.$initNewRelated(model)
-    })
-  }
-
-  /**
-   * Get related model using a provided type.
-   */
-  private $getRelatedModel(type: string): Model {
-    return this.$database().getModel(type)
+    return queries
   }
 }

@@ -4,11 +4,13 @@ import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 
+type Schemas = Record<string, Normalizr.Entity>
+
 export class Schema {
   /**
    * The list of generated schemas.
    */
-  private schemas: Record<string, Normalizr.Entity> = {}
+  private schemas: Schemas = {}
 
   /**
    * The model instance.
@@ -54,12 +56,15 @@ export class Schema {
   }
 
   /**
-   * Create an union schema for the given model.
+   * Create an union schema for the given models.
    */
-  union(
-    schemas: Record<string, Normalizr.Entity>,
-    callback: Normalizr.SchemaFunction
-  ): Normalizr.Union {
+  union(models: Model[], callback: Normalizr.SchemaFunction): Normalizr.Union {
+    const schemas = models.reduce<Schemas>((schemas, model) => {
+      schemas[model.$entity()] = this.one(model)
+
+      return schemas
+    }, {})
+
     return new Normalizr.Union(schemas, callback)
   }
 
@@ -110,7 +115,8 @@ export class Schema {
       // relationship of the parent model. In this case, we'll attach any
       // missing foreign keys to the record first.
       if (key !== null) {
-        // Using optional chaining in the event of an inverse polymorphic relation that won't have a defined relation
+        // Using optional chaining in the event of an inverse polymorphic
+        // relation that won't have a defined relation.
         ;(parent.$fields()[key] as Relation)?.attach(parentRecord, record)
       }
 

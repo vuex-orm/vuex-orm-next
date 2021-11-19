@@ -76,14 +76,14 @@ export class Query<M extends Model = Model> {
   /**
    * Create a new query instance for the given model.
    */
-  protected newQuery(model: string): Query<Model> {
+  newQuery(model: string): Query<Model> {
     return new Query(this.database, this.database.getModel(model))
   }
 
   /**
    * Create a new query instance from the given relation.
    */
-  protected newQueryForRelation(relation: Relation): Query<Model> {
+  newQueryForRelation(relation: Relation): Query<Model> {
     return new Query(this.database, relation.getRelated())
   }
 
@@ -382,7 +382,7 @@ export class Query<M extends Model = Model> {
     // Once we have the results, we just match those back up to their parent models
     // using the relationship instance. Then we just return the finished arrays
     // of models which have been eagerly hydrated and are readied for return.
-    relation.match(name, models, relation.getEager(query))
+    relation.match(name, models, relation.getEager(query), query)
   }
 
   /**
@@ -453,19 +453,19 @@ export class Query<M extends Model = Model> {
         return
       }
 
-      // Inverse polymorphic relations have the same parent and child model so we need to query using the type stored
-      // in the parent model
+      // Inverse polymorphic relations have the same parent and child model
+      // so we need to query using the type stored in the parent model.
       if (attr instanceof MorphTo) {
-        const relatedType = model[attr.getType() as string]
+        const relatedType = model[attr.getType()]
 
-        model[key] = isArray(relatedSchema)
-          ? this.newQuery(relatedType).reviveMany(relatedSchema)
-          : this.newQuery(relatedType).reviveOne(relatedSchema)
-      } else {
-        model[key] = isArray(relatedSchema)
-          ? this.newQueryForRelation(attr).reviveMany(relatedSchema)
-          : this.newQueryForRelation(attr).reviveOne(relatedSchema)
+        model[key] = this.newQuery(relatedType).reviveOne(relatedSchema)
+
+        continue
       }
+
+      model[key] = isArray(relatedSchema)
+        ? this.newQueryForRelation(attr).reviveMany(relatedSchema)
+        : this.newQueryForRelation(attr).reviveOne(relatedSchema)
     }
   }
 

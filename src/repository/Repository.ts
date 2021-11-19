@@ -12,7 +12,6 @@ import {
   OrderBy,
   EagerLoadConstraint
 } from '../query/Options'
-import { MorphTo } from '@/model/attributes/relations/MorphTo'
 
 export class Repository<M extends Model = Model> {
   /**
@@ -52,8 +51,6 @@ export class Repository<M extends Model = Model> {
     if (model) {
       this.model = model.newRawInstance()
 
-      this.$setInversePolymorphicDatabase(this.model)
-
       return this
     }
 
@@ -63,8 +60,6 @@ export class Repository<M extends Model = Model> {
     // property and instantiate that.
     if (this.use) {
       this.model = this.use.newRawInstance() as M
-
-      this.$setInversePolymorphicDatabase(this.model)
 
       return this
     }
@@ -251,14 +246,5 @@ export class Repository<M extends Model = Model> {
    */
   flush(): M[] {
     return this.query().flush()
-  }
-
-  protected $setInversePolymorphicDatabase(model: Model): void {
-    const fields = model.$fields()
-    Object.keys(fields).forEach((key) => {
-      if (fields[key] instanceof MorphTo) {
-        ;(fields[key] as MorphTo).setDatabase(this.database)
-      }
-    })
   }
 }
