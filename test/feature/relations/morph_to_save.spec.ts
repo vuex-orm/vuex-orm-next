@@ -44,7 +44,7 @@ describe('feature/relations/morph_to_save', () => {
     })
   })
 
-  it('generates missing foreign key', () => {
+  it('generates missing relational key', () => {
     const store = createStore()
 
     store.$repo(Image).save({
@@ -67,7 +67,7 @@ describe('feature/relations/morph_to_save', () => {
     })
   })
 
-  it('can insert a record with missing relational key', () => {
+  it('can insert a record with missing related data', () => {
     const store = createStore()
 
     store.$repo(Image).save({
@@ -88,7 +88,7 @@ describe('feature/relations/morph_to_save', () => {
     })
   })
 
-  it('can insert a record with relational key set to `null`', () => {
+  it('can insert a record with related data set to `null`', () => {
     const store = createStore()
 
     store.$repo(Image).save({
