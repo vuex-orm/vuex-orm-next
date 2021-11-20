@@ -10,7 +10,7 @@ describe('feature/relations/morph_to_save', () => {
     @Num(0) imageableId!: number
     @Str('') imageableType!: string
     @MorphTo(() => [User], 'imageableId', 'imageableType')
-    imageable!: User | Post | null
+    imageable!: User | null
   }
 
   class User extends Model {
@@ -18,13 +18,6 @@ describe('feature/relations/morph_to_save', () => {
 
     @Num(0) id!: number
     @Str('') name!: string
-  }
-
-  class Post extends Model {
-    static entity = 'posts'
-
-    @Num(0) id!: number
-    @Str('') title!: string
   }
 
   it('inserts a record to the store with "morph to" relation', () => {
