@@ -33,16 +33,16 @@ describe('feature/relations/morph_to_save_custom_key', () => {
       id: 1,
       url: '/profile.jpg',
       imageableType: 'users',
-      imageable: { userId: 1, name: 'John Doe' }
+      imageable: { userId: 2, name: 'John Doe' }
     })
 
     assertState(store, {
-      users: { 1: { userId: 1, name: 'John Doe' } },
+      users: { 2: { userId: 2, name: 'John Doe' } },
       images: {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageableId: 1,
+          imageableId: 2,
           imageableType: 'users'
         }
       }
@@ -76,16 +76,16 @@ describe('feature/relations/morph_to_save_custom_key', () => {
       url: '/profile.jpg',
       imageableId: 1,
       imageableType: 'users',
-      imageable: { id: 1, imageableId: 1, name: 'John Doe' }
+      imageable: { id: 1, imageableId: 2, name: 'John Doe' }
     })
 
     assertState(store, {
-      users: { 1: { id: 1, imageableId: 1, name: 'John Doe' } },
+      users: { 1: { id: 1, imageableId: 2, name: 'John Doe' } },
       images: {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageableId: 1,
+          imageableId: 2,
           imageableType: 'users'
         }
       }

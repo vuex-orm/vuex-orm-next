@@ -49,7 +49,7 @@ describe('feature/relations/morph_to_save_uid', () => {
     })
   })
 
-  it('inserts "morph to" relation with child having "uid" as the owner key', () => {
+  it('inserts "morph to" relation with parent and child having "uid" as the primary key', () => {
     class Image extends Model {
       static entity = 'images'
 
