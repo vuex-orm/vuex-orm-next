@@ -116,22 +116,14 @@ export class MorphTo extends Relation {
     // Create dictionary that contains relationships.
     const dictionary = this.buildDictionary(query, models)
 
-    if (Object.keys(dictionary).length < 1) {
-      // Set relations to null if dictionary is empty
-      models.forEach((model) => {
-        model.$setRelation(relation, null)
-      })
-    } else {
-      // Otherwise, set model relations using the dictionary
-      models.forEach((model) => {
-        const type = model[this.morphType]
-        const id = model[this.morphId]
+    models.forEach((model) => {
+      const type = model[this.morphType]
+      const id = model[this.morphId]
 
-        const related = dictionary[type]?.[id] ?? null
+      const related = dictionary[type]?.[id] ?? null
 
-        model.$setRelation(relation, related)
-      })
-    }
+      model.$setRelation(relation, related)
+    })
   }
 
   /**
