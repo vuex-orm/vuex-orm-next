@@ -99,7 +99,9 @@ describe('feature/relations/morph_to_retrieve', () => {
       .$repo(Image)
       .limit(2)
       .orderBy('id', 'desc')
-      .with('imageable')
+      .with('imageable', (query) => {
+        query.where('id', 2)
+      })
       .get()!
 
     expect(limitOrderedImages.length).toBe(2)
@@ -115,7 +117,7 @@ describe('feature/relations/morph_to_retrieve', () => {
       url: '/post.jpg',
       imageableId: 1,
       imageableType: 'posts',
-      imageable: { id: 1, title: 'Hello, world!' }
+      imageable: null
     })
   })
 
