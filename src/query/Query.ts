@@ -87,6 +87,7 @@ export class Query<M extends Model = Model> {
     const newQuery = new Query(this.database, this.database.getModel(model))
 
     // Copy query constraints
+    newQuery.eagerLoad = { ...this.eagerLoad }
     newQuery.wheres = [...this.wheres]
     newQuery.orders = [...this.orders]
     newQuery.take = this.take
