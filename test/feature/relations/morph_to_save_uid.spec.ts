@@ -55,7 +55,7 @@ describe('feature/relations/morph_to_save_uid', () => {
 
       @Uid() id!: string
       @Str('') url!: string
-      @Str('') imageableId!: string
+      @Attr() imageableId!: string
       @Attr() imageableType!: string
       @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
