@@ -4,7 +4,7 @@ import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 
-type Schemas = Record<string, Normalizr.Entity>
+export type Schemas = Record<string, Normalizr.Entity>
 
 export class Schema {
   /**
