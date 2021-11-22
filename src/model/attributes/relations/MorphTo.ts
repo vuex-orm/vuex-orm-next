@@ -1,9 +1,16 @@
 import { Schema as NormalizrSchema } from 'normalizr'
+import { assert } from '../../../support/Utils'
 import { Schema } from '../../../schema/Schema'
 import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
 import { Relation } from './Relation'
+
+interface DictionaryByEntities {
+  [entity: string]: {
+    [id: string]: Model
+  }
+}
 
 export class MorphTo extends Relation {
   /**
@@ -112,19 +119,25 @@ export class MorphTo extends Relation {
    * Find and attach related children to their respective parents.
    */
   match(relation: string, models: Collection, query: Query): void {
-    models.forEach((model) => {
-      let related
-      const type = model[this.morphType]
-      const id = model[this.morphId]
+    // Create dictionary that contains relationships.
+    const dictionary = this.buildDictionary(query, models)
 
-      try {
-        related = query.newQueryWithConstraints(type).find(id)
-      } catch (e) {
-        related = null
-      }
+    if (Object.keys(dictionary).length < 1) {
+      // Set relations to null if dictionary is empty
+      models.forEach((model) => {
+        model.$setRelation(relation, null)
+      })
+    } else {
+      // Otherwise, set model relations using the dictionary
+      models.forEach((model) => {
+        const type = model[this.morphType]
+        const id = model[this.morphId]
 
-      model.$setRelation(relation, related)
-    })
+        const related = dictionary[type]?.[id] ?? null
+
+        model.$setRelation(relation, related)
+      })
+    }
   }
 
   /**
@@ -136,5 +149,57 @@ export class MorphTo extends Relation {
     }
 
     return this.relatedTypes[type].$newInstance(element)
+  }
+
+  buildDictionary(query: Query, models: Collection): DictionaryByEntities {
+    const keys = this.getKeysByEntity(models)
+
+    const dictionary = {} as DictionaryByEntities
+
+    for (const entity in keys) {
+      const model = this.relatedTypes[entity]
+
+      // If we can't find a model here, it means the user did not provide model
+      // that corresponds with the type. We can throw here to inform users.
+      assert(!!model, [
+        `Trying to load "morph to" relation of \`${entity}\` but the model ` +
+          `could not be found.`
+      ])
+
+      const ownerKey = (this.ownerKey || model.$getKeyName()) as string
+
+      const results = query
+        .newQueryWithConstraints(entity)
+        .whereIn(ownerKey, keys[entity])
+        .get()
+
+      dictionary[entity] = results.reduce<Record<string, Model>>(
+        (dic, result) => {
+          dic[result[ownerKey]] = result
+
+          return dic
+        },
+        {}
+      )
+    }
+
+    return dictionary
+  }
+
+  getKeysByEntity(models: Collection): Record<string, (string | number)[]> {
+    return models.reduce<Record<string, (string | number)[]>>((keys, model) => {
+      const type = model[this.morphType]
+      const id = model[this.morphId]
+
+      if (id !== null && this.relatedTypes[type] !== undefined) {
+        if (!keys[type]) {
+          keys[type] = []
+        }
+
+        keys[type].push(id)
+      }
+
+      return keys
+    }, {})
   }
 }

@@ -1,5 +1,5 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
-import { Model, Num, Uid, Str, MorphTo } from '@/index'
+import { Model, Attr, Num, Uid, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_save_uid', () => {
   beforeEach(() => {
@@ -12,8 +12,8 @@ describe('feature/relations/morph_to_save_uid', () => {
 
       @Uid() id!: number
       @Str('') url!: string
-      @Num(0) imageableId!: number
-      @Str('') imageableType!: string
+      @Attr() imageableId!: number
+      @Attr() imageableType!: string
       @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
     }
@@ -56,7 +56,7 @@ describe('feature/relations/morph_to_save_uid', () => {
       @Uid() id!: string
       @Str('') url!: string
       @Str('') imageableId!: string
-      @Str('') imageableType!: string
+      @Attr() imageableType!: string
       @MorphTo(() => [User], 'imageableId', 'imageableType')
       imageable!: User | null
     }

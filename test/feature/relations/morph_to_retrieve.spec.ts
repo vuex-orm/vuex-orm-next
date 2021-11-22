@@ -1,5 +1,5 @@
 import { createStore, fillState, assertModel } from 'test/Helpers'
-import { Model, Num, Str, MorphTo } from '@/index'
+import { Model, Attr, Num, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_retrieve', () => {
   class Image extends Model {
@@ -7,8 +7,8 @@ describe('feature/relations/morph_to_retrieve', () => {
 
     @Num(0) id!: number
     @Str('') url!: string
-    @Num(0) imageableId!: number
-    @Str('') imageableType!: string
+    @Attr() imageableId!: number
+    @Attr() imageableType!: string
     @MorphTo(() => [User, Post], 'imageableId', 'imageableType')
     imageable!: User | Post | null
   }
@@ -153,9 +153,7 @@ describe('feature/relations/morph_to_retrieve', () => {
       images: {
         1: {
           id: 1,
-          url: '/profile.jpg',
-          imageableId: 0,
-          imageableType: ''
+          url: '/profile.jpg'
         }
       }
     })
@@ -165,8 +163,8 @@ describe('feature/relations/morph_to_retrieve', () => {
     assertModel(image, {
       id: 1,
       url: '/profile.jpg',
-      imageableId: 0,
-      imageableType: '',
+      imageableId: null,
+      imageableType: null,
       imageable: null
     })
   })

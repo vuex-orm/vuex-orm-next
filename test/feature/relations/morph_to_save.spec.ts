@@ -1,5 +1,5 @@
 import { createStore, assertState } from 'test/Helpers'
-import { Model, Num, Str, MorphTo } from '@/index'
+import { Model, Attr, Num, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_save', () => {
   class Image extends Model {
@@ -7,8 +7,8 @@ describe('feature/relations/morph_to_save', () => {
 
     @Num(0) id!: number
     @Str('') url!: string
-    @Num(0) imageableId!: number
-    @Str('') imageableType!: string
+    @Attr() imageableId!: number
+    @Attr() imageableType!: string
     @MorphTo(() => [User], 'imageableId', 'imageableType')
     imageable!: User | null
   }
@@ -81,8 +81,8 @@ describe('feature/relations/morph_to_save', () => {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageableId: 0,
-          imageableType: ''
+          imageableId: null,
+          imageableType: null
         }
       }
     })
@@ -103,8 +103,8 @@ describe('feature/relations/morph_to_save', () => {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageableId: 0,
-          imageableType: ''
+          imageableId: null,
+          imageableType: null
         }
       }
     })
