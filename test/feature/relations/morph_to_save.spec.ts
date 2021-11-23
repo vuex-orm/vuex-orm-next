@@ -1,30 +1,23 @@
 import { createStore, assertState } from 'test/Helpers'
-import { Model, Attr, Str, MorphTo } from '@/index'
+import { Model, Attr, Num, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_save', () => {
   class Image extends Model {
     static entity = 'images'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') url!: string
     @Attr() imageableId!: number
     @Attr() imageableType!: string
     @MorphTo(() => [User], 'imageableId', 'imageableType')
-    imageable!: User | Post | null
+    imageable!: User | null
   }
 
   class User extends Model {
     static entity = 'users'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') name!: string
-  }
-
-  class Post extends Model {
-    static entity = 'posts'
-
-    @Attr() id!: number
-    @Str('') title!: string
   }
 
   it('inserts a record to the store with "morph to" relation', () => {
@@ -35,46 +28,46 @@ describe('feature/relations/morph_to_save', () => {
       url: '/profile.jpg',
       imageableId: 1,
       imageableType: 'users',
-      imageable: { id: 1, name: 'John Doe' }
+      imageable: { id: 2, name: 'John Doe' }
     })
 
     assertState(store, {
-      users: { 1: { id: 1, name: 'John Doe' } },
+      users: { 2: { id: 2, name: 'John Doe' } },
       images: {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageableId: 1,
+          imageableId: 2,
           imageableType: 'users'
         }
       }
     })
   })
 
-  it('generates missing foreign key', () => {
+  it('generates missing relational key', () => {
     const store = createStore()
 
     store.$repo(Image).save({
       id: 1,
       url: '/profile.jpg',
       imageableType: 'users',
-      imageable: { id: 1, name: 'John Doe' }
+      imageable: { id: 2, name: 'John Doe' }
     })
 
     assertState(store, {
-      users: { 1: { id: 1, name: 'John Doe' } },
+      users: { 2: { id: 2, name: 'John Doe' } },
       images: {
         1: {
           id: 1,
           url: '/profile.jpg',
-          imageableId: 1,
+          imageableId: 2,
           imageableType: 'users'
         }
       }
     })
   })
 
-  it('can insert a record with missing relational key', () => {
+  it('can insert a record with missing related data', () => {
     const store = createStore()
 
     store.$repo(Image).save({
@@ -95,7 +88,7 @@ describe('feature/relations/morph_to_save', () => {
     })
   })
 
-  it('can insert a record with relational key set to `null`', () => {
+  it('can insert a record with related data set to `null`', () => {
     const store = createStore()
 
     store.$repo(Image).save({

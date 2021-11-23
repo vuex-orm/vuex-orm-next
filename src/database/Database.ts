@@ -1,6 +1,6 @@
 import { Store } from 'vuex'
 import { schema as Normalizr } from 'normalizr'
-import { Schema } from '../schema/Schema'
+import { Schema, Schemas } from '../schema/Schema'
 import { Model } from '../model/Model'
 import { Relation } from '../model/attributes/relations/Relation'
 import { State } from '../modules/State'
@@ -26,7 +26,7 @@ export class Database {
   /**
    * The schema definition for the registered models.
    */
-  schemas: Record<string, Normalizr.Entity> = {}
+  schemas: Schemas = {}
 
   /**
    * Whether the database has already been installed to Vuex or not.

@@ -81,6 +81,22 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Create a new query instance with constraints for the given model.
+   */
+  newQueryWithConstraints(model: string): Query<Model> {
+    const newQuery = new Query(this.database, this.database.getModel(model))
+
+    // Copy query constraints
+    newQuery.eagerLoad = { ...this.eagerLoad }
+    newQuery.wheres = [...this.wheres]
+    newQuery.orders = [...this.orders]
+    newQuery.take = this.take
+    newQuery.skip = this.skip
+
+    return newQuery
+  }
+
+  /**
    * Create a new query instance from the given relation.
    */
   newQueryForRelation(relation: Relation): Query<Model> {
@@ -382,7 +398,7 @@ export class Query<M extends Model = Model> {
     // Once we have the results, we just match those back up to their parent models
     // using the relationship instance. Then we just return the finished arrays
     // of models which have been eagerly hydrated and are readied for return.
-    relation.match(name, models, relation.getEager(query), query)
+    relation.match(name, models, query)
   }
 
   /**

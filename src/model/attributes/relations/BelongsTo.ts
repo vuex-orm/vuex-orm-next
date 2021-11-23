@@ -84,7 +84,8 @@ export class BelongsTo extends Relation {
   /**
    * Match the eagerly loaded results to their respective parents.
    */
-  match(relation: string, models: Collection, results: Collection): void {
+  match(relation: string, models: Collection, query: Query): void {
+    const results = query.get()
     const dictionary = results.reduce<Record<string, Model>>((dic, result) => {
       dic[result[this.ownerKey]] = result
 

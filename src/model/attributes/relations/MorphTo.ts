@@ -1,9 +1,10 @@
 import { Schema as NormalizrSchema } from 'normalizr'
+import { assert } from '../../../support/Utils'
 import { Schema } from '../../../schema/Schema'
 import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
-import { Relation } from './Relation'
+import { Relation, DictionaryByEntities } from './Relation'
 
 export class MorphTo extends Relation {
   /**
@@ -101,7 +102,7 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Since we do not know the child model ahead of time, we cannot add any
+   * Add eager constraints. Since we do not know the related model ahead of time, we cannot add any
    * eager constraints.
    */
   addEagerConstraints(_query: Query, _models: Collection): void {
@@ -109,29 +110,17 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Execute the eager loading query.
-   */
-  getEager(_query: Query): Collection {
-    return []
-  }
-
-  /**
    * Find and attach related children to their respective parents.
    */
-  match(
-    relation: string,
-    models: Collection,
-    _results: Collection,
-    query: Query
-  ): void {
-    const queries = this.createRelatedQueries(query)
+  match(relation: string, models: Collection, query: Query): void {
+    // Create dictionary that contains relationships.
+    const dictionary = this.buildDictionary(query, models)
 
     models.forEach((model) => {
       const type = model[this.morphType]
       const id = model[this.morphId]
 
-      const related =
-        type !== null && id !== null ? queries[type].find(id) : null
+      const related = dictionary[type]?.[id] ?? null
 
       model.$setRelation(relation, related)
     })
@@ -148,15 +137,55 @@ export class MorphTo extends Relation {
     return this.relatedTypes[type].$newInstance(element)
   }
 
-  // TODO: Need to find a way to copy user defined query constraints here.
-  protected createRelatedQueries(query: Query): Record<string, Query> {
-    const queries = {} as Record<string, Query>
+  buildDictionary(query: Query, models: Collection): DictionaryByEntities {
+    const keys = this.getKeysByEntity(models)
 
-    for (const entity in this.relatedTypes) {
-      // TODO: Copy query's constraints to the new query.
-      queries[entity] = query.newQuery(entity)
+    const dictionary = {} as DictionaryByEntities
+
+    for (const entity in keys) {
+      const model = this.relatedTypes[entity]
+
+      // If we can't find a model here, it means the user did not provide model
+      // that corresponds with the type. We can throw here to inform users.
+      assert(!!model, [
+        `Trying to load "morph to" relation of \`${entity}\` but the model ` +
+          `could not be found.`
+      ])
+
+      const ownerKey = (this.ownerKey || model.$getKeyName()) as string
+
+      const results = query
+        .newQueryWithConstraints(entity)
+        .whereIn(ownerKey, keys[entity])
+        .get()
+
+      dictionary[entity] = results.reduce<Record<string, Model>>(
+        (dic, result) => {
+          dic[result[ownerKey]] = result
+
+          return dic
+        },
+        {}
+      )
     }
 
-    return queries
+    return dictionary
+  }
+
+  getKeysByEntity(models: Collection): Record<string, (string | number)[]> {
+    return models.reduce<Record<string, (string | number)[]>>((keys, model) => {
+      const type = model[this.morphType]
+      const id = model[this.morphId]
+
+      if (id !== null && this.relatedTypes[type] !== undefined) {
+        if (!keys[type]) {
+          keys[type] = []
+        }
+
+        keys[type].push(id)
+      }
+
+      return keys
+    }, {})
   }
 }

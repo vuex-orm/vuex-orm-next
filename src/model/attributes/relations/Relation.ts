@@ -9,6 +9,12 @@ export interface Dictionary {
   [id: string]: Model[]
 }
 
+export interface DictionaryByEntities {
+  [entity: string]: {
+    [id: string]: Model
+  }
+}
+
 export abstract class Relation extends Attribute {
   /**
    * The parent model.
@@ -57,21 +63,9 @@ export abstract class Relation extends Attribute {
   abstract addEagerConstraints(query: Query, models: Collection): void
 
   /**
-   * Execute the eager loading query.
-   */
-  public getEager(query: Query): Collection {
-    return query.get()
-  }
-
-  /**
    * Match the eagerly loaded results to their parents.
    */
-  abstract match(
-    relation: string,
-    models: Collection,
-    results: Collection,
-    query: Query
-  ): void
+  abstract match(relation: string, models: Collection, query: Query): void
 
   /**
    * Get all of the primary keys for an array of models.

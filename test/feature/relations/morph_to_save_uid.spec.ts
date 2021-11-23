@@ -1,5 +1,5 @@
 import { createStore, assertState, mockUid } from 'test/Helpers'
-import { Model, Attr, Uid, Str, MorphTo } from '@/index'
+import { Model, Attr, Num, Uid, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_save_uid', () => {
   beforeEach(() => {
@@ -21,7 +21,7 @@ describe('feature/relations/morph_to_save_uid', () => {
     class User extends Model {
       static entity = 'users'
 
-      @Attr() id!: number
+      @Num(0) id!: number
       @Str('') name!: string
     }
 
@@ -49,7 +49,7 @@ describe('feature/relations/morph_to_save_uid', () => {
     })
   })
 
-  it('inserts "morph to" relation with child having "uid" as the owner key', () => {
+  it('inserts "morph to" relation with parent and child having "uid" as the primary key', () => {
     class Image extends Model {
       static entity = 'images'
 

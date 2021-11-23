@@ -1,11 +1,11 @@
 import { createStore, fillState, assertModel } from 'test/Helpers'
-import { Model, Attr, Str, MorphTo } from '@/index'
+import { Model, Attr, Num, Str, MorphTo } from '@/index'
 
 describe('feature/relations/morph_to_retrieve', () => {
   class Image extends Model {
     static entity = 'images'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') url!: string
     @Attr() imageableId!: number
     @Attr() imageableType!: string
@@ -16,14 +16,14 @@ describe('feature/relations/morph_to_retrieve', () => {
   class User extends Model {
     static entity = 'users'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') name!: string
   }
 
   class Post extends Model {
     static entity = 'posts'
 
-    @Attr() id!: number
+    @Num(0) id!: number
     @Str('') title!: string
   }
 
@@ -90,6 +90,37 @@ describe('feature/relations/morph_to_retrieve', () => {
     })
   })
 
+  it('can eager load morph to relation with constraints', () => {
+    const store = createStore()
+
+    fillState(store, MORPH_TO_ENTITIES)
+
+    const limitOrderedImages = store
+      .$repo(Image)
+      .limit(2)
+      .orderBy('id', 'desc')
+      .with('imageable', (query) => {
+        query.where('id', 2)
+      })
+      .get()!
+
+    expect(limitOrderedImages.length).toBe(2)
+    assertModel(limitOrderedImages[0], {
+      id: 3,
+      url: '/post2.jpg',
+      imageableId: 2,
+      imageableType: 'posts',
+      imageable: { id: 2, title: 'Hello, world! Again!' }
+    })
+    assertModel(limitOrderedImages[1], {
+      id: 2,
+      url: '/post.jpg',
+      imageableId: 1,
+      imageableType: 'posts',
+      imageable: null
+    })
+  })
+
   it('can eager load missing relation as `null`', () => {
     const store = createStore()
     fillState(store, {
@@ -124,9 +155,7 @@ describe('feature/relations/morph_to_retrieve', () => {
       images: {
         1: {
           id: 1,
-          url: '/profile.jpg',
-          imageableId: null,
-          imageableType: null
+          url: '/profile.jpg'
         }
       }
     })

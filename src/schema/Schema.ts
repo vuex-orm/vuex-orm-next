@@ -4,7 +4,7 @@ import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 
-type Schemas = Record<string, Normalizr.Entity>
+export type Schemas = Record<string, Normalizr.Entity>
 
 export class Schema {
   /**
@@ -115,9 +115,7 @@ export class Schema {
       // relationship of the parent model. In this case, we'll attach any
       // missing foreign keys to the record first.
       if (key !== null) {
-        // Using optional chaining in the event of an inverse polymorphic
-        // relation that won't have a defined relation.
-        ;(parent.$fields()[key] as Relation)?.attach(parentRecord, record)
+        ;(parent.$fields()[key] as Relation).attach(parentRecord, record)
       }
 
       // Next, we'll generate any missing primary key fields defined as
