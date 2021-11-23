@@ -3,7 +3,7 @@ import { Schema } from '../../../schema/Schema'
 import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
-import { Relation, Dictionary } from './Relation'
+import { Dictionary, Relation } from './Relation'
 
 export class HasMany extends Relation {
   /**
@@ -62,8 +62,7 @@ export class HasMany extends Relation {
    * Match the eagerly loaded results to their parents.
    */
   match(relation: string, models: Collection, query: Query): void {
-    const results = query.get()
-    const dictionary = this.buildDictionary(results)
+    const dictionary = this.buildDictionary(query.get())
 
     models.forEach((model) => {
       const key = model[this.localKey]

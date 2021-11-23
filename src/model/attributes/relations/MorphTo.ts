@@ -179,6 +179,9 @@ export class MorphTo extends Relation {
     return dictionary
   }
 
+  /**
+   * Get the relation's primary keys grouped by its entity.
+   */
   protected getKeysByEntity(
     models: Collection
   ): Record<string, (string | number)[]> {
