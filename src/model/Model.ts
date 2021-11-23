@@ -13,6 +13,7 @@ import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
 import { MorphOne } from './attributes/relations/MorphOne'
 import { MorphTo } from './attributes/relations/MorphTo'
+import { MorphMany } from './attributes/relations/MorphMany'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -261,6 +262,22 @@ export class Model {
     const relatedModels = related.map((model) => model.newRawInstance())
 
     return new MorphTo(instance, relatedModels, id, type, ownerKey)
+  }
+
+  /*
+   * Create a new MorphMany relation instance.
+   */
+  static morphMany(
+    related: typeof Model,
+    id: string,
+    type: string,
+    localKey?: string
+  ): MorphMany {
+    const model = this.newRawInstance()
+
+    localKey = localKey ?? model.$getLocalKey()
+
+    return new MorphMany(model, related.newRawInstance(), id, type, localKey)
   }
 
   /**
