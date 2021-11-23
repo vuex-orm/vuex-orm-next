@@ -85,6 +85,7 @@ that will let us access the model which owns the image. We can define the invers
 ```js
 class Image extends Model {
   static entity = 'images'
+
   static fields () {
     return {
       id: this.number(0),
@@ -105,6 +106,7 @@ model. You may also pass a fourth argument to the `morphTo` method specifying yo
 ```js
 class Image extends Model {
   static entity = 'images'
+
   static fields () {
     return {
       id: this.number(0),
