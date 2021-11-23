@@ -9,6 +9,7 @@ import {
 import { Element, Elements, Item, Collection } from '../data/Data'
 import { Database } from '../database/Database'
 import { Relation } from '../model/attributes/relations/Relation'
+import { MorphTo } from '../model/attributes/relations/MorphTo'
 import { Model } from '../model/Model'
 import { Interpreter } from '../interpreter/Interpreter'
 import { Connection } from '../connection/Connection'
@@ -22,7 +23,6 @@ import {
   EagerLoad,
   EagerLoadConstraint
 } from './Options'
-import { MorphTo } from '@/model/attributes/relations/MorphTo'
 
 export interface CollectionPromises {
   indexes: string[]

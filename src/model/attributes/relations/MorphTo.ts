@@ -52,14 +52,15 @@ export class MorphTo extends Relation {
     this.ownerKey = ownerKey
   }
 
+  /**
+   * Create a dictionary of relations keyed by their entity.
+   */
   protected createRelatedTypes(models: Model[]): Record<string, Model> {
-    const types = {} as Record<string, Model>
-
-    models.forEach((model) => {
+    return models.reduce<Record<string, Model>>((types, model) => {
       types[model.$entity()] = model
-    })
 
-    return types
+      return types
+    }, {})
   }
 
   /**
@@ -102,8 +103,8 @@ export class MorphTo extends Relation {
   }
 
   /**
-   * Add eager constraints. Since we do not know the related model ahead of time, we cannot add any
-   * eager constraints.
+   * Add eager constraints. Since we do not know the related model ahead of time,
+   * we cannot add any eager constraints.
    */
   addEagerConstraints(_query: Query, _models: Collection): void {
     return
@@ -137,7 +138,13 @@ export class MorphTo extends Relation {
     return this.relatedTypes[type].$newInstance(element)
   }
 
-  buildDictionary(query: Query, models: Collection): DictionaryByEntities {
+  /**
+   * Build model dictionary keyed by the owner key for each entity.
+   */
+  protected buildDictionary(
+    query: Query,
+    models: Collection
+  ): DictionaryByEntities {
     const keys = this.getKeysByEntity(models)
 
     const dictionary = {} as DictionaryByEntities
@@ -145,11 +152,11 @@ export class MorphTo extends Relation {
     for (const entity in keys) {
       const model = this.relatedTypes[entity]
 
-      // If we can't find a model here, it means the user did not provide model
-      // that corresponds with the type. We can throw here to inform users.
+      // If we can't find a model, it means the user did not provide model
+      // that corresponds with the type.
       assert(!!model, [
-        `Trying to load "morph to" relation of \`${entity}\` but the model ` +
-          `could not be found.`
+        `Trying to load "morph to" relation of \`${entity}\``,
+        'but the model could not be found.'
       ])
 
       const ownerKey = (this.ownerKey || model.$getKeyName()) as string
@@ -172,7 +179,9 @@ export class MorphTo extends Relation {
     return dictionary
   }
 
-  getKeysByEntity(models: Collection): Record<string, (string | number)[]> {
+  protected getKeysByEntity(
+    models: Collection
+  ): Record<string, (string | number)[]> {
     return models.reduce<Record<string, (string | number)[]>>((keys, model) => {
       const type = model[this.morphType]
       const id = model[this.morphId]
