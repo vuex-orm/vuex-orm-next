@@ -75,3 +75,44 @@ class User extends Model {
   }
 }
 ```
+
+### Defining The Inverse Of The Relationship
+
+So, we can access the `Image` model from our `User` or `Post`. Now, let's define a relationship on the `Image` model
+that will let us access the model which owns the image. We can define the inverse of a `morphOne` relationship using the
+`morphTo` attribute:
+
+```js
+class Image extends Model {
+  static entity = 'images'
+  static fields () {
+    return {
+      id: this.number(0),
+      url: this.string(''),
+      imageableId: this.number(0),
+      imageableType: this.string(''),
+      imageable: this.morphTo([User, Post], 'imageableId', 'imageableType'),
+    }
+  }
+}
+```
+
+The first argument passed to the `morphTo` method is an array of models which are related, the second argument is the
+name of the field which will contain the `id` of the model, and the third argument is the name of the field which will
+contain the `entity` of the related model. The third argument is used to determine the "type" of the related
+model. You may also pass a fourth argument to the `morphTo` method specifying your custom key on the related model.
+
+```js
+class Image extends Model {
+  static entity = 'images'
+  static fields () {
+    return {
+      id: this.number(0),
+      url: this.string(''),
+      imageableId: this.number(0),
+      imageableType: this.string(''),
+      imageable: this.morphTo([User, Post], 'imageableId', 'imageableType', 'morphableId'),
+    }
+  }
+}
+```
