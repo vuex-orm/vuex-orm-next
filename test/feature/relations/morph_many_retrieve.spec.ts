@@ -1,5 +1,10 @@
-import { createStore, fillState, assertModel, assertInstanceOf } from 'test/Helpers'
-import { Model, Str, Num, MorphMany } from '@/index'
+import {
+  createStore,
+  fillState,
+  assertModel,
+  assertInstanceOf
+} from 'test/Helpers'
+import { Model, Attr, Str, Num, MorphMany } from '@/index'
 
 describe('feature/relations/morph_many_retrieve', () => {
   class Comment extends Model {
@@ -7,8 +12,8 @@ describe('feature/relations/morph_many_retrieve', () => {
 
     @Num(0) id!: number
     @Str('') body!: string
-    @Num(0) commentableId!: number
-    @Str('') commentableType!: string
+    @Attr(null) commentableId!: number | null
+    @Attr(null) commentableType!: string | null
   }
 
   class Video extends Model {
@@ -102,12 +107,14 @@ describe('feature/relations/morph_many_retrieve', () => {
       assertModel(post, {
         id: 1,
         title: 'Hello, world!',
-        comments: [{
-          id: 3,
-          body: 'Cool Post!',
-          commentableId: 1,
-          commentableType: 'posts'
-        }]
+        comments: [
+          {
+            id: 3,
+            body: 'Cool Post!',
+            commentableId: 1,
+            commentableType: 'posts'
+          }
+        ]
       })
     })
   })
@@ -135,7 +142,7 @@ describe('feature/relations/morph_many_retrieve', () => {
     })
   })
 
-  it('can revive "has many" relations', () => {
+  it('can revive "morph many" relations', () => {
     const store = createStore()
 
     fillState(store, {
@@ -143,8 +150,18 @@ describe('feature/relations/morph_many_retrieve', () => {
         1: { id: 1, link: '/video.mp4' }
       },
       comments: {
-        1: { id: 1, commentableId: 1, commentableType: 'videos', body: 'Cool Video!' },
-        2: { id: 2, commentableId: 1, commentableType: 'videos', body: 'Cool Video Again!' }
+        1: {
+          id: 1,
+          commentableId: 1,
+          commentableType: 'videos',
+          body: 'Cool Video!'
+        },
+        2: {
+          id: 2,
+          commentableId: 1,
+          commentableType: 'videos',
+          body: 'Cool Video Again!'
+        }
       }
     })
 
