@@ -45,14 +45,14 @@ export class MorphMany extends Relation {
   }
 
   /**
-   * Define the normalizr schema for the relation. TODO
+   * Define the normalizr schema for the relation.
    */
   define(schema: Schema): NormalizrSchema {
     return schema.many(this.related, this.parent)
   }
 
   /**
-   * Attach the parent type and id to the given relation. TODO
+   * Attach the parent type and id to the given relation.
    */
   attach(record: Element, child: Element): void {
     child[this.morphId] = record[this.localKey]
@@ -60,7 +60,7 @@ export class MorphMany extends Relation {
   }
 
   /**
-   * Set the constraints for an eager load of the relation. TODO
+   * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
     query.where(this.morphType, this.parent.$entity())
@@ -92,7 +92,7 @@ export class MorphMany extends Relation {
   }
 
   /**
-   * Make related models. TODO
+   * Make related models.
    */
   make(elements?: Element[]): Model[] {
     return elements
