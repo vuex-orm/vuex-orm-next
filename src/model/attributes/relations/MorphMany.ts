@@ -38,7 +38,7 @@ export class MorphMany extends Relation {
   }
 
   /**
-   * Get all related models for the relationship. TODO
+   * Get all related models for the relationship.
    */
   getRelateds(): Model[] {
     return [this.related]
