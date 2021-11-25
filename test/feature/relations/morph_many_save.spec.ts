@@ -76,7 +76,7 @@ describe('feature/relations/morph_many_save', () => {
     })
   })
 
-  it('generates missing foreign key', async () => {
+  it('generates missing relational key', async () => {
     const store = createStore()
 
     store.$repo(Video).save({

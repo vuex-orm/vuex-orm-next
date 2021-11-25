@@ -59,7 +59,7 @@ describe('feature/relations/morph_many_save_uid', () => {
     })
   })
 
-  it('inserts "morph many" relation with related having "uid" as the related key', () => {
+  it('inserts "morph many" relation with related having "uid" as the relational key', () => {
     class Comment extends Model {
       static entity = 'comments'
 
