@@ -72,7 +72,9 @@ describe('feature/relations/morph_many_retrieve', () => {
   describe('when there are comments', () => {
     const store = createStore()
 
-    fillState(store, ENTITIES)
+    beforeAll(() => {
+      fillState(store, ENTITIES)
+    })
 
     it('can eager load morph many relation for video', () => {
       const video = store.$repo(Video).with('comments').first()!
@@ -122,12 +124,14 @@ describe('feature/relations/morph_many_retrieve', () => {
   describe('when there are no comments', () => {
     const store = createStore()
 
-    fillState(store, {
-      videos: {
-        1: { id: 1, link: '/video.mp4' }
-      },
-      posts: {},
-      comments: {}
+    beforeAll(() => {
+      fillState(store, {
+        videos: {
+          1: { id: 1, link: '/video.mp4' }
+        },
+        posts: {},
+        comments: {}
+      })
     })
 
     it('can eager load missing relation as empty array', () => {
