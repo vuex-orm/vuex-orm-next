@@ -101,7 +101,7 @@ describe('feature/relations/morph_many_retrieve', () => {
       })
     })
 
-    it('can eager load morph one relation for post', () => {
+    it('can eager load morph many relation for post', () => {
       const post = store.$repo(Post).with('comments').first()!
 
       expect(post).toBeInstanceOf(Post)
