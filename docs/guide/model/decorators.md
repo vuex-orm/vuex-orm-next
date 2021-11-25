@@ -229,3 +229,19 @@ class Cluster extends Model {
   image!: Image | null
 }
 ```
+
+### `@MorphMany`
+
+Marks a property on the model as a [morphMany attribute](../relationships/polymorphic) type. For example:
+
+```ts
+import { Model, MorphMany } from '@vuex-orm/core'
+import Comment from '@/models/Comment'
+
+class Video extends Model {
+  static entity = 'videos'
+
+  @MorphMany(() => Comment, 'commentableId', 'commentableType')
+  comments!: Comment[]
+}
+```
