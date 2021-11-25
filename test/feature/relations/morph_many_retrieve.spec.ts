@@ -119,7 +119,7 @@ describe('feature/relations/morph_many_retrieve', () => {
     })
   })
 
-  describe('when there are no images', () => {
+  describe('when there are no comments', () => {
     const store = createStore()
 
     fillState(store, {
