@@ -84,7 +84,7 @@ more than one type of model on a single association. For example, a `Comment` mi
 
 ### Defining A One To Many Polymorphic Relationship
 
-To define this relationship, for example, a `Post` or `Video` model might be associated with one or more `Comment`'s, we
+To define this relationship, for example, a `Post` or `Video` model might be associated with one or more `Comment`(s), we
 define a `morphMany` field to the `Post` and `Video` models.
 
 ```js
@@ -132,7 +132,7 @@ field which will contain the `id` of the model, and the third argument is the na
 
 Additionally, Vuex ORM assumes that the foreign key should have a value matching the `id`
 (or the custom `static primaryKey`) field of the parent. In other words, Vuex ORM will look for the value of the
-videos's `id` field in the `commentableId` field of the `Comment` record. If you would like the relationship to use a
+video's `id` field in the `commentableId` field of the `Comment` record. If you would like the relationship to use a
 value other than `id`, you may pass a fourth argument to the `morphMany` method specifying your custom key:
 
 ```js
