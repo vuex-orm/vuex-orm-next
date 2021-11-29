@@ -1,4 +1,4 @@
-import { createStore } from 'test/Helpers'
+import { createStore, assertInstanceOf } from 'test/Helpers'
 import {
   Model,
   Attr,
@@ -183,8 +183,7 @@ describe('unit/model/Model_Relations', () => {
       ]
     })
 
-    expect(user.comments[0]).toBeInstanceOf(Comment)
-    expect(user.comments[1]).toBeInstanceOf(Comment)
+    assertInstanceOf(user.comments, Comment)
     expect(user.comments[0].id).toBe(2)
     expect(user.comments[1].id).toBe(3)
   })

@@ -176,9 +176,8 @@ describe('feature/relations/morph_many_retrieve', () => {
 
     const video = store.$repo(Video).revive(schema)!
 
-    expect(video.comments.length).toBe(2)
-    expect(video.comments[0]).toBeInstanceOf(Comment)
-    expect(video.comments[1]).toBeInstanceOf(Comment)
+    expect(video.comments).toHaveLength(2)
+    assertInstanceOf(video.comments, Comment)
     expect(video.comments[0].id).toBe(2)
     expect(video.comments[1].id).toBe(1)
   })
