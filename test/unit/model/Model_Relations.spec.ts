@@ -1,4 +1,4 @@
-import { createStore } from 'test/Helpers'
+import { createStore, assertInstanceOf } from 'test/Helpers'
 import {
   Model,
   Attr,
@@ -6,8 +6,9 @@ import {
   BelongsTo,
   HasMany,
   HasManyBy,
+  MorphOne,
   MorphTo,
-  MorphOne
+  MorphMany
 } from '@/index'
 
 describe('unit/model/Model_Relations', () => {
@@ -32,6 +33,9 @@ describe('unit/model/Model_Relations', () => {
 
     @MorphOne(() => Image, 'imageableId', 'imageableType')
     image!: Image | null
+
+    @MorphMany(() => Comment, 'commentableId', 'commentableType')
+    comments!: Comment[]
   }
 
   class Phone extends Model {
@@ -69,6 +73,15 @@ describe('unit/model/Model_Relations', () => {
 
     @MorphTo(() => [User], 'imageableId', 'imageableType')
     imageable!: User | null
+  }
+
+  class Comment extends Model {
+    static entity = 'comments'
+
+    @Attr() id!: number
+    @Attr() body!: string
+    @Attr() commentableId!: string | null
+    @Attr() commentableType!: string | null
   }
 
   it('fills "has one" relation', () => {
@@ -157,5 +170,21 @@ describe('unit/model/Model_Relations', () => {
 
     expect(image.imageable!).toBeInstanceOf(User)
     expect(image.imageable!.id).toBe(2)
+  })
+
+  it('fills "morph many" relation', () => {
+    const store = createStore()
+
+    const user = store.$repo(User).make({
+      id: 1,
+      comments: [
+        { id: 2, body: 'Hey User!' },
+        { id: 3, body: 'Hey User Again!' }
+      ]
+    })
+
+    assertInstanceOf(user.comments, Comment)
+    expect(user.comments[0].id).toBe(2)
+    expect(user.comments[1].id).toBe(3)
   })
 })

@@ -16,6 +16,7 @@ import { BelongsTo } from './model/decorators/attributes/relations/BelongsTo'
 import { HasMany } from './model/decorators/attributes/relations/HasMany'
 import { HasManyBy } from './model/decorators/attributes/relations/HasManyBy'
 import { MorphOne } from './model/decorators/attributes/relations/MorphOne'
+import { MorphMany } from './model/decorators/attributes/relations/MorphMany'
 import { Attribute } from './model/attributes/Attribute'
 import { Type } from './model/attributes/types/Type'
 import { Attr as AttrAttr } from './model/attributes/types/Attr'
@@ -29,6 +30,7 @@ import { BelongsTo as BelongsToAttr } from './model/attributes/relations/Belongs
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
 import { HasManyBy as HasManyByAttr } from './model/attributes/relations/HasManyBy'
 import { MorphOne as MorphOneAttr } from './model/attributes/relations/MorphOne'
+import { MorphMany as MorphManyAttr } from './model/attributes/relations/MorphMany'
 import { Repository } from './repository/Repository'
 import { Interpreter } from './interpreter/Interpreter'
 import { Query } from './query/Query'
@@ -51,6 +53,7 @@ export default {
   HasMany,
   HasManyBy,
   MorphOne,
+  MorphMany,
   Attribute,
   Type,
   AttrAttr,
@@ -64,6 +67,7 @@ export default {
   HasManyAttr,
   HasManyByAttr,
   MorphOneAttr,
+  MorphManyAttr,
   Repository,
   Interpreter,
   Query,
