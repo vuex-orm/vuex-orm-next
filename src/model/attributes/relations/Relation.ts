@@ -9,12 +9,6 @@ export interface Dictionary {
   [id: string]: Model[]
 }
 
-export interface DictionaryByEntities {
-  [entity: string]: {
-    [id: string]: Model
-  }
-}
-
 export abstract class Relation extends Attribute {
   /**
    * The parent model.

@@ -4,7 +4,13 @@ import { Schema } from '../../../schema/Schema'
 import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
-import { Relation, DictionaryByEntities } from './Relation'
+import { Relation } from './Relation'
+
+interface DictionaryByEntities {
+  [entity: string]: {
+    [id: string]: Model
+  }
+}
 
 export class MorphTo extends Relation {
   /**
