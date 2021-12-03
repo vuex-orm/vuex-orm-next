@@ -84,18 +84,27 @@ export class BelongsTo extends Relation {
   /**
    * Match the eagerly loaded results to their respective parents.
    */
-  match(relation: string, models: Collection, results: Collection): void {
-    const dictionary = results.reduce<Record<string, Model>>((dic, result) => {
-      dic[result[this.ownerKey]] = result
-
-      return dic
-    }, {})
+  match(relation: string, models: Collection, query: Query): void {
+    const dictionary = this.buildDictionary(query.get())
 
     models.forEach((model) => {
-      dictionary[model[this.foreignKey]]
-        ? model.$setRelation(relation, dictionary[model[this.foreignKey]])
+      const key = model[this.foreignKey]
+
+      dictionary[key]
+        ? model.$setRelation(relation, dictionary[key])
         : model.$setRelation(relation, null)
     })
+  }
+
+  /**
+   * Build model dictionary keyed by relation's parent key.
+   */
+  protected buildDictionary(models: Collection): Record<string, Model> {
+    return models.reduce<Record<string, Model>>((dictionary, model) => {
+      dictionary[model[this.ownerKey]] = model
+
+      return dictionary
+    }, {})
   }
 
   /**

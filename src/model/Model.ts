@@ -12,6 +12,7 @@ import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
 import { MorphOne } from './attributes/relations/MorphOne'
+import { MorphTo } from './attributes/relations/MorphTo'
 
 export type ModelFields = Record<string, Attribute>
 export type ModelSchemas = Record<string, ModelFields>
@@ -248,6 +249,21 @@ export class Model {
   }
 
   /**
+   * Create a new MorphTo relation instance.
+   */
+  static morphTo(
+    related: typeof Model[],
+    id: string,
+    type: string,
+    ownerKey: string = ''
+  ): MorphTo {
+    const instance = this.newRawInstance()
+    const relatedModels = related.map((model) => model.newRawInstance())
+
+    return new MorphTo(instance, relatedModels, id, type, ownerKey)
+  }
+
+  /**
    * Get the constructor for this model.
    */
   $self(): typeof Model {
@@ -332,16 +348,17 @@ export class Model {
    */
   protected $fillField(key: string, attr: Attribute, value: any): void {
     if (value !== undefined) {
-      this[key] = attr.make(value)
+      this[key] =
+        attr instanceof MorphTo
+          ? attr.make(value, this[attr.getType()])
+          : attr.make(value)
+
       return
     }
 
-    if (this[key] !== undefined) {
-      this[key] = this[key]
-      return
+    if (this[key] === undefined) {
+      this[key] = attr.make()
     }
-
-    this[key] = attr.make()
   }
 
   /**

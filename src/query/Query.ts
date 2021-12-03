@@ -9,6 +9,7 @@ import {
 import { Element, Elements, Item, Collection } from '../data/Data'
 import { Database } from '../database/Database'
 import { Relation } from '../model/attributes/relations/Relation'
+import { MorphTo } from '../model/attributes/relations/MorphTo'
 import { Model } from '../model/Model'
 import { Interpreter } from '../interpreter/Interpreter'
 import { Connection } from '../connection/Connection'
@@ -75,14 +76,30 @@ export class Query<M extends Model = Model> {
   /**
    * Create a new query instance for the given model.
    */
-  protected newQuery(model: string): Query<Model> {
+  newQuery(model: string): Query<Model> {
     return new Query(this.database, this.database.getModel(model))
+  }
+
+  /**
+   * Create a new query instance with constraints for the given model.
+   */
+  newQueryWithConstraints(model: string): Query<Model> {
+    const newQuery = new Query(this.database, this.database.getModel(model))
+
+    // Copy query constraints
+    newQuery.eagerLoad = { ...this.eagerLoad }
+    newQuery.wheres = [...this.wheres]
+    newQuery.orders = [...this.orders]
+    newQuery.take = this.take
+    newQuery.skip = this.skip
+
+    return newQuery
   }
 
   /**
    * Create a new query instance from the given relation.
    */
-  protected newQueryForRelation(relation: Relation): Query<Model> {
+  newQueryForRelation(relation: Relation): Query<Model> {
     return new Query(this.database, relation.getRelated())
   }
 
@@ -381,7 +398,7 @@ export class Query<M extends Model = Model> {
     // Once we have the results, we just match those back up to their parent models
     // using the relationship instance. Then we just return the finished arrays
     // of models which have been eagerly hydrated and are readied for return.
-    relation.match(name, models, relation.getEager(query))
+    relation.match(name, models, query)
   }
 
   /**
@@ -450,6 +467,16 @@ export class Query<M extends Model = Model> {
 
       if (!relatedSchema) {
         return
+      }
+
+      // Inverse polymorphic relations have the same parent and child model
+      // so we need to query using the type stored in the parent model.
+      if (attr instanceof MorphTo) {
+        const relatedType = model[attr.getType()]
+
+        model[key] = this.newQuery(relatedType).reviveOne(relatedSchema)
+
+        continue
       }
 
       model[key] = isArray(relatedSchema)

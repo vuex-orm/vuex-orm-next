@@ -61,8 +61,8 @@ export class HasOne extends Relation {
   /**
    * Match the eagerly loaded results to their parents.
    */
-  match(relation: string, models: Collection, results: Collection): void {
-    const dictionary = this.buildDictionary(results)
+  match(relation: string, models: Collection, query: Query): void {
+    const dictionary = this.buildDictionary(query.get())
 
     models.forEach((model) => {
       const key = model[this.localKey]

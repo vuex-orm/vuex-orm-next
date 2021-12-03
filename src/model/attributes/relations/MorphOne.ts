@@ -3,7 +3,7 @@ import { Schema } from '../../../schema/Schema'
 import { Element, Collection } from '../../../data/Data'
 import { Query } from '../../../query/Query'
 import { Model } from '../../Model'
-import { Relation, Dictionary } from './Relation'
+import { Relation } from './Relation'
 
 export class MorphOne extends Relation {
   /**
@@ -63,21 +63,22 @@ export class MorphOne extends Relation {
    * Set the constraints for an eager load of the relation.
    */
   addEagerConstraints(query: Query, models: Collection): void {
-    query.where(this.morphType, this.parent.$entity())
-    query.whereIn(this.morphId, this.getKeys(models, this.localKey))
+    query
+      .where(this.morphType, this.parent.$entity())
+      .whereIn(this.morphId, this.getKeys(models, this.localKey))
   }
 
   /**
    * Match the eagerly loaded results to their parents.
    */
-  match(relation: string, models: Collection, results: Collection): void {
-    const dictionary = this.buildDictionary(results)
+  match(relation: string, models: Collection, query: Query): void {
+    const dictionary = this.buildDictionary(query.get())
 
     models.forEach((model) => {
       const key = model[this.localKey]
 
       dictionary[key]
-        ? model.$setRelation(relation, dictionary[key][0])
+        ? model.$setRelation(relation, dictionary[key])
         : model.$setRelation(relation, null)
     })
   }
@@ -85,10 +86,12 @@ export class MorphOne extends Relation {
   /**
    * Build model dictionary keyed by the relation's foreign key.
    */
-  protected buildDictionary(results: Collection): Dictionary {
-    return this.mapToDictionary(results, (result) => {
-      return [result[this.morphId], result]
-    })
+  protected buildDictionary(models: Collection): Record<string, Model> {
+    return models.reduce<Record<string, Model>>((dictionary, model) => {
+      dictionary[model[this.morphId]] = model
+
+      return dictionary
+    }, {})
   }
 
   /**
