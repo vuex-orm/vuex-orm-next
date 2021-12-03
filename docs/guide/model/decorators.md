@@ -217,15 +217,35 @@ Marks a property on the model as a [morphOne attribute](../relationships/polymor
 
 ```ts
 import { Model, MorphOne } from '@vuex-orm/core'
-import Node from '@/models/Node'
+import Image from '@/models/Image'
 
-class Cluster extends Model {
-  static entity = 'clusters'
+class User extends Model {
+  static entity = 'users'
+
+  @MorphOne(() => Image, 'imageableId', 'imageableType')
+  image!: Image | null
+}
+```
+
+### `@MorphTo`
+
+Marks a property on the model as a [morphTo attribute](../relationships/polymorphic) type. For example:
+
+```ts
+import { Model, MorphTo } from '@vuex-orm/core'
+import User from '@/models/User'
+import Post from '@/models/Post'
+
+class Image extends Model {
+  static entity = 'images'
 
   @Attr(null)
-  nodeIds!: number[]
+  imageableId!: number | null
 
-  @HasManyBy(() => Image, 'imageableId', 'imageableType')
-  image!: Image | null
+  @Attr(null)
+  imageableType!: string | null
+
+  @MorphTo(() => [User, Post], 'imageableId', 'imageableType')
+  imageable!: User | Post | null
 }
 ```

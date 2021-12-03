@@ -105,12 +105,8 @@ export class HasManyBy extends Relation {
   /**
    * Match the eagerly loaded results to their parents.
    */
-  match(relation: string, models: Collection, results: Collection): void {
-    const dictionary = results.reduce<Record<string, Model>>((dic, result) => {
-      dic[result[this.ownerKey]] = result
-
-      return dic
-    }, {})
+  match(relation: string, models: Collection, query: Query): void {
+    const dictionary = this.buildDictionary(query.get())
 
     models.forEach((model) => {
       const relatedModels = this.getRelatedModels(
@@ -120,6 +116,17 @@ export class HasManyBy extends Relation {
 
       model.$setRelation(relation, relatedModels)
     })
+  }
+
+  /**
+   * Build model dictionary keyed by the relation's foreign key.
+   */
+  protected buildDictionary(models: Collection): Record<string, Model> {
+    return models.reduce<Record<string, Model>>((dictionary, model) => {
+      dictionary[model[this.ownerKey]] = model
+
+      return dictionary
+    }, {})
   }
 
   /**

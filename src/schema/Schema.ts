@@ -4,11 +4,13 @@ import { Uid } from '../model/attributes/types/Uid'
 import { Relation } from '../model/attributes/relations/Relation'
 import { Model } from '../model/Model'
 
+export type Schemas = Record<string, Normalizr.Entity>
+
 export class Schema {
   /**
    * The list of generated schemas.
    */
-  private schemas: Record<string, Normalizr.Entity> = {}
+  private schemas: Schemas = {}
 
   /**
    * The model instance.
@@ -51,6 +53,19 @@ export class Schema {
    */
   many(model: Model, parent?: Model): Normalizr.Array {
     return new Normalizr.Array(this.one(model, parent))
+  }
+
+  /**
+   * Create an union schema for the given models.
+   */
+  union(models: Model[], callback: Normalizr.SchemaFunction): Normalizr.Union {
+    const schemas = models.reduce<Schemas>((schemas, model) => {
+      schemas[model.$entity()] = this.one(model)
+
+      return schemas
+    }, {})
+
+    return new Normalizr.Union(schemas, callback)
   }
 
   /**
