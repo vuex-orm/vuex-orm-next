@@ -16,6 +16,7 @@ export * from './model/decorators/attributes/relations/BelongsTo'
 export * from './model/decorators/attributes/relations/HasMany'
 export * from './model/decorators/attributes/relations/HasManyBy'
 export * from './model/decorators/attributes/relations/MorphOne'
+export * from './model/decorators/attributes/relations/MorphMany'
 export * from './model/decorators/attributes/relations/MorphTo'
 export * from './model/decorators/attributes/relations/MorphMany'
 export * from './model/decorators/Contracts'
@@ -33,6 +34,7 @@ export { BelongsTo as BelongsToAttr } from './model/attributes/relations/Belongs
 export { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
 export { HasManyBy as HasManyByAttr } from './model/attributes/relations/HasManyBy'
 export { MorphOne as MorphOneAttr } from './model/attributes/relations/MorphOne'
+export { MorphMany as MorphManyAttr } from './model/attributes/relations/MorphMany'
 export { MorphTo as MorphToAttr } from './model/attributes/relations/MorphTo'
 export { MorphMany as MorphManyAttr } from './model/attributes/relations/MorphMany'
 export * from './modules/RootModule'
@@ -67,6 +69,7 @@ import { BelongsTo as BelongsToAttr } from './model/attributes/relations/Belongs
 import { HasMany as HasManyAttr } from './model/attributes/relations/HasMany'
 import { HasManyBy as HasManyByAttr } from './model/attributes/relations/HasManyBy'
 import { MorphOne as MorphOneAttr } from './model/attributes/relations/MorphOne'
+import { MorphMany as MorphManyAttr } from './model/attributes/relations/MorphMany'
 import { MorphTo as MorphToAttr } from './model/attributes/relations/MorphTo'
 import { MorphMany as MorphManyAttr } from './model/attributes/relations/MorphMany'
 import { Repository } from './repository/Repository'
@@ -94,6 +97,7 @@ export default {
   HasManyAttr,
   HasManyByAttr,
   MorphOneAttr,
+  MorphManyAttr,
   MorphToAttr,
   MorphManyAttr,
   Repository,

@@ -12,6 +12,7 @@ import { BelongsTo } from './attributes/relations/BelongsTo'
 import { HasMany } from './attributes/relations/HasMany'
 import { HasManyBy } from './attributes/relations/HasManyBy'
 import { MorphOne } from './attributes/relations/MorphOne'
+import { MorphMany } from './attributes/relations/MorphMany'
 import { MorphTo } from './attributes/relations/MorphTo'
 import { MorphMany } from './attributes/relations/MorphMany'
 
@@ -250,6 +251,22 @@ export class Model {
   }
 
   /**
+   * Create a new MorphMany relation instance.
+   */
+  static morphMany(
+    related: typeof Model,
+    id: string,
+    type: string,
+    localKey?: string
+  ): MorphMany {
+    const model = this.newRawInstance()
+
+    localKey = localKey ?? model.$getLocalKey()
+
+    return new MorphMany(model, related.newRawInstance(), id, type, localKey)
+  }
+
+  /*
    * Create a new MorphTo relation instance.
    */
   static morphTo(
