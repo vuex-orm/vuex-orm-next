@@ -8,7 +8,6 @@ import {
   HasManyBy,
   MorphOne,
   MorphTo,
-  MorphOne,
   MorphMany
 } from '@/index'
 
