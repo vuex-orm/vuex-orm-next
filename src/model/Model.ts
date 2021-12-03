@@ -249,7 +249,7 @@ export class Model {
     return new MorphOne(model, related.newRawInstance(), id, type, localKey)
   }
 
-  /*
+  /**
    * Create a new MorphTo relation instance.
    */
   static morphTo(
@@ -264,7 +264,7 @@ export class Model {
     return new MorphTo(instance, relatedModels, id, type, ownerKey)
   }
 
-  /*
+  /**
    * Create a new MorphMany relation instance.
    */
   static morphMany(
