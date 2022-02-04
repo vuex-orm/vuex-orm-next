@@ -148,6 +148,14 @@ export class Repository<M extends Model = Model> {
   }
 
   /**
+   * Set the relationship that should be eager loaded recursively.
+   * Should be a parent / child relationship within a single model.
+   */
+  withRecursive(name: string, depth?: number): Query<M> {
+    return this.query().withRecursive(name, depth)
+  }
+
+  /**
    * Set to eager load all top-level relationships. Constraint is set for all relationships.
    */
   withAll(callback?: EagerLoadConstraint): Query<M> {
