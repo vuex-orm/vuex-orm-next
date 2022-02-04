@@ -194,6 +194,18 @@ export class Query<M extends Model = Model> {
   }
 
   /**
+   * Set to eager load the passed relationship recursively.
+   * Should be a parent / child relationship within a single model.
+   */
+  withRecursive(name: string, depth: number = 3): Query<M> {
+    this.with(name, (query) => {
+      depth > 0 && query.withRecursive(name, depth - 1)
+    })
+
+    return this
+  }
+
+  /**
    * Set to eager load all top-level relationships. Constraint is set for all relationships.
    */
   withAll(callback: EagerLoadConstraint = () => {}): Query<M> {
